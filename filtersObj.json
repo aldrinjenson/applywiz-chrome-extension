@@ -1,0 +1,135 @@
+[
+  {
+    "Sort by": [
+      {
+        "element": {},
+        "value": "Most recent"
+      },
+      {
+        "element": {},
+        "value": "Most relevant"
+      }
+    ]
+  },
+  {
+    "Date posted": [
+      {
+        "element": {},
+        "value": "Any time"
+      },
+      {
+        "element": {},
+        "value": "Past month"
+      },
+      {
+        "element": {},
+        "value": "Past week"
+      },
+      {
+        "element": {},
+        "value": "Past 24 hours"
+      }
+    ]
+  },
+  {
+    "Experience level": [
+      {
+        "element": {},
+        "value": "Internship"
+      },
+      {
+        "element": {},
+        "value": "Entry level"
+      },
+      {
+        "element": {},
+        "value": "Associate"
+      },
+      {
+        "element": {},
+        "value": "Mid-Senior level"
+      },
+      {
+        "element": {},
+        "value": "Director"
+      },
+      {
+        "element": {},
+        "value": "Executive"
+      }
+    ]
+  },
+  {
+    "On-site/remote": [
+      {
+        "element": {},
+        "value": "On-site"
+      },
+      {
+        "element": {},
+        "value": "Remote"
+      },
+      {
+        "element": {},
+        "value": "Hybrid"
+      }
+    ]
+  },
+  {
+    "Easy Apply": []
+  },
+  {
+    "Title": [
+      {
+        "element": {},
+        "value": "DevOps Engineer"
+      },
+      {
+        "element": {},
+        "value": "Software Engineer"
+      },
+      {
+        "element": {},
+        "value": "Process Coordinator"
+      },
+      {
+        "element": {},
+        "value": "iOS Developer"
+      },
+      {
+        "element": {},
+        "value": "Wordpress Developer"
+      },
+      {
+        "element": {},
+        "value": "Javascript Developer"
+      },
+      {
+        "element": {},
+        "value": "Web Developer"
+      },
+      {
+        "element": {},
+        "value": "Delivery Specialist"
+      },
+      {
+        "element": {},
+        "value": "Dotnet Developer"
+      },
+      {
+        "element": {},
+        "value": "Data Engineer"
+      },
+      {
+        "element": {},
+        "value": "PHP Developer"
+      }
+    ]
+  },
+  {
+    "Under 10 applicants": []
+  },
+  {
+    "In your network": []
+  }
+]
