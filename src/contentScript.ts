@@ -41,8 +41,6 @@ const goOverJobs = async () => {
 const scrollToFooter = async () => {
     console.log('scrolling');
     const footer = await waitForElement('#compactfooter-about')
-    console.log(footer);
-
     if (footer) {
         console.log('scrolling to footer');
         footer.scrollIntoView();
@@ -56,44 +54,51 @@ const scrollToFooter = async () => {
 const getFilters = async () => {
     const filterButtonSelector = ".search-reusables__all-filters-pill-button"
     const filterButton = await waitForElement(filterButtonSelector)
-    console.log(filterButton);
     filterButton.click()
 
     const availableFilters: { [x: string]: [y: string]; }[] = []
     const allFiltersLi = await waitForElement('.search-reusables__secondary-filters-filter', true)
-    console.log(allFiltersLi);
 
     allFiltersLi.forEach(li => {
         const type = li.querySelector('h3').innerText
-        console.log(type);
         const options = [...li.querySelectorAll('.search-reusables__filter-value-item')]
-        const availableOptions = []
+        const availableOptions: { element: any; value: any; id: string }[] = []
         options.forEach(option => {
-            console.log(option);
             const optionSpan = option.querySelector('span')
-            availableOptions.push({ element: optionSpan, value: optionSpan.innerText })
+            const liInput = option.querySelector('input')
+            availableOptions.push({ value: optionSpan.innerText, id: liInput?.id, element: liInput, })
         })
         const newFilter = { [type]: availableOptions }
         availableFilters.push(newFilter)
     })
-
     console.log(availableFilters);
+}
+
+// Send a message to the extension popup to check if the user is logged in
+chrome.runtime.sendMessage({ action: 'checkLoginStatus' }, function (response) {
+    console.log('checking for login');
+    if (response.isLoggedIn) {
+        console.log(response);
+
+        console.log('login set aanu bro');
+    }
+});
 
 
+const main = async () => {
 
+    await sleep(2500)
+    console.log('sleep done');
+    await getFilters()
 }
 
 window.addEventListener('load', async () => {
     console.log('windod loaded bro');
     await sleep(2500);
     console.log('sleep done');
+    main()
     // await scrollToFooter();
-    // await sleep(2500)
-    console.log('sleep done');
-    await getFilters()
     // await sleep(1000)
     // await goOverJobs();
-
-    // Your code here
-    // It will run after all resources have loaded
 });
+

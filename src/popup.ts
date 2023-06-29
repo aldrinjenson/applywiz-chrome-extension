@@ -1,51 +1,31 @@
 import '../styles/popup.scss';
 
+console.log('broski');
+
 document.getElementById('go-to-options').addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
 });
 
-// console.log('hello');
+console.log('in popup');
+
+const checkUserLoginStatus = () => {
+  return true
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('new request received');
+  console.log(request);
+  console.log(sender);
+
+  if (request.action === 'checkLoginStatus') {
+    console.log('action matched');
+
+    // Check if the user is logged in (replace with your login check logic)
+    const isLoggedIn = checkUserLoginStatus();
+    console.log(isLoggedIn);
 
 
-// console.log('hello');
-
-// const func = () => {
-//     const jobLinks = [...document.querySelectorAll('a')]
-//         .map((link) => link.href)
-//         .filter((el) => el.includes('/jobs/'))
-//         // .slice(1);
-//         .slice(1, 3);
-//     console.log(jobLinks);
-
-
-//     function openAndApply(link) {
-//         return new Promise((resolve, reject) => {
-//             const newTab = window.open(link, '_blank');
-
-//             const interval = setInterval(() => {
-//                 if (newTab.closed) {
-//                     clearInterval(interval);
-//                     reject(new Error(`Failed to open link: ${link}`));
-//                 } else if (newTab.document.readyState === 'complete') {
-//                     clearInterval(interval);
-//                     const applyButton = newTab.document.querySelector('.jobs-apply-button');
-//                     if (applyButton) {
-//                         applyButton.click();
-//                         resolve();
-//                     } else {
-//                         reject(new Error(`Failed to find apply button in link: ${link}`));
-//                     }
-//                 }
-//             }, 100); // Adjust the interval as needed
-//         });
-//     }
-
-
-//     for (const link in jobLinks) {
-//         alert(link);
-//     }
-// }
-
-// console.log('gonna run');
-
-// func()
+    // Send the response back to the content script
+    sendResponse({ isLoggedIn: isLoggedIn });
+  }
+});
