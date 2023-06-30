@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "serviceWorker.js"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -12,7 +12,8 @@
       "js": ["contentScript.js"]
     }
   ],
-  "permissions": ["storage", "scripting", "webRequest"],
+  "permissions": ["storage", "scripting", "webRequest", "activeTab", "tabs"],
+  "host_permissions": ["https://www.linkedin.com/*"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true

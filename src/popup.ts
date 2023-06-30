@@ -1,31 +1,32 @@
 import '../styles/popup.scss';
 
-console.log('broski');
-
 document.getElementById('go-to-options').addEventListener('click', () => {
+  console.log('going to options');
+
   chrome.runtime.openOptionsPage();
 });
 
-console.log('in popup');
+document.addEventListener('DOMContentLoaded', () => {
+  const openJobsButton = document.getElementById('openJobsButton');
 
-const checkUserLoginStatus = () => {
-  return true
-}
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  console.log('new request received');
-  console.log(request);
-  console.log(sender);
-
-  if (request.action === 'checkLoginStatus') {
-    console.log('action matched');
-
-    // Check if the user is logged in (replace with your login check logic)
-    const isLoggedIn = checkUserLoginStatus();
-    console.log(isLoggedIn);
+  openJobsButton.addEventListener('click', () => {
+    chrome.tabs.create({ url: 'https://www.linkedin.com/jobs/search?keywords=software+developer&f_AL=true' }, (tab) => {
+      chrome.tabs.sendMessage(tab.id, { action: 'selectFirstJobCard' });
+    });
+  });
 
 
-    // Send the response back to the content script
-    sendResponse({ isLoggedIn: isLoggedIn });
-  }
+  // openJobsButton.addEventListener('click', () => {
+  //   chrome.runtime.sendMessage({ action: 'openJobs' });
+  // });
+
+
 });
+
+
+const startNowBtn = document.getElementById('startnowbtn')
+startNowBtn.addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { action: 'selectFirstJobCard' });
+  });
+})
