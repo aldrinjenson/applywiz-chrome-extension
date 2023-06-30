@@ -7,8 +7,6 @@ window.addEventListener('load', async () => {
 });
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-  console.log('message received');
-  console.log(message.action);
   switch (message.action) {
     case 'TEST': {
       // startAutomation();
@@ -34,10 +32,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       applyToJobs();
       break;
     }
-
     default:
-      console.log('Invalid action');
-
+      console.log('Invalid action passed in message');
       break;
   }
 });

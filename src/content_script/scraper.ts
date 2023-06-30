@@ -1,7 +1,8 @@
-import { waitForElement } from './utils';
+import { waitForElement } from '../utils';
 
 export const applyToJobs = async () => {
   console.log('getting job links');
+  const failedJobs = [];
 
   const jobSideCards = [
     ...document.querySelectorAll('.job-card-container--clickable'),
@@ -12,9 +13,7 @@ export const applyToJobs = async () => {
 
   for (const jobCard of jobSideCards) {
     try {
-      console.log('clicking');
       jobCard.click();
-
       await waitForElement('.jobs-apply-button');
       const applyButton = document.querySelector('.jobs-apply-button');
       applyButton.click();
@@ -28,9 +27,14 @@ export const applyToJobs = async () => {
       if (count++ >= 3) break;
     } catch (error) {
       console.log('error bro: ', error);
+      const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
+      failedJobs.push({ url: window.location.href, jobName });
     }
     if (count++ >= 3) break;
   }
+  console.log(failedJobs);
+
+  return failedJobs;
 };
 
 export const scrollToFooter = async () => {
