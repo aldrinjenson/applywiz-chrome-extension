@@ -1,6 +1,6 @@
 import { waitForElement } from './utils';
 
-const goOverJobs = async () => {
+export const applyToJobs = async () => {
   console.log('getting job links');
 
   const jobSideCards = [
@@ -33,7 +33,7 @@ const goOverJobs = async () => {
   }
 };
 
-const scrollToFooter = async () => {
+export const scrollToFooter = async () => {
   console.log('scrolling');
   const footer = await waitForElement('#compactfooter-about');
   if (footer) {
@@ -45,7 +45,7 @@ const scrollToFooter = async () => {
   }
 };
 
-const getFilters = async () => {
+export const getFilters = async () => {
   const filterButtonSelector = '.search-reusables__all-filters-pill-button';
   const filterButton = await waitForElement(filterButtonSelector);
   filterButton.click();
@@ -75,6 +75,7 @@ const getFilters = async () => {
     availableFilters.push(newFilter);
   });
   console.log(availableFilters);
+  return availableFilters;
 };
 
 console.log('bro');
