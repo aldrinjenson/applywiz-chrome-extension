@@ -1,6 +1,44 @@
-import { waitForElement } from '../utils';
+import { sleep, waitForElement } from '../utils';
 
-export const applyToJobs = async () => {
+const handleAnyUnfilledColumns = async (user) => {
+  console.log({ user });
+
+  const errorDivs: HTMLDivElement[] = Array.from(
+    document.querySelectorAll(
+      'div[role="alert"][class^="artdeco-inline-feedback"]',
+    ),
+  );
+
+  if (!errorDivs.length) return;
+
+  const errorInputWrappers = errorDivs.map(
+    (div) => div.parentElement.parentElement,
+  );
+
+  errorInputWrappers.forEach((wrapper) => {
+    const label = wrapper.querySelector('label').innerText.toLowerCase();
+    const input = wrapper.querySelector('input');
+    let filedsFilled = false;
+    for (const key in user) {
+      console.log('filling');
+      console.log(label, key.toLowerCase());
+
+      if (label.includes(key.toLowerCase())) {
+        input.value = user[key];
+        const inputEvent = new Event('input', { bubbles: true });
+        input.dispatchEvent(inputEvent);
+        filedsFilled = true;
+        break;
+      }
+    }
+    if (!filedsFilled) {
+      throw new Error('Not able to fill all fields based on given user object');
+    }
+  });
+  await sleep(5000);
+};
+
+export const applyToJobs = async (filters = [], user = {}) => {
   console.log('getting job links');
   const failedJobs = [];
 
@@ -13,23 +51,48 @@ export const applyToJobs = async () => {
   console.log('Total Jobs found = ' + jobSideCards.length);
 
   for (const jobCard of jobSideCards) {
+    const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
     try {
       jobCard.click();
-      await waitForElement('.jobs-apply-button');
-      const applyButton: HTMLButtonElement =
-        document.querySelector('.jobs-apply-button');
+      const applyButton = await waitForElement('.jobs-apply-button');
       applyButton.click();
 
-      const nextButtonSelector = '.data-easy-apply-next-button';
-      await waitForElement(nextButtonSelector);
-      const nextButton: HTMLButtonElement =
-        document.querySelector('.jobs-apply-button');
-      nextButton.click();
+      let isFormComplete = false;
+      let formPageCount = 0;
 
-      if (count++ >= 3) break;
+      while (!isFormComplete && formPageCount++ < 4) {
+        const nextButton: HTMLButtonElement = await waitForElement(
+          'button[aria-label="Continue to next step"]',
+        );
+        console.log(nextButton);
+        console.log({ formPageCount });
+
+        await handleAnyUnfilledColumns(user);
+        console.log('error handled');
+
+        if (!nextButton) {
+          const reviewButton: HTMLButtonElement = document.querySelector(
+            'button[aria-label="Review your application"]',
+          );
+          console.log({ reviewButton });
+          reviewButton.click();
+          await handleAnyUnfilledColumns(user);
+          reviewButton.click();
+          const finalApplyButton: HTMLButtonElement = document.querySelector(
+            'button[aria-label="Submit application"]',
+          );
+          console.log(finalApplyButton);
+          console.log('form complete');
+          // finalApplyButton.click();
+          isFormComplete = true;
+        } else {
+          nextButton.click();
+        }
+      }
+
+      if (count++ >= 4) break;
     } catch (error) {
       console.log('error bro: ', error);
-      const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
       failedJobs.push({ url: window.location.href, jobName });
     }
     if (count++ >= 3) break;
@@ -78,29 +141,9 @@ export const getFilters = async () => {
         element: liInput,
       });
     });
-    const newFilter = { [type]: availableOptions };
+    const newFilter = { name: type, options: availableOptions };
     availableFilters.push(newFilter);
   });
   console.log(availableFilters);
   return availableFilters;
 };
-
-console.log('bro');
-
-function selectFirstJobCard() {
-  console.log('inside');
-  alert('seleting first card');
-
-  // Modify this code to select the first job card element on the page
-  const jobCard: HTMLDivElement = document.querySelector('.job-card');
-
-  if (jobCard) {
-    jobCard.click();
-  }
-}
-
-chrome.runtime.onMessage.addListener((request) => {
-  if (request.action === 'selectFirstJobCard') {
-    selectFirstJobCard();
-  }
-});

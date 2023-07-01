@@ -1,4 +1,4 @@
-export function waitForElement(selector: string, all = false, timeout = 6000) {
+export function waitForElement(selector: string, all = false, timeout = 5000) {
   console.log('waiting for ' + selector);
   return new Promise((resolve, reject) => {
     const startTime = Date.now();
@@ -14,11 +14,10 @@ export function waitForElement(selector: string, all = false, timeout = 6000) {
           resolve(element);
         }
       } else if (Date.now() - startTime >= timeout) {
-        reject(
-          new Error(
-            `Timeout: Element '${selector}' not found within ${timeout} milliseconds`,
-          ),
-        );
+        console.log(
+          `Timeout: Element '${selector}' not found within ${timeout} milliseconds`,
+        ),
+          resolve(null);
       } else {
         setTimeout(checkElement, 100); // Retry after 100 milliseconds
       }

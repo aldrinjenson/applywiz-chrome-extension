@@ -27,9 +27,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
     }
     case 'START_AUTOMATION': {
-      const filters = message.data.filters;
-      console.log(filters);
-      applyToJobs();
+      const { filters, user } = message.data;
+      console.log(filters, user);
+      await applyToJobs(filters, user);
       break;
     }
     default:
@@ -37,3 +37,4 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
   }
 });
+// applyToJobs([], { experience: 10, notice: 20 });

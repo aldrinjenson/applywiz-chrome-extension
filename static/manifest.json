@@ -12,7 +12,14 @@
       "js": ["contentScript.js"]
     }
   ],
-  "permissions": ["storage", "scripting", "webRequest", "activeTab", "tabs"],
+  "permissions": [
+    "storage",
+    "scripting",
+    "webRequest",
+    "activeTab",
+    "tabs",
+    "notifications"
+  ],
   "host_permissions": ["https://www.linkedin.com/*"],
   "options_ui": {
     "page": "options.html",

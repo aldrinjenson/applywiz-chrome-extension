@@ -14,23 +14,28 @@ export async function waitForContentScriptLoad(tabId: number) {
   });
 }
 
-export const getFiltersFromContentScript = (jobKeyword: string) => {
-  const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
-  chrome.tabs.create({ url, active: true }, async (tab) => {
-    await waitForContentScriptLoad(tab.id);
-    chrome.tabs.sendMessage(tab.id, {
-      action: 'GET_FILTERS',
-      data: { tabId: tab.id },
+export const getFiltersFromContentScript = (
+  jobKeyword: string,
+): Promise<string> => {
+  return new Promise<string>((resolve) => {
+    const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
+    chrome.tabs.create({ url, active: false }, async (tab) => {
+      await waitForContentScriptLoad(tab.id);
+      chrome.tabs.sendMessage(tab.id, {
+        action: 'GET_FILTERS',
+        data: { tabId: tab.id },
+      });
+    });
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === 'RECEIVE_FILTERS') {
+        const filters = message.data;
+        const validFilters = filters.filter(
+          (f: { name: string }) => f.name !== 'Easy Apply',
+        );
+        alert('Filters received');
+        resolve(validFilters);
+      }
     });
   });
-
-  chrome.runtime.onMessage.addListener(
-    async (message, sender, sendResponse) => {
-      console.log(message.action);
-      if (message.action === 'RECEIVE_FILTERS') {
-        console.log(message.data);
-        alert('Filters received');
-      }
-    },
-  );
 };
