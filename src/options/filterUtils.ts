@@ -4,6 +4,13 @@ export function createFilters(
     options: { value: string; id: string }[];
   }[],
   rootElement = document.body,
+  onClick: (
+    arg0: {
+      name: string;
+      options: { value: string; id: string; isSelected: boolean }[];
+    }[],
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+  ) => void = () => {},
 ) {
   // Create a form element
   rootElement.innerHTML = '';
@@ -64,7 +71,7 @@ export function createFilters(
   );
 
   const submitButton = document.createElement('button');
-  submitButton.textContent = 'Submit';
+  submitButton.textContent = 'Start Applying';
   form.appendChild(submitButton);
 
   // Add an event listener to the submit button
@@ -89,6 +96,7 @@ export function createFilters(
 
     // Log the selected options JSON
     console.log(selectedOptions);
+    onClick(selectedOptions);
   });
 
   // Append the form to the document body

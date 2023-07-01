@@ -36,10 +36,6 @@ export const getFiltersFromContentScript = (
           'Easy Apply',
         ];
 
-        filters.forEach((f) => {
-          console.log(f.name, ignoredFilters.includes(f.name));
-          console.log(ignoredFilters);
-        });
         const validFilters = filters.filter(
           (f: { name: string }) => !ignoredFilters.includes(f.name),
         );

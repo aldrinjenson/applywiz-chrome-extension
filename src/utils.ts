@@ -1,6 +1,6 @@
 export function waitForElement(selector: string, all = false, timeout = 5000) {
   console.log('waiting for ' + selector);
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const startTime = Date.now();
 
     const checkElement = () => {
