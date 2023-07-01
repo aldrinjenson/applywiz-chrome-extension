@@ -131,14 +131,13 @@ export const getFilters = async () => {
     const options = [
       ...li.querySelectorAll('.search-reusables__filter-value-item'),
     ];
-    const availableOptions: { element: any; value: any; id: string }[] = [];
+    const availableOptions: { value: string; id: string }[] = [];
     options.forEach((option) => {
       const optionSpan = option.querySelector('span');
       const liInput = option.querySelector('input');
       availableOptions.push({
         value: optionSpan.innerText,
         id: liInput?.id,
-        element: liInput,
       });
     });
     const newFilter = { name: type, options: availableOptions };

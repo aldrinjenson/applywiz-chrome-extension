@@ -9,3 +9,10 @@
   margin: 2%;
   padding: 2%;
 }
+
+#filter-container {
+  margin: 3%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}

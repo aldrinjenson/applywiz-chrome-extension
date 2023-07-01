@@ -16,7 +16,7 @@ export async function waitForContentScriptLoad(tabId: number) {
 
 export const getFiltersFromContentScript = (
   jobKeyword: string,
-): Promise<string> => {
+): Promise<string | []> => {
   return new Promise<string>((resolve) => {
     const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
     chrome.tabs.create({ url, active: false }, async (tab) => {
@@ -30,8 +30,18 @@ export const getFiltersFromContentScript = (
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.action === 'RECEIVE_FILTERS') {
         const filters = message.data;
+        const ignoredFilters = [
+          'Under 10 applicants',
+          'In your network',
+          'Easy Apply',
+        ];
+
+        filters.forEach((f) => {
+          console.log(f.name, ignoredFilters.includes(f.name));
+          console.log(ignoredFilters);
+        });
         const validFilters = filters.filter(
-          (f: { name: string }) => f.name !== 'Easy Apply',
+          (f: { name: string }) => !ignoredFilters.includes(f.name),
         );
         alert('Filters received');
         resolve(validFilters);

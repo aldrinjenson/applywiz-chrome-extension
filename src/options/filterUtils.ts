@@ -1,0 +1,96 @@
+export function createFilters(
+  data: {
+    name: string;
+    options: { value: string; id: string }[];
+  }[],
+  rootElement = document.body,
+) {
+  // Create a form element
+  rootElement.innerHTML = '';
+  const form = document.createElement('form');
+
+  // Iterate over the data
+  data.forEach(
+    (filter: { name: string; options: { id: string; value: string }[] }) => {
+      const { name: filterName, options: filterOptions } = filter;
+      const heading = document.createElement('h3');
+      heading.textContent = filterName;
+      form.appendChild(heading);
+
+      if (
+        filterName.includes('Sort by') ||
+        filterName.includes('Date posted')
+      ) {
+        // Create a radio button group
+        const radioGroup = document.createElement('div');
+        radioGroup.classList.add('radio-group');
+
+        // Iterate over the options
+        filterOptions.forEach((option) => {
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = filterName.replace(/\s/g, '-').toLowerCase();
+          radio.value = option.id;
+          radio.id = option.id;
+
+          // Create a label for the radio button
+          const label = document.createElement('label');
+          label.textContent = option.value;
+          label.htmlFor = option.id;
+          radioGroup.appendChild(radio);
+          radioGroup.appendChild(label);
+        });
+        form.appendChild(radioGroup);
+      } else {
+        // Create checkbox elements for other filters
+        filterOptions.forEach((option) => {
+          // Create a checkbox element
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = option.id;
+          checkbox.id = option.id;
+
+          // Create a label for the checkbox
+          const label = document.createElement('label');
+          label.textContent = option.value;
+          label.htmlFor = option.id;
+
+          // Append the checkbox and label to the form
+          form.appendChild(checkbox);
+          form.appendChild(label);
+        });
+      }
+    },
+  );
+
+  const submitButton = document.createElement('button');
+  submitButton.textContent = 'Submit';
+  form.appendChild(submitButton);
+
+  // Add an event listener to the submit button
+  submitButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    // Generate the selected options JSON
+    const selectedOptions = data.map((filter) => {
+      return {
+        name: filter.name,
+        options: filter.options.map((option) => {
+          const inputElement: HTMLInputElement = document.getElementById(
+            option.id,
+          );
+          return {
+            value: option.value,
+            id: option.id,
+            isSelected: inputElement.checked,
+          };
+        }),
+      };
+    });
+
+    // Log the selected options JSON
+    console.log(selectedOptions);
+  });
+
+  // Append the form to the document body
+  rootElement.appendChild(form);
+}

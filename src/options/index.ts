@@ -1,9 +1,13 @@
 import '../../styles/options.scss';
 import { toastNotify } from '../common/common_utils';
+import { createFilters } from './filterUtils';
+import { filtersData } from './sampleFiltersData';
 import { getFiltersFromContentScript, waitForContentScriptLoad } from './utils';
 
 const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
+const filterContainer: HTMLDivElement =
+  document.getElementById('filter-container');
 
 const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
 const fetchFiltersBtn: HTMLButtonElement =
@@ -34,5 +38,7 @@ fetchFiltersBtn.addEventListener('click', async () => {
   }
   const filters = await getFiltersFromContentScript(jobKeyword);
   toastNotify('Filters Received');
-  console.log(filters);
+  createFilters(filters, filterContainer);
 });
+
+// createFilters(filtersData, filterContainer);
