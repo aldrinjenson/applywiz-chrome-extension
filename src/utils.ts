@@ -1,4 +1,4 @@
-export function waitForElement(selector, all = false, timeout = 6000) {
+export function waitForElement(selector: string, all = false, timeout = 6000) {
   console.log('waiting for ' + selector);
   return new Promise((resolve, reject) => {
     const startTime = Date.now();
@@ -9,7 +9,7 @@ export function waitForElement(selector, all = false, timeout = 6000) {
       if (element) {
         console.log(selector + ' found');
         if (all) {
-          resolve([...document.querySelectorAll(selector)]);
+          resolve(Array.from(document.querySelectorAll(selector)));
         } else {
           resolve(element);
         }
@@ -28,8 +28,8 @@ export function waitForElement(selector, all = false, timeout = 6000) {
   });
 }
 
-export function trackNetworkRequests(url) {
-  return new Promise((resolve) => {
+export function trackNetworkRequests(url: string) {
+  return new Promise<void>((resolve) => {
     const openRequests = new Set();
 
     // Intercept fetch requests
@@ -56,7 +56,7 @@ export function trackNetworkRequests(url) {
   });
 }
 
-async function sleep(ms: number) {
+export async function sleep(ms: number) {
   console.log('sleeping for ' + ms + ' ms');
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

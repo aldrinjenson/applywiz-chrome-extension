@@ -4,9 +4,10 @@ export const applyToJobs = async () => {
   console.log('getting job links');
   const failedJobs = [];
 
-  const jobSideCards = [
-    ...document.querySelectorAll('.job-card-container--clickable'),
-  ];
+  const jobSideCards: HTMLElement[] = Array.from(
+    document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
+  );
+
   let count = 1;
   console.log(jobSideCards);
   console.log('Total Jobs found = ' + jobSideCards.length);
@@ -15,14 +16,15 @@ export const applyToJobs = async () => {
     try {
       jobCard.click();
       await waitForElement('.jobs-apply-button');
-      const applyButton = document.querySelector('.jobs-apply-button');
+      const applyButton: HTMLButtonElement =
+        document.querySelector('.jobs-apply-button');
       applyButton.click();
 
       const nextButtonSelector = '.data-easy-apply-next-button';
       await waitForElement(nextButtonSelector);
-      const nextButton = document.querySelector('.jobs-apply-button');
+      const nextButton: HTMLButtonElement =
+        document.querySelector('.jobs-apply-button');
       nextButton.click();
-      // applyButton.click()
 
       if (count++ >= 3) break;
     } catch (error) {
@@ -44,14 +46,15 @@ export const scrollToFooter = async () => {
     console.log('scrolling to footer');
     footer.scrollIntoView();
   } else {
-    // Element not found
     console.log('Element not found');
   }
 };
 
 export const getFilters = async () => {
   const filterButtonSelector = '.search-reusables__all-filters-pill-button';
-  const filterButton = await waitForElement(filterButtonSelector);
+  const filterButton: HTMLButtonElement = await waitForElement(
+    filterButtonSelector,
+  );
   filterButton.click();
 
   const availableFilters: { [x: string]: [y: string] }[] = [];
@@ -89,7 +92,7 @@ function selectFirstJobCard() {
   alert('seleting first card');
 
   // Modify this code to select the first job card element on the page
-  const jobCard = document.querySelector('.job-card');
+  const jobCard: HTMLDivElement = document.querySelector('.job-card');
 
   if (jobCard) {
     jobCard.click();

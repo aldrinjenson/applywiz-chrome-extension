@@ -1,6 +1,10 @@
-export async function waitForContentScriptLoad(tabId) {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+export async function waitForContentScriptLoad(tabId: number) {
   return new Promise<void>((resolve) => {
-    const listener = function (updatedTabId, changeInfo) {
+    const listener = function (
+      updatedTabId: number,
+      changeInfo: { status: string },
+    ) {
       if (updatedTabId === tabId && changeInfo.status === 'complete') {
         chrome.tabs.onUpdated.removeListener(listener); // Remove the listener after the content script is loaded
         resolve();
@@ -10,7 +14,7 @@ export async function waitForContentScriptLoad(tabId) {
   });
 }
 
-export const getFiltersFromContentScript = (keyword: string) => {
+export const getFiltersFromContentScript = (jobKeyword: string) => {
   const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
   chrome.tabs.create({ url, active: true }, async (tab) => {
     await waitForContentScriptLoad(tab.id);

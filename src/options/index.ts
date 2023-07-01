@@ -1,9 +1,10 @@
 import '../../styles/options.scss';
 import { getFiltersFromContentScript, waitForContentScriptLoad } from './utils';
 
-const startBtn = document.querySelector('#applyBtn');
-const jobKeywordInput = document.querySelector('#jobKeyword');
-const fetchFiltersBtn = document.querySelector('#fetchFiltersBtn');
+const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
+const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
+const fetchFiltersBtn: HTMLButtonElement =
+  document.querySelector('#fetchFiltersBtn');
 
 startBtn.addEventListener('click', () => {
   const jobKeyword = jobKeywordInput.value;
