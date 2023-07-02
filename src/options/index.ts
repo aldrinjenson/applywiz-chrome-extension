@@ -11,7 +11,10 @@ const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const filterContainer: HTMLDivElement =
   document.getElementById('filter-container');
 
-const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
+// const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
+// startBtn.addEventListener('click', () => {
+//   sendMessageToApplyToJobs(chosenFilters, []);
+// });
 const fetchFiltersBtn: HTMLButtonElement =
   document.querySelector('#fetchFiltersBtn');
 
@@ -39,13 +42,11 @@ const sendMessageToApplyToJobs = (
 };
 
 const chosenFilters = [];
-startBtn.addEventListener('click', () => {
-  sendMessageToApplyToJobs(chosenFilters, []);
-});
 
 const submitHandler = (selectedFilterOptions: []) => {
   // chosenFilters = selectedFilterOptions;
   sendMessageToApplyToJobs(selectedFilterOptions);
+  console.log(selectedFilterOptions);
 };
 
 fetchFiltersBtn.addEventListener('click', async () => {

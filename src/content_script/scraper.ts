@@ -32,26 +32,34 @@ const handleAnyUnfilledColumns = async (user) => {
       }
     }
     if (!filedsFilled) {
-      throw new Error('Not able to fill all fields based on given user object');
+      console.log(label);
+      throw new Error(
+        'Not able to fill all fields based on given user object for label: ',
+        label,
+      );
     }
   });
+  console.log('before sleeping');
   await sleep(5000);
+  console.log('after 5 second sleep');
 };
 
 export const applyToJobs = async (filters = [], user = {}) => {
   console.log('getting job links');
   const failedJobs = [];
+  const successfullJobs = [];
 
   const jobSideCards: HTMLElement[] = Array.from(
     document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
   );
 
-  let count = 1;
-  console.log(jobSideCards);
+  let count = 0;
+  // console.log(jobSideCards);
   console.log('Total Jobs found = ' + jobSideCards.length);
 
   for (const jobCard of jobSideCards) {
     const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
+    const jobUrl = jobCard.getElementsByTagName('a').href;
     try {
       jobCard.click();
       const applyButton = await waitForElement('.jobs-apply-button');
@@ -60,7 +68,7 @@ export const applyToJobs = async (filters = [], user = {}) => {
       let isFormComplete = false;
       let formPageCount = 0;
 
-      while (!isFormComplete && formPageCount++ < 4) {
+      while (!isFormComplete && formPageCount++ < 7) {
         const nextButton: HTMLButtonElement = await waitForElement(
           'button[aria-label="Continue to next step"]',
         );
@@ -83,8 +91,9 @@ export const applyToJobs = async (filters = [], user = {}) => {
           );
           console.log(finalApplyButton);
           console.log('form complete');
-          // finalApplyButton.click();
+          finalApplyButton.click();
           isFormComplete = true;
+          successfullJobs.push({ jobUrl, jobName });
         } else {
           nextButton.click();
         }
@@ -93,11 +102,15 @@ export const applyToJobs = async (filters = [], user = {}) => {
       if (count++ >= 4) break;
     } catch (error) {
       console.log('error bro: ', error);
-      failedJobs.push({ url: window.location.href, jobName });
+      failedJobs.push({ jobUrl, jobName });
     }
-    if (count++ >= 3) break;
+    if (count++ >= 5) break;
   }
   console.log(failedJobs);
+  console.log(successfullJobs);
+
+  const status = { successfullJobs, failedJobs };
+  console.log(status);
 
   return failedJobs;
 };

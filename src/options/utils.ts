@@ -39,7 +39,6 @@ export const getFiltersFromContentScript = (
         const validFilters = filters.filter(
           (f: { name: string }) => !ignoredFilters.includes(f.name),
         );
-        alert('Filters received');
         resolve(validFilters);
       }
     });

@@ -1,4 +1,6 @@
-import { getFilters, applyToJobs } from './scraper';
+import { waitForElement } from '../utils';
+import { applySelectedFilters } from './filter_utils';
+import { getFilters, applyToJobs, scrollToFooter } from './scraper';
 
 console.log('running from content script');
 
@@ -29,6 +31,18 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case 'START_AUTOMATION': {
       const { filters, user } = message.data;
       console.log(filters, user);
+      await applySelectedFilters(filters);
+      const noJobsExist: HTMLButtonElement = await waitForElement(
+        '.jobs-search-no-results-banner__image',
+      );
+      if (noJobsExist) {
+        alert(
+          'No job exists which matches these filters. Go back and modify filters and try again.',
+        );
+        return;
+      }
+      const footer = await waitForElement('#compactfooter-about');
+      // footer.click();
       await applyToJobs(filters, user);
       break;
     }
