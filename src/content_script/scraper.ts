@@ -4,115 +4,240 @@ const handleAnyUnfilledColumns = async (user) => {
   console.log({ user });
 
   const errorDivs: HTMLDivElement[] = Array.from(
-    document.querySelectorAll(
-      'div[role="alert"][class^="artdeco-inline-feedback"]',
-    ),
+    document.querySelectorAll('li-icon[type="error-pebble-icon"]'),
   );
 
-  if (!errorDivs.length) return;
+  if (!errorDivs.length) return false;
 
+  console.log({ errorDivs });
   const errorInputWrappers = errorDivs.map(
-    (div) => div.parentElement.parentElement,
+    (div) => div.parentElement.parentElement.parentElement,
   );
 
-  errorInputWrappers.forEach((wrapper) => {
-    const label = wrapper.querySelector('label').innerText.toLowerCase();
-    const input = wrapper.querySelector('input');
-    let filedsFilled = false;
-    for (const key in user) {
-      console.log('filling');
-      console.log(label, key.toLowerCase());
+  for (const wrapper of errorInputWrappers) {
+    console.log(wrapper);
 
-      if (label.includes(key.toLowerCase())) {
-        input.value = user[key];
-        const inputEvent = new Event('input', { bubbles: true });
-        input.dispatchEvent(inputEvent);
-        filedsFilled = true;
-        break;
+    const label = await waitForElement('label', false, wrapper);
+    const labelText = label?.innerText?.toLowerCase() || '';
+    const input = await waitForElement('input', false, wrapper);
+    console.log({ labelText });
+
+    let filedsFilled = false;
+
+    // for handling checkboxes
+    if (labelText === 'yes') {
+      label.click();
+      console.log('marking Yes');
+      filedsFilled = true;
+    }
+
+    // for handling normal input fields
+    for (const key in user) {
+      if (labelText.includes(key.toLowerCase())) {
+        try {
+          input.value = user[key];
+          const inputEvent = new Event('input', { bubbles: true });
+          console.log('filling label: ', labelText, ' with key: ', key);
+
+          input.dispatchEvent(inputEvent);
+          filedsFilled = true;
+        } catch (error) {
+          console.log('error in matching input: ', input);
+        } finally {
+          // eslint-disable-next-line no-unsafe-finally
+          break;
+        }
       }
     }
+    // for handling selects
     if (!filedsFilled) {
-      console.log(label);
-      throw new Error(
-        'Not able to fill all fields based on given user object for label: ',
-        label,
-      );
+      const select = await waitForElement('select', false, wrapper);
+      if (select) {
+        console.log(labelText);
+        console.log(select);
+        console.log(select.options);
+        const firstOption = select.options[1];
+        select.value =
+          firstOption.value.toLowerCase() !== 'none'
+            ? firstOption.value
+            : select.options[2].value;
+
+        // const inputEvent = new Event('input', { bubbles: true });
+        // select.dispatchEvent(inputEvent);
+
+        const changeEvent = new Event('change', { bubbles: true });
+        select.dispatchEvent(changeEvent);
+
+        filedsFilled = true;
+      }
     }
-  });
+
+    // if still not filled, then mark the job as unable to fill
+    if (!filedsFilled) {
+      console.log(
+        'Not able to fill all fields based on given user object for label: ' +
+          labelText,
+      );
+      await sleep(2500);
+      return true;
+    }
+  }
   console.log('before sleeping');
-  await sleep(5000);
+  await sleep(2000);
   console.log('after 5 second sleep');
+};
+
+const handleComplexity = async (user) => {
+  const isTooComplexToFill: boolean = await handleAnyUnfilledColumns(user);
+  console.log({ isTooComplexToFill });
+
+  if (isTooComplexToFill) {
+    alert('too complex');
+    // close the job and throw error to try again
+    const closeJobModalButton: HTMLButtonElement = await waitForElement(
+      'button[aria-label="Dismiss"]',
+    );
+    closeJobModalButton?.click();
+    const confirmDiscardJobButton: HTMLButtonElement = await waitForElement(
+      '[data-control-name="discard_application_confirm_btn"]',
+    );
+    confirmDiscardJobButton.click();
+    alert('dismissing');
+    console.warn('Fields too complex to be filled. Skipping Job');
+    return true;
+  }
+  return false;
 };
 
 export const applyToJobs = async (filters = [], user = {}) => {
   console.log('getting job links');
   const failedJobs = [];
   const successfullJobs = [];
+  const alreadyAppliedJobs = [];
 
   const jobSideCards: HTMLElement[] = Array.from(
     document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
   );
+  console.log(jobSideCards);
 
   let count = 0;
   // console.log(jobSideCards);
   console.log('Total Jobs found = ' + jobSideCards.length);
 
-  for (const jobCard of jobSideCards) {
+  let maxCount = 7;
+
+  for (let i = 0; i < jobSideCards.length; i++) {
+    const jobCard = jobSideCards[i];
+    console.log({ i, maxCount });
+
+    if (count++ >= maxCount) break;
+
     const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
-    const jobUrl = jobCard.getElementsByTagName('a').href;
+    const jobUrl = jobCard.querySelector('a').href;
+    const jobObject = { jobUrl, jobName: jobName.replace(/\s{3,}/g, ' ') };
+    console.log(
+      'applying for job: ',
+      count,
+      ' with link = ',
+      jobUrl,
+      // ' and name = ',
+      // jobName,
+    );
     try {
       jobCard.click();
-      const applyButton = await waitForElement('.jobs-apply-button');
+      await sleep(1000);
+
+      const isAlreadyApplied = await waitForElement(
+        'a.jobs-s-apply__application-link',
+      );
+
+      if (isAlreadyApplied) {
+        maxCount++;
+        alreadyAppliedJobs.push(jobObject);
+        console.log('Already applied; moving on to next');
+        alert('already applied; moving on');
+        continue;
+      }
+
+      const applyButton: HTMLDivElement = await waitForElement(
+        '.jobs-apply-button:not(.artdeco-button--disable)',
+      );
       applyButton.click();
 
       let isFormComplete = false;
       let formPageCount = 0;
 
-      while (!isFormComplete && formPageCount++ < 7) {
-        const nextButton: HTMLButtonElement = await waitForElement(
-          'button[aria-label="Continue to next step"]',
-        );
-        console.log(nextButton);
-        console.log({ formPageCount });
+      let nextButtonSelector = 'button[aria-label="Continue to next step"]';
+      const reviewButtonSelector =
+        'button[aria-label="Review your application"]';
+      const finalApplyButtonSelector =
+        'button[aria-label="Submit application"]';
 
-        await handleAnyUnfilledColumns(user);
-        console.log('error handled');
+      let isFinalStep = false;
+      while (!isFormComplete && formPageCount++ < 8) {
+        const nextButton: HTMLButtonElement = await waitForElement(
+          nextButtonSelector,
+        );
 
         if (!nextButton) {
-          const reviewButton: HTMLButtonElement = document.querySelector(
-            'button[aria-label="Review your application"]',
+          const finalApplyButton: HTMLButtonElement = await waitForElement(
+            finalApplyButtonSelector,
           );
-          console.log({ reviewButton });
-          reviewButton.click();
-          await handleAnyUnfilledColumns(user);
-          reviewButton.click();
-          const finalApplyButton: HTMLButtonElement = document.querySelector(
-            'button[aria-label="Submit application"]',
-          );
-          console.log(finalApplyButton);
-          console.log('form complete');
-          finalApplyButton.click();
-          isFormComplete = true;
-          successfullJobs.push({ jobUrl, jobName });
-        } else {
-          nextButton.click();
-        }
-      }
+          console.log({ finalApplyButton });
 
-      if (count++ >= 4) break;
+          if (!finalApplyButton) {
+            nextButtonSelector = reviewButtonSelector;
+          } else {
+            nextButtonSelector = finalApplyButtonSelector;
+            isFinalStep = true;
+          }
+          // const completedModal: HTMLButtonElement = await waitForElement(
+          //   'div[aria-labelledby="post-apply-modal"]',
+          // );
+          // formPageCount++;
+          continue;
+        }
+
+        console.log({ isFinalStep });
+        console.log('before clicking');
+        nextButton.click();
+        console.log('after clicking');
+        let isTooComplex = await handleComplexity(user);
+        if (isTooComplex) {
+          console.log('breaking..');
+          break;
+        }
+
+        if (isFinalStep) {
+          // nextButton?.click();
+          console.log('form complete');
+          isFormComplete = true;
+          await waitForElement('li-icon[type="search"]'); // search icon which appears after the confirmation modal
+          const closeJobModalButton: HTMLButtonElement = await waitForElement(
+            'button[aria-label="Dismiss"]',
+          );
+          console.log('closing');
+          await sleep(1200);
+          closeJobModalButton?.click();
+          successfullJobs.push(jobObject);
+        }
+
+        await sleep(2000);
+      }
     } catch (error) {
       console.log('error bro: ', error);
-      failedJobs.push({ jobUrl, jobName });
+      failedJobs.push(jobObject);
     }
-    if (count++ >= 5) break;
   }
-  console.log(failedJobs);
-  console.log(successfullJobs);
 
-  const status = { successfullJobs, failedJobs };
+  // console.log(alreadyAppliedJobs);
+  // console.log(failedJobs);
+  // console.log(successfullJobs);
+
+  const status = { alreadyAppliedJobs, successfullJobs, failedJobs };
   console.log(status);
 
-  return failedJobs;
+  return status;
 };
 
 export const scrollToFooter = async () => {

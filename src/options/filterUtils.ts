@@ -15,6 +15,9 @@ export function createFilters(
   // Create a form element
   rootElement.innerHTML = '';
   const form = document.createElement('form');
+  const h2 = document.createElement('h2');
+  h2.innerText = 'Select Preferred Filters';
+  form.appendChild(h2);
 
   // Iterate over the data
   data.forEach(

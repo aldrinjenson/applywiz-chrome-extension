@@ -1,15 +1,20 @@
-export function waitForElement(selector: string, all = false, timeout = 5000) {
+export function waitForElement(
+  selector: string,
+  all = false,
+  root = document,
+  timeout = 5000,
+) {
   console.log('waiting for ' + selector);
   return new Promise((resolve) => {
     const startTime = Date.now();
 
     const checkElement = () => {
-      const element = document.querySelector(selector);
+      const element = root.querySelector(selector);
 
       if (element) {
         console.log(selector + ' found');
         if (all) {
-          resolve(Array.from(document.querySelectorAll(selector)));
+          resolve(Array.from(root.querySelectorAll(selector)));
         } else {
           resolve(element);
         }

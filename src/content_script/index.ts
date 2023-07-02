@@ -1,12 +1,9 @@
+import { filtersData } from '../options/sampleFiltersData';
 import { waitForElement } from '../utils';
 import { applySelectedFilters } from './filter_utils';
 import { getFilters, applyToJobs, scrollToFooter } from './scraper';
 
 console.log('running from content script');
-
-window.addEventListener('load', async () => {
-  console.log('window loaded bro');
-});
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.action) {
@@ -51,4 +48,12 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
   }
 });
-// applyToJobs([], { experience: 10, notice: 20 });
+window.addEventListener('load', async () => {
+  console.log('window loaded bro');
+  applyToJobs(filtersData, {
+    experience: 1,
+    notice: 2,
+    ctc: 3,
+    city: 'Thiruvananthapuram, Kerala, India',
+  });
+});

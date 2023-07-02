@@ -6,15 +6,23 @@ import { getFiltersFromContentScript, waitForContentScriptLoad } from './utils';
 
 const jobKeyword: string = document.querySelector('#jobKeyword').value;
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
+const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 
 const filterContainer: HTMLDivElement =
   document.getElementById('filter-container');
 
-// const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
-// startBtn.addEventListener('click', () => {
-//   sendMessageToApplyToJobs(chosenFilters, []);
-// });
+const userData = {
+  experience: workExpInput.value,
+  notice: noticePeriodInput.value,
+  ctc: ctcInput.value,
+  compensation: ctcInput.value,
+};
+
+const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
+startBtn.addEventListener('click', () => {
+  sendMessageToApplyToJobs(filtersData, userData);
+});
 const fetchFiltersBtn: HTMLButtonElement =
   document.querySelector('#fetchFiltersBtn');
 
@@ -23,7 +31,7 @@ const sendMessageToApplyToJobs = (
   user?: { experience: string; notice: string },
 ) => {
   if (!user) {
-    user = { experience: workExpInput.value, notice: noticePeriodInput.value };
+    user = userData;
   }
   const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
   chrome.tabs.create({ url, active: true }, async (tab) => {
@@ -41,7 +49,7 @@ const sendMessageToApplyToJobs = (
   });
 };
 
-const chosenFilters = [];
+// const chosenFilters = [];
 
 const submitHandler = (selectedFilterOptions: []) => {
   // chosenFilters = selectedFilterOptions;
@@ -54,9 +62,11 @@ fetchFiltersBtn.addEventListener('click', async () => {
     return alert('Please enter a job Keyword');
   }
   toastNotify('Fetching Filters for: ', jobKeyword);
+  fetchFiltersBtn.disabled = true;
   const filters = await getFiltersFromContentScript(jobKeyword);
   toastNotify('Filters Received');
   createFilters(filters, filterContainer, submitHandler);
+  fetchFiltersBtn.disabled = false;
 });
 
 // createFilters(filtersData, filterContainer);

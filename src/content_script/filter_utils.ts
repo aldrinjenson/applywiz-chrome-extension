@@ -12,16 +12,13 @@ export const applySelectedFilters = async (selectedFilters) => {
   const showResultsButton: HTMLButtonElement = await waitForElement(
     '[data-test-reusables-filters-modal-show-results-button="true"]',
   );
+  console.log({ showResultsButton });
 
   for (const filter of selectedFilters) {
     for (const option of filter.options) {
       if (option.isSelected) {
-        console.log(option);
-
         try {
           const input = document.getElementById(option.id);
-          console.log(option);
-          console.log(input);
           input.click();
         } catch (error) {
           console.log('Error:', error);
@@ -29,6 +26,11 @@ export const applySelectedFilters = async (selectedFilters) => {
       }
     }
   }
+
+  console.log('sleping for 3 seconds before closing filter');
+  await sleep(3000);
+  console.log('sleping for 3 seconds done');
+  console.log('clicking show results button');
 
   showResultsButton.click();
 };
