@@ -1,21 +1,31 @@
-import { sleep } from '../utils';
+import { sleep, waitForElement } from '../utils';
 
-export const fetchAllJobsInCurrPage = async (currPageNum) => {
+export const fetchAllJobsInCurrPage = async () => {
   // to handle lazy loading or cards🙂
   let jobSideCards: HTMLElement[] = [];
   let numJobsFound = 0;
 
-  // if currpagenum = 1, that means this is the first try. therefor already scrolled to bottom
-  const maxNumLoops = currPageNum <= 1 ? 1 : 3;
-  for (let i = 0; i < maxNumLoops; i++) {
+  for (let i = 0; i < 7; i++) {
     jobSideCards = Array.from(
       document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
     );
     numJobsFound = jobSideCards.length;
     console.log('Total Jobs found = ' + numJobsFound);
-    jobSideCards[numJobsFound - 1].scrollIntoView();
-    console.log('sleeping for 1 second');
-    await sleep(1000);
+
+    const footer: HTMLDivElement = await waitForElement(
+      '#compactfooter-about',
+      false,
+      document,
+      1100,
+    );
+    if (!footer) {
+      jobSideCards[numJobsFound - 1].scrollIntoView();
+      console.log('sleeping for 1 second');
+      // await sleep(1000);
+    } else {
+      console.log('footer found. breaking..');
+      break;
+    }
   }
   console.log('loop done');
   return jobSideCards;
@@ -133,4 +143,38 @@ export const handleComplexity = async (user) => {
     return true;
   }
   return false;
+};
+
+export const moveToNextPage = async () => {
+  const paginationLis = Array.from(
+    document.querySelectorAll('.artdeco-pagination__indicator'),
+  );
+  console.log(paginationLis);
+
+  if (!paginationLis?.length) {
+    console.log('only one page results exist! Returning..');
+    return;
+  }
+
+  const currSelectedLi = paginationLis.find((li) =>
+    li.classList.contains('selected'),
+  );
+  console.log(currSelectedLi);
+  const currPageNum = +currSelectedLi.getAttribute(
+    'data-test-pagination-page-btn',
+  );
+  console.log({ currPageNum });
+
+  // const nextButton = document.querySelector(const liElement = document.querySelector('li[data-test-pagination-page-btn="1"]');)
+
+  const nextLiElement = document.querySelector(
+    `li[data-test-pagination-page-btn="${currPageNum + 1}"]`,
+  );
+  if (!nextLiElement) {
+    console.log('Next page does not exist!');
+  }
+  const nextButton = nextLiElement.querySelector('button');
+  nextButton.click();
+  console.log('moving to next page');
+  await sleep(2000);
 };
