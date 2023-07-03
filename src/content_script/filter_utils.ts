@@ -34,3 +34,37 @@ export const applySelectedFilters = async (selectedFilters) => {
 
   showResultsButton.click();
 };
+
+export const getFilters = async () => {
+  const filterButtonSelector = '.search-reusables__all-filters-pill-button';
+  const filterButton: HTMLButtonElement = await waitForElement(
+    filterButtonSelector,
+  );
+  filterButton.click();
+
+  const availableFilters: { [x: string]: [y: string] }[] = [];
+  const allFiltersLi = await waitForElement(
+    '.search-reusables__secondary-filters-filter',
+    true,
+  );
+
+  allFiltersLi.forEach((li) => {
+    const type = li.querySelector('h3').innerText;
+    const options = [
+      ...li.querySelectorAll('.search-reusables__filter-value-item'),
+    ];
+    const availableOptions: { value: string; id: string }[] = [];
+    options.forEach((option) => {
+      const optionSpan = option.querySelector('span');
+      const liInput = option.querySelector('input');
+      availableOptions.push({
+        value: optionSpan.innerText,
+        id: liInput?.id,
+      });
+    });
+    const newFilter = { name: type, options: availableOptions };
+    availableFilters.push(newFilter);
+  });
+  console.log(availableFilters);
+  return availableFilters;
+};

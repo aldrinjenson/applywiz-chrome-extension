@@ -8,6 +8,10 @@ const jobKeyword: string = document.querySelector('#jobKeyword').value;
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
+const messagToHiringManagerInput: HTMLInputElement =
+  document.querySelector('#message');
+
+console.log(messagToHiringManagerInput.value);
 
 const filterContainer: HTMLDivElement =
   document.getElementById('filter-container');
@@ -17,6 +21,7 @@ const userData = {
   notice: noticePeriodInput.value,
   ctc: ctcInput.value,
   compensation: ctcInput.value,
+  message: messagToHiringManagerInput.value,
 };
 
 const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
@@ -49,10 +54,7 @@ const sendMessageToApplyToJobs = (
   });
 };
 
-// const chosenFilters = [];
-
 const submitHandler = (selectedFilterOptions: []) => {
-  // chosenFilters = selectedFilterOptions;
   sendMessageToApplyToJobs(selectedFilterOptions);
   console.log(selectedFilterOptions);
 };

@@ -1,7 +1,7 @@
 import { filtersData } from '../options/sampleFiltersData';
 import { waitForElement } from '../utils';
-import { applySelectedFilters } from './filter_utils';
-import { getFilters, applyToJobs, scrollToFooter } from './scraper';
+import { applySelectedFilters, getFilters } from './filter_utils';
+import { applyToJobs } from './scraper';
 
 console.log('running from content script');
 
@@ -38,8 +38,6 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         );
         return;
       }
-      const footer = await waitForElement('#compactfooter-about');
-      // footer.click();
       await applyToJobs(filters, user);
       break;
     }
@@ -50,10 +48,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 window.addEventListener('load', async () => {
   console.log('window loaded bro');
-  applyToJobs(filtersData, {
+  await applyToJobs(filtersData, {
     experience: 1,
     notice: 2,
     ctc: 3,
     city: 'Thiruvananthapuram, Kerala, India',
+    message: 'I will be a good fit',
   });
 });
