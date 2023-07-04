@@ -3,10 +3,39 @@ import reducer from './reducer';
 class Store {
   private state: any;
   private listeners: ((state: any) => void)[];
+  private storageKey: string;
 
-  constructor(initialState: any) {
-    this.state = initialState;
+  constructor(storageKey: string, initialState: any) {
+    this.storageKey = storageKey;
     this.listeners = [];
+    this.initState(initialState);
+  }
+  private initState(initialState: any) {
+    chrome.storage.sync.get(this.storageKey, (result) => {
+      const storedData = result?.[this.storageKey];
+
+      if (!storedData) {
+        // Running extension for the first time
+        this.state = initialState;
+        this.saveState();
+        this.notifyListeners();
+        return;
+      }
+
+      const storedExtensionVersion = storedData.extensionVersion;
+      if (
+        !storedExtensionVersion ||
+        storedExtensionVersion < initialState.extensionVersion
+      ) {
+        // Running new version for the first time
+        this.state = { ...storedData, ...initialState };
+      } else {
+        // Running same version for the second time
+        this.state = storedData;
+      }
+
+      this.notifyListeners();
+    });
   }
 
   getState() {
@@ -17,6 +46,7 @@ class Store {
     const newState = reducer(this.state, action, data);
     if (newState !== this.state) {
       this.state = newState;
+      this.saveState();
       this.notifyListeners();
     }
   }
@@ -32,12 +62,22 @@ class Store {
   private notifyListeners() {
     this.listeners.forEach((listener) => listener(this.state));
   }
+
+  private saveState() {
+    const data = {
+      [this.storageKey]: this.state,
+    };
+    chrome.storage.sync.set(data);
+  }
 }
 
+const storageKey = 'applyWizstoreData';
 const initialState = {
   user: null,
+  counter: 0,
+  extensionVersion: chrome.runtime.getManifest().version,
 };
 
-const store = new Store(initialState);
+const store = new Store(storageKey, initialState);
 
 export default store;

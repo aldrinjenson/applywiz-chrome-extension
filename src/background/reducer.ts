@@ -1,9 +1,11 @@
+// for accessing and modifying the store values
+
 function reducer(state: any, action: string, data?: any) {
   switch (action) {
+    case 'INCREMENT_COUNTER':
+      return { ...state, counter: state.counter + 1 };
     case 'SET_USER':
       return { ...state, user: data };
-
-    // Add more cases for other actions
 
     default:
       return state;
