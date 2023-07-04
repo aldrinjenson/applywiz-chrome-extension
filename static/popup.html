@@ -8,13 +8,40 @@
   <link rel="stylesheet" href="styles/popup.css">
 </head>
 
-<body>
-  <div class="container">
-    <h1>Hello Aldrin</h1>
+<body class="container">
+
+  <div>
+
+    <header>
+      <h1 style="text-align: center;">ApplyWizard</h1>
+    </header>
+
+  </div>
+
+
+  <form id="loginForm">
+    <h2>Login</h2>
+    <div class="row">
+      <label for="email">Email:</label>
+      <input type="email" value="john@gmail.com" id="emailInput" name="email" required><br>
+    </div>
+    <div class="row">
+      <label for="password">Password:</label>
+      <input type="password" id="passwordInput" value="password123" name="password" required><br>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+
+
+  <div class="protected hidden" id="stats">
     <button id="go-to-options" class="button" style="margin-top: 2rem;">Visit Dashboard to apply </button>
     <p>30/50 Automations used today</p>
     <p>Visit <a href="https://jobs4u.com">jobs4u.com</a> to upgrade to Pro plan!</p>
+    <button id="signOutBtn">Sign Out</button>
   </div>
+
+
+
   <script src="popup.js"></script>
 </body>
 

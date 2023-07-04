@@ -3,13 +3,27 @@
 .container {
   min-height: 200px;
   min-width: 300px;
-
-  padding: 2rem;
-
+  padding: 1.7rem;
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
+}
+
+#loginForm {
+  .row {
+    padding: 2%;
+    margin: 3%;
+  }
+}
+
+#login {
+  margin: 5%;
+  h5 {
+    text-align: center;
+  }
+}
+
+.hidden {
+  display: none;
 }

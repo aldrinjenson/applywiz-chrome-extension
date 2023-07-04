@@ -1,6 +1,6 @@
 {
-  "name": "chrome-extension-webpack",
-  "description": "My basic Chrome extension",
+  "name": "apply-wizard",
+  "description": "Chrome extension to automatically apply to jobs on several sites, making you much productive ",
   "version": "0.1.0",
   "manifest_version": 3,
   "background": {
@@ -8,7 +8,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://www.linkedin.com/jobs/search/*"],
       "js": ["contentScript.js"]
     }
   ],
@@ -20,13 +20,16 @@
     "tabs",
     "notifications"
   ],
-  "host_permissions": ["https://www.linkedin.com/*"],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://apis.google.com/*"
+  ],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
   "action": {
-    "default_title": "My basic Chrome extension",
+    "default_title": "ApplyWizard - automatic Job Applier",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "/icons/16x.png",
