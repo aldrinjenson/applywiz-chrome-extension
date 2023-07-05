@@ -1,5 +1,4 @@
 @import 'normalize.css';
-
 body {
   background-color: #292d3e;
   color: #ffffff;
@@ -14,4 +13,22 @@ body {
   gap: 1rem;
 
   align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-align {
+  text-align: center;
 }

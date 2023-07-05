@@ -7,7 +7,6 @@ export const handleEmailSignin = async (email: string, password: string) => {
       .signInWithEmailAndPassword(email, password);
     const user = userCredential.user;
     console.log('User logged in:', user);
-    console.log(user);
     return user;
   } catch (error) {
     const errorCode = error.code;

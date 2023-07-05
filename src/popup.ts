@@ -1,15 +1,12 @@
 /* eslint-disable no-case-declarations */
 import '../styles/popup.scss';
-import { GeneralStore } from './content_script/content_store';
+import { GeneralStore } from './common/General_store';
+import { showNotification } from './common/common_utils';
 const contentStore = new GeneralStore();
 
 const loginWithEmailForm: HTMLFormElement =
   document.querySelector('#loginForm');
 const statsDiv: HTMLDivElement = document.getElementById('stats');
-
-function showNotification(text: string) {
-  chrome.runtime.sendMessage({ action: 'SHOW_NOTIFICATION', data: { text } });
-}
 
 const signOutButton = document.getElementById('signOutBtn');
 
@@ -18,6 +15,16 @@ signOutButton.addEventListener('click', () => {
     action: 'USER_SIGN_OUT',
   });
 });
+
+const triggerMainSectionVisibility = (user?: JSON) => {
+  if (user) {
+    loginWithEmailForm.classList.add('hidden');
+    statsDiv.classList.remove('hidden');
+  } else {
+    statsDiv.classList.add('hidden');
+    loginWithEmailForm.classList.remove('hidden');
+  }
+};
 
 loginWithEmailForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -42,13 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   showNotification('Popup, loaded!');
 
   chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
-    if (user) {
-      loginWithEmailForm.classList.add('hidden');
-      statsDiv.classList.remove('hidden');
-    } else {
-      statsDiv.classList.add('hidden');
-      loginWithEmailForm.classList.remove('hidden');
-    }
+    triggerMainSectionVisibility(user);
   });
 });
 
@@ -59,22 +60,20 @@ chrome.runtime.onMessage.addListener(
     switch (action) {
       case 'SIGN_IN_SUCCESS':
         console.log('successfull signin');
-        loginWithEmailForm.classList.add('hidden');
-        statsDiv.classList.remove('hidden');
-        contentStore.setState({ user: data.user });
-        console.log(data.user);
+        const { user } = data;
+        contentStore.setState({ user });
+        triggerMainSectionVisibility(user);
         break;
 
       case 'SIGN_OUT_SUCCESS':
-        statsDiv.classList.add('hidden');
-        loginWithEmailForm.classList.remove('hidden');
         contentStore.setState({ user: null });
+        triggerMainSectionVisibility(null);
         break;
 
       default:
         console.warn('Unhandled action:', action);
     }
 
-    return true;
+    // return true;
   },
 );

@@ -3,71 +3,77 @@
 
 <head>
   <title>Job Search and Apply</title>
-  <link rel="stylesheet" href="styles/options.css">
+  <link rel="stylesheet" href="styles/options.css" />
 </head>
 
 <body>
+  <div id="no-login" style="margin-top: 40vh;">
+    <h1 class="center-align">
+      Please Login from the extension popup to continue
+    </h1>
+  </div>
 
-  <section class="container">
-    <h1>Hello Aldrin, </h1>
+  <main id="main-content" class="hidden">
+    <section class="container">
+      <h1>Hello Aldrin,</h1>
 
-    <h3>25/50 Daily automations used</h3>
-    <br>
-    <br>
-    <label for="keyword">Job Keyword:</label>
-    <input type="text" id="jobKeyword" value="Software Engineer" name="keyword" placeholder="eg: Software Developer">
+      <h3>25/50 Daily automations used</h3>
+      <br />
+      <br />
+      <label for="keyword">Job Keyword:</label>
+      <input type="text" id="jobKeyword" value="Software Engineer" name="keyword"
+        placeholder="eg: Software Developer" />
 
-    <br>
-    <button id="fetchFiltersBtn">Fetch filters<span id="keywordPlaceholder"></span></button>
+      <br />
+      <button id="fetchFiltersBtn">
+        Fetch filters<span id="keywordPlaceholder"></span>
+      </button>
 
-    <br>
-    <br>
-    <hr>
-  </section>
+      <br />
+      <br />
+      <hr />
+    </section>
 
-  <!-- Filters Section -->
-  <section class="container">
+    <!-- Filters Section -->
+    <section class="container">
+      <h2>Questions</h2>
 
-    <h2>Questions</h2>
+      <ol>
+        <li>
+          <label for="workExp">How many years of work experience do you have? :</label>
+          <input type="number" id="workExp" value="2" name="workExp" placeholder="eg: 2" />
+        </li>
+        <li>
+          <label for="notice">How many days of notice period do you need?:</label>
+          <input type="number" id="notice" value="14" name="notice" placeholder="eg: 14" />
+        </li>
+        <li>
+          <label for="ctc">What is your current salary?:</label>
+          <input type="text" id="ctc" value="2" name="ctc" placeholder="eg: 10lpa" />
+        </li>
+        <li>
+          <label for="ctc">What is your current CTC?:</label>
+          <input type="text" id="ctc" value="2" name="ctc" placeholder="eg: 10lpa" />
+        </li>
+        <li>
+          <label for="keyword">What is your expected CTC?:</label>
+          <input type="text" id="workExp" value="2" name="workExp" placeholder="eg: 15lpa" />
+        </li>
+        <li>
+          <label for="message">Your personal message to Hiring Manager</label>
+          <textarea id="message" name="message" cols="20" rows="4" draggable="true"
+            placeholder="I would be a good fit for this role!">
+ I would be a good fit for this role!</textarea>
+        </li>
+      </ol>
 
-    <ol>
-      <li>
-        <label for="workExp">How many years of work experience do you have? :</label>
-        <input type="number" id="workExp" value="2" name="workExp" placeholder="eg: 2">
-      </li>
-      <li>
-        <label for="notice">How many days of notice period do you need?:</label>
-        <input type="number" id="notice" value="14" name="notice" placeholder="eg: 14">
-      </li>
-      <li>
-        <label for="ctc">What is your current salary?:</label>
-        <input type="text" id="ctc" value="2" name="ctc" placeholder="eg: 10lpa">
-      </li>
-      <li>
-        <label for="ctc">What is your current CTC?:</label>
-        <input type="text" id="ctc" value="2" name="ctc" placeholder="eg: 10lpa">
-      </li>
-      <li>
-        <label for="keyword">What is your expected CTC?:</label>
-        <input type="text" id="workExp" value="2" name="workExp" placeholder="eg: 15lpa">
-      </li>
-      <li>
-        <label for="message">Your personal message to Hiring Manager</label>
-        <textarea id="message" name="message" cols="20" rows="4" draggable="true"
-          placeholder="I would be a good fit for this role!"> I would be a good fit for this role!</textarea>
-      </li>
+      <!-- Apply Button -->
+      <button id="applyBtn">Apply for jobs</button>
 
-    </ol>
+      <div id="filter-container"></div>
+    </section>
+  </main>
 
-    <!-- Apply Button -->
-    <button id="applyBtn">Apply for jobs</button>
-
-
-    <div id="filter-container">
-
-    </div>
-
-  </section>
   <script src="options.js"></script>
 </body>
 

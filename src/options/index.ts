@@ -1,17 +1,25 @@
+/* eslint-disable no-case-declarations */
 import '../../styles/options.scss';
-import { toastNotify } from '../common/common_utils';
+import { showNotification, toastNotify } from '../common/common_utils';
+import { GeneralStore } from '../common/General_store';
+import { Message } from '../types';
 import { createFilters } from './filterUtils';
 import { filtersData } from './sampleFiltersData';
-import { getFiltersFromContentScript, waitForContentScriptLoad } from './utils';
+import {
+  getFiltersFromContentScript,
+  waitForContentScriptLoad,
+} from './optionUtils';
+
+const optionStore = new GeneralStore();
 
 const jobKeyword: string = document.querySelector('#jobKeyword').value;
+const mainContentSection = document.querySelector('main#main-content');
+const noLoginSection = document.querySelector('#no-login');
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const messagToHiringManagerInput: HTMLInputElement =
   document.querySelector('#message');
-
-console.log(messagToHiringManagerInput.value);
 
 const filterContainer: HTMLDivElement =
   document.getElementById('filter-container');
@@ -72,3 +80,44 @@ fetchFiltersBtn.addEventListener('click', async () => {
 });
 
 // createFilters(filtersData, filterContainer);
+
+chrome.runtime.onMessage.addListener(
+  (message: Message, sender, sendReponse) => {
+    const { action, data } = message;
+    console.log('in options handler');
+
+    switch (action) {
+      case 'SIGN_IN_SUCCESS':
+        console.log('successfull signin');
+        const { user } = data;
+        optionStore.setState({ user });
+        triggerMainSectionVisibility(user);
+        break;
+
+      case 'SIGN_OUT_SUCCESS':
+        optionStore.setState({ user: null });
+        triggerMainSectionVisibility(null);
+        break;
+
+      default:
+        console.warn('Unhandled action:', action);
+    }
+  },
+);
+
+const triggerMainSectionVisibility = (user?: JSON) => {
+  if (user) {
+    noLoginSection.classList.add('hidden');
+    mainContentSection.classList.remove('hidden');
+  } else {
+    mainContentSection.classList.add('hidden');
+    noLoginSection.classList.remove('hidden');
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('From Options Page: DOM Loaded');
+  chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
+    triggerMainSectionVisibility(user);
+  });
+});

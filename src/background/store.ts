@@ -10,32 +10,33 @@ class Store {
     this.listeners = [];
     this.initState(initialState);
   }
-  private initState(initialState: any) {
-    chrome.storage.sync.get(this.storageKey, (result) => {
-      const storedData = result?.[this.storageKey];
+  private initState(initialState: JSON) {
+    this.state = initialState;
+    // chrome.storage.sync.get(this.storageKey, (result) => {
+    //   const storedData = result?.[this.storageKey];
 
-      if (!storedData) {
-        // Running extension for the first time
-        this.state = initialState;
-        this.saveState();
-        this.notifyListeners();
-        return;
-      }
+    //   if (!storedData) {
+    //     // Running extension for the first time
+    //     this.state = initialState;
+    //     this.saveState();
+    //     this.notifyListeners();
+    //     return;
+    //   }
 
-      const storedExtensionVersion = storedData.extensionVersion;
-      if (
-        !storedExtensionVersion ||
-        storedExtensionVersion < initialState.extensionVersion
-      ) {
-        // Running new version for the first time
-        this.state = { ...storedData, ...initialState };
-      } else {
-        // Running same version for the second time
-        this.state = storedData;
-      }
+    //   const storedExtensionVersion = storedData.extensionVersion;
+    //   if (
+    //     !storedExtensionVersion ||
+    //     storedExtensionVersion < initialState.extensionVersion
+    //   ) {
+    //     // Running new version for the first time
+    //     this.state = { ...storedData, ...initialState };
+    //   } else {
+    //     // Running same version for the second time
+    //     this.state = storedData;
+    //   }
 
-      this.notifyListeners();
-    });
+    //   this.notifyListeners();
+    // });
   }
 
   getState() {
@@ -64,10 +65,11 @@ class Store {
   }
 
   private saveState() {
-    const data = {
-      [this.storageKey]: this.state,
-    };
-    chrome.storage.sync.set(data);
+    // console.log('saving state');
+    // const data = {
+    //   [this.storageKey]: this.state,
+    // };
+    // chrome.storage.sync.set(data);
   }
 }
 

@@ -14,10 +14,14 @@ export const toastNotify = (title: string, message = '', type = 'basic') => {
       message,
     },
     (notificationId) => {
-      console.log('notification sent with id: ', notificationId);
+      // console.log('notification sent with id: ', notificationId);
     },
   );
   setTimeout(() => {
     closeNotification(notificationId);
   }, 3000);
 };
+
+export function showNotification(text: string) {
+  chrome.runtime.sendMessage({ action: 'SHOW_NOTIFICATION', data: { text } });
+}
