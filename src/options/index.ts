@@ -85,11 +85,12 @@ chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendReponse) => {
     const { action, data } = message;
     console.log('in options handler');
+    console.log(message);
 
     switch (action) {
       case 'SIGN_IN_SUCCESS':
         console.log('successfull signin');
-        const { user } = data;
+        const user = data;
         optionStore.setState({ user });
         triggerMainSectionVisibility(user);
         break;

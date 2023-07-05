@@ -8,13 +8,7 @@ import { handleEmailSignin, handleSignOut } from './firebseUtils';
 import store from './store';
 
 chrome.runtime.onInstalled.addListener(async () => {
-  // await initializeStorageWithDefaults({});
-  // setInterval(() => {
-  //   console.log('incrementing counter');
-  //   store.dispatch('INCREMENT_COUNTER');
-  //   console.log(store.getState().counter);
-  // }, 1000);
-
+  await initializeStorageWithDefaults({});
   console.log('Extension successfully installed!');
 });
 
@@ -48,6 +42,7 @@ chrome.runtime.onMessage.addListener(
 
       case 'USER_SIGN_IN':
         const { email, password } = data;
+        toastNotify('Logging in.', 'Hold on..');
         handleEmailSignin(email, password).then((user) => {
           console.log({ user });
           store.dispatch('SET_USER', user);

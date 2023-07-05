@@ -60,7 +60,7 @@ chrome.runtime.onMessage.addListener(
     switch (action) {
       case 'SIGN_IN_SUCCESS':
         console.log('successfull signin');
-        const { user } = data;
+        const user = data;
         contentStore.setState({ user });
         triggerMainSectionVisibility(user);
         break;
