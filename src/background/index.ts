@@ -1,9 +1,9 @@
 /* eslint-disable no-case-declarations */
-import firebase from '../fbConfig';
+import firebase from '../services/fbConfig';
 import { toastNotify } from '../common/common_utils';
 import { initializeStorageWithDefaults } from '../storage';
 import { Message } from '../types';
-import { handleEmailSignin, handleSignOut } from './firebseUtils';
+import { handleEmailSignin, handleSignOut } from '../services/firebseUtils';
 
 import store from './store';
 

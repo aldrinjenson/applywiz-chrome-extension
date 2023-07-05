@@ -1,4 +1,4 @@
-import firebase from '../fbConfig';
+import firebase from './fbConfig';
 
 export const handleEmailSignin = async (email: string, password: string) => {
   try {
