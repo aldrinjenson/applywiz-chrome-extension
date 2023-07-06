@@ -48,11 +48,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 window.addEventListener('load', async () => {
   console.log('window loaded bro');
-  await applyToJobs(filtersData, {
-    experience: 1,
-    notice: 2,
-    ctc: 3,
-    city: 'Thiruvananthapuram, Kerala, India',
-    message: 'I will be a good fit',
-  });
+  // await applyToJobs(filtersData, {
+  //   experience: 1,
+  //   notice: 2,
+  //   ctc: 3,
+  //   city: 'Thiruvananthapuram, Kerala, India',
+  //   message: 'I will be a good fit',
+  // });
 });

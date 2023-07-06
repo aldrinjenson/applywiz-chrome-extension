@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <div id="no-login" style="margin-top: 40vh;">
+  <div id="no-login" style="margin-top: 40vh">
     <h1 class="center-align">
       Please Login from the extension popup to continue
     </h1>
@@ -16,33 +16,13 @@
   <main id="main-content" class="hidden">
     <section class="container">
       <h1>Hello Aldrin,</h1>
-
       <h3>25/50 Daily automations used</h3>
-      <br />
-      <br />
-      <label for="keyword">Job Keyword:</label>
-      <input type="text" id="jobKeyword" value="Software Engineer" name="keyword"
-        placeholder="eg: Software Developer" />
-
-      <br />
-      <button id="fetchFiltersBtn">
-        Fetch filters<span id="keywordPlaceholder"></span>
-      </button>
-
-      <br />
-      <br />
-      <hr />
     </section>
 
     <!-- Filters Section -->
     <section class="container">
       <h2>Questions</h2>
-
       <ol>
-        <li>
-          <label for="workExp">How many years of work experience do you have? :</label>
-          <input type="number" id="workExp" value="2" name="workExp" placeholder="eg: 2" />
-        </li>
         <li>
           <label for="notice">How many days of notice period do you need?:</label>
           <input type="number" id="notice" value="14" name="notice" placeholder="eg: 14" />
@@ -66,11 +46,67 @@
  I would be a good fit for this role!</textarea>
         </li>
       </ol>
+    </section>
 
-      <!-- Apply Button -->
-      <button id="applyBtn">Apply for jobs</button>
+    <section class="container">
+      <h2>Experience</h2>
+      <div id="experienceContainer">
+        <!-- <div>
+                <label for="workExp">How many years of work experience do you have? :</label>
+                <input type="number" id="workExp" value="2" name="workExp" placeholder="eg: 2" />
+              </div> -->
+        <li class="row">
+          <div class="column" style="font-weight: bold">Skill</div>
+          <div class="column" style="font-weight: bold">
+            Experience in Years
+          </div>
+        </li>
+        <li class="row">
+          <div class="column">
+            <input type="text" name="skill[]" value="javascript" />
+          </div>
+          <div class="column">
+            <input type="number" name="experience[]" value="5" />
+          </div>
+          <div class="button" id="addButton">+</div>
+          <div class="dummy" style="opacity: 0;">-</div>
+        </li>
+        <li class="row">
+          <div class="column">
+            <input type="text" name="skill[]" value="sql" />
+          </div>
+          <div class="column">
+            <input type="number" name="experience[]" value="2" />
+          </div>
+          <div class="button" id="addButton">+</div>
+          <div class="dummy" style="opacity: 0;">-</div>
+        </li>
+      </div>
+    </section>
 
+    <!-- Apply Button -->
+
+    <section class="container">
+      <label for="keyword">Job Keyword:</label>
+      <input type="text" id="jobKeyword" value="Software Engineer" name="keyword"
+        placeholder="eg: Software Developer" />
+      <br />
+      <br />
+      <button id="fetchFiltersBtn">
+        Fetch filters<span id="keywordPlaceholder"></span>
+      </button>
+    </section>
+
+    <section class="container">
       <div id="filter-container"></div>
+      <div>
+        <br />
+        <label for="maxJobs">How many jobs do you want to apply? </label>
+        <input type="text" id="maxJobs" value="5" name="maxJobs" placeholder="eg: 20" />
+      </div>
+
+      <br />
+      <button id="applyBtn">Apply for jobs</button>
     </section>
   </main>
 

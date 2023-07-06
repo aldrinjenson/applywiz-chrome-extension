@@ -6,7 +6,9 @@ import { Message } from '../types';
 import { createFilters } from './filterUtils';
 import { filtersData } from './sampleFiltersData';
 import {
+  addNewSkillExperienceRow,
   getFiltersFromContentScript,
+  getExperience,
   waitForContentScriptLoad,
 } from './optionUtils';
 
@@ -18,8 +20,11 @@ const noLoginSection = document.querySelector('#no-login');
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
+const maxJobsInput: HTMLInputElement = document.getElementById('numJobs');
 const messagToHiringManagerInput: HTMLInputElement =
   document.querySelector('#message');
+const addButton = document.getElementById('addButton');
+addButton.addEventListener('click', addNewSkillExperienceRow);
 
 const filterContainer: HTMLDivElement =
   document.getElementById('filter-container');
@@ -53,7 +58,7 @@ const sendMessageToApplyToJobs = (
       tab.id,
       {
         action: 'START_AUTOMATION',
-        data: { filters, user },
+        data: { filters, user, maxJobs: maxJobsInput.value },
       },
       () => {
         toastNotify('Automation starting..', 'Sit back and relax!');
@@ -119,6 +124,8 @@ const triggerMainSectionVisibility = (user?: JSON) => {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
   chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
-    triggerMainSectionVisibility(user);
+    console.log({ user });
+    // triggerMainSectionVisibility(user);
+    triggerMainSectionVisibility(true);
   });
 });
