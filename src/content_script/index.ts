@@ -26,8 +26,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
     }
     case 'START_AUTOMATION': {
-      const { filters, user } = message.data;
-      console.log(filters, user);
+      const { filters, user, maxJobs } = message.data;
+      console.log(message.data);
       await applySelectedFilters(filters);
       const noJobsExist: HTMLButtonElement = await waitForElement(
         '.jobs-search-no-results-banner__image',
@@ -38,7 +38,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         );
         return;
       }
-      await applyToJobs(filters, user);
+      await applyToJobs(filters, user, maxJobs);
       break;
     }
     default:

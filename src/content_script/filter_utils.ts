@@ -27,9 +27,9 @@ export const applySelectedFilters = async (selectedFilters) => {
     }
   }
 
-  console.log('sleping for 3 seconds before closing filter');
-  await sleep(3000);
-  console.log('sleping for 3 seconds done');
+  // console.log('sleping for 3 seconds before closing filter');
+  // await sleep(3000);
+  // console.log('sleping for 3 seconds done');
   console.log('clicking show results button');
 
   showResultsButton.click();

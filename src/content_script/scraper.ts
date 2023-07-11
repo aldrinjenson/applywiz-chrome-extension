@@ -22,7 +22,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     const jobCard = jobSideCards[i];
     console.log({ i, maxCount });
 
-    if (count++ >= maxCount) break;
+    if (count++ > maxCount) break;
 
     const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
     const jobUrl = jobCard.querySelector('a').href;
@@ -34,6 +34,9 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
       const isAlreadyApplied = await waitForElement(
         'a.jobs-s-apply__application-link',
+        false,
+        document,
+        3500,
       );
 
       if (isAlreadyApplied) {
@@ -44,7 +47,6 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         continue;
       }
 
-      // const applyButton: HTMLDivElement = await waitForElement(
       const applyButton: HTMLDivElement = document.querySelector(
         '.jobs-apply-button:not(.artdeco-button--disable)',
       );
@@ -116,7 +118,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           successfullJobs.push(jobObject);
         }
 
-        // await sleep(2000);
+        await sleep(1000);
       }
     } catch (error) {
       console.log('error bro: ', error);

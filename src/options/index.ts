@@ -14,13 +14,15 @@ import {
 
 const optionStore = new GeneralStore();
 
-const jobKeyword: string = document.querySelector('#jobKeyword').value;
+const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
 const mainContentSection = document.querySelector('main#main-content');
 const noLoginSection = document.querySelector('#no-login');
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const maxJobsInput: HTMLInputElement = document.getElementById('numJobs');
+console.log(maxJobsInput.value);
+
 const messagToHiringManagerInput: HTMLInputElement =
   document.querySelector('#message');
 const addButton = document.getElementById('addButton');
@@ -51,9 +53,17 @@ const sendMessageToApplyToJobs = (
   if (!user) {
     user = userData;
   }
+  const jobKeyword = jobKeywordInput.value;
   const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
   chrome.tabs.create({ url, active: true }, async (tab) => {
     await waitForContentScriptLoad(tab.id);
+
+    const experienceObj = getExperience();
+    console.log(experienceObj);
+    experienceObj['generalExp'] = workExpInput.value;
+    user.experience = experienceObj;
+    user.expected = user.ctc; // make this dynamic with multiple key values
+
     chrome.tabs.sendMessage(
       tab.id,
       {
@@ -73,6 +83,7 @@ const submitHandler = (selectedFilterOptions: []) => {
 };
 
 fetchFiltersBtn.addEventListener('click', async () => {
+  const jobKeyword = jobKeywordInput.value;
   if (!jobKeyword) {
     return alert('Please enter a job Keyword');
   }
@@ -106,7 +117,7 @@ chrome.runtime.onMessage.addListener(
         break;
 
       default:
-        console.warn('Unhandled action:', action);
+        console.log(' Warning: Unhandled action:', action);
     }
   },
 );
@@ -124,8 +135,11 @@ const triggerMainSectionVisibility = (user?: JSON) => {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
   chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
-    console.log({ user });
     // triggerMainSectionVisibility(user);
     triggerMainSectionVisibility(true);
   });
 });
+
+// setInterval(() => {
+//   getExperience();
+// }, 3000);

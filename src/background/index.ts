@@ -67,7 +67,7 @@ chrome.runtime.onMessage.addListener(
         break;
 
       default:
-        console.warn('Unhandled action:', action);
+        console.log(' Warning: Unhandled action:', action);
     }
 
     return true;

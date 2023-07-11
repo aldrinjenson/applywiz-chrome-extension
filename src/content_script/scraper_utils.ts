@@ -20,7 +20,7 @@ export const fetchAllJobsInCurrPage = async () => {
     );
     if (!footer) {
       jobSideCards[numJobsFound - 1].scrollIntoView();
-      console.log('sleeping for 1 second');
+      // console.log('sleeping for 1 second');
       // await sleep(1000);
     } else {
       console.log('footer found. breaking..');
@@ -70,7 +70,23 @@ const handleAnyUnfilledColumns = async (user) => {
       continue;
     }
 
-    // for handling normal input fields
+    // for handling experience input fields
+    if (labelText.includes('experience')) {
+      const inputEvent = new Event('input', { bubbles: true });
+      for (const key in user.experience) {
+        if (labelText.includes(key.toLowerCase()))
+          input.value = user.experience[key];
+        fieldsFilled = true;
+      }
+      if (!fieldsFilled) {
+        input.value = user.experience.generalExp;
+        fieldsFilled = true;
+      }
+      input.dispatchEvent(inputEvent);
+      continue;
+    }
+
+    // for handling normal input fields other than experience
     for (const key in user) {
       if (labelText.includes(key.toLowerCase())) {
         try {
@@ -114,13 +130,13 @@ const handleAnyUnfilledColumns = async (user) => {
         'Not able to fill all fields based on given user object for label: ' +
           labelText,
       );
-      await sleep(2500);
+      // await sleep(2500);
       return true;
     }
   }
-  console.log('before sleeping');
-  await sleep(2000);
-  console.log('after 5 second sleep');
+  // console.log('before sleeping');
+  // await sleep(2000);
+  // console.log('after 5 second sleep');
 };
 
 export const handleComplexity = async (user) => {
@@ -139,7 +155,7 @@ export const handleComplexity = async (user) => {
     );
     confirmDiscardJobButton.click();
     alert('dismissing');
-    console.warn('Fields too complex to be filled. Skipping Job');
+    console.log(' Warning: Fields too complex to be filled. Skipping Job');
     return true;
   }
   return false;

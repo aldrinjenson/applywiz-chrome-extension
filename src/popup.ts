@@ -46,8 +46,6 @@ document.getElementById('go-to-options').addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Content Script: DOM Loaded');
-  showNotification('Popup, loaded!');
-
   chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
     triggerMainSectionVisibility(user);
   });
@@ -71,7 +69,7 @@ chrome.runtime.onMessage.addListener(
         break;
 
       default:
-        console.warn('Unhandled action:', action);
+        console.log(' Warning: Unhandled action:', action);
     }
 
     // return true;
