@@ -17,7 +17,7 @@ export const fetchAllJobsInCurrPage = async () => {
 
     const footer: HTMLDivElement = await waitForElement({
       selector: '#compactfooter-about',
-      params: { all: false, timeout: 1100 },
+      params: { all: false, timeout: 2000 },
     });
     if (!footer) {
       jobSideCards[numJobsFound - 1].scrollIntoView({ behavior: 'smooth' });

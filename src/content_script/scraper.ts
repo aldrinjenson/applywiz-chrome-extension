@@ -114,6 +114,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         }
 
         console.log({ isFinalStep });
+        await sleep(1500);
         nextButton.click();
         const isTooComplex = await handleComplexity(user);
         if (isTooComplex) {

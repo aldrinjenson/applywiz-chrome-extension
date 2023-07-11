@@ -45,20 +45,17 @@ export function trackNetworkRequests(url: string) {
   return new Promise<void>((resolve) => {
     const openRequests = new Set();
 
-    // Intercept fetch requests
     window.fetch = (function (oldFetch) {
       return function (...args) {
         const fetchPromise = oldFetch.apply(this, args);
 
-        // Check if the request URL matches the specified URL
         if (args[0] === url) {
           openRequests.add(fetchPromise);
           fetchPromise.finally(() => {
             openRequests.delete(fetchPromise);
 
-            // Check if all requests to the specified URL have completed
             if (openRequests.size === 0) {
-              resolve(); // Resolve the promise when all requests are completed
+              resolve();
             }
           });
         }
