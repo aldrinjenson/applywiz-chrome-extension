@@ -24,7 +24,7 @@ export function waitForElement(
         ),
           resolve(null);
       } else {
-        setTimeout(checkElement, 100); // Retry after 100 milliseconds
+        setTimeout(checkElement, 75); // Retry after 100 milliseconds
       }
     };
 

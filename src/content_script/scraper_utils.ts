@@ -5,7 +5,10 @@ export const fetchAllJobsInCurrPage = async () => {
   let jobSideCards: HTMLElement[] = [];
   let numJobsFound = 0;
 
-  for (let i = 0; i < 7; i++) {
+  // temporary, change max to 7
+  const max = 1;
+  // const max = 7
+  for (let i = 0; i < max; i++) {
     jobSideCards = Array.from(
       document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
     );
@@ -19,20 +22,20 @@ export const fetchAllJobsInCurrPage = async () => {
       1100,
     );
     if (!footer) {
-      jobSideCards[numJobsFound - 1].scrollIntoView();
+      jobSideCards[numJobsFound - 1].scrollIntoView({ behavior: 'smooth' });
       console.log('sleeping for 1 second');
       await sleep(1000);
     } else {
       console.log('footer found. breaking..');
-      footer.scrollIntoView();
-      jobSideCards = Array.from(
-        document.querySelectorAll<HTMLElement>(
-          '.job-card-container--clickable',
-        ),
-      );
+      footer.scrollIntoView({ behavior: 'smooth' });
+      await sleep(1000);
       break;
     }
   }
+  jobSideCards[0].scrollIntoView({ behavior: 'smooth' });
+  jobSideCards = Array.from(
+    document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
+  );
   console.log('loop done');
   return jobSideCards;
 };
@@ -46,27 +49,25 @@ const handleAnyUnfilledColumns = async (user) => {
 
   if (!errorDivs.length) return false;
 
-  console.log({ errorDivs });
   const errorInputWrappers = errorDivs.map(
     (div) => div.parentElement.parentElement.parentElement,
   );
 
   for (const wrapper of errorInputWrappers) {
-    console.log(wrapper);
+    // console.log(wrapper);
 
-    const label = await waitForElement('label', false, wrapper);
+    // const label = await waitForElement('label', false, wrapper);
+    const label = wrapper.querySelector('label');
     const labelText = label?.innerText?.toLowerCase() || '';
-    const input = await waitForElement('input', false, wrapper);
-    console.log({ labelText });
+    const input = wrapper.querySelector('input');
 
     let fieldsFilled = false;
 
     // for handling checkboxes
     if (labelText === 'yes') {
       label.click();
-      console.log('marking Yes');
+      console.log('marking Yes in checkbox');
       fieldsFilled = true;
-
       continue;
     }
 
@@ -81,13 +82,22 @@ const handleAnyUnfilledColumns = async (user) => {
     if (labelText.includes('experience')) {
       const inputEvent = new Event('input', { bubbles: true });
       for (const key in user.experience) {
-        if (labelText.includes(key.toLowerCase()))
+        if (labelText.includes(key.toLowerCase())) {
+          // console.log('key matches, key = ', key.toLowerCase());
           input.value = user.experience[key];
-        fieldsFilled = true;
+          console.log('filled experience with entered value');
+          fieldsFilled = true;
+          break; // break inner loop
+        }
       }
       if (!fieldsFilled) {
-        input.value = user.experience.generalExp;
+        console.log(user);
+
+        input.value = user.generalExp;
+        console.log('filled experience with general exp');
         fieldsFilled = true;
+        // alert('bro why');
+        // sleep(5000);
       }
       input.dispatchEvent(inputEvent);
       continue;
@@ -100,7 +110,6 @@ const handleAnyUnfilledColumns = async (user) => {
           input.value = user[key];
           const inputEvent = new Event('input', { bubbles: true });
           console.log('filling label: ', labelText, ' with key: ', key);
-
           input.dispatchEvent(inputEvent);
           fieldsFilled = true;
         } catch (error) {
@@ -115,9 +124,6 @@ const handleAnyUnfilledColumns = async (user) => {
     if (!fieldsFilled) {
       const select = await waitForElement('select', false, wrapper);
       if (select) {
-        console.log(labelText);
-        console.log(select);
-        console.log(select.options);
         const firstOption = select.options[1];
         select.value =
           firstOption.value.toLowerCase() !== 'none'
@@ -126,8 +132,8 @@ const handleAnyUnfilledColumns = async (user) => {
 
         const changeEvent = new Event('change', { bubbles: true });
         select.dispatchEvent(changeEvent);
-
         fieldsFilled = true;
+        console.log('handling select with first option');
       }
     }
 
@@ -141,9 +147,10 @@ const handleAnyUnfilledColumns = async (user) => {
       return true;
     }
   }
-  // console.log('before sleeping');
-  // await sleep(2000);
+  console.log('before sleeping');
+  await sleep(4000);
   // console.log('after 5 second sleep');
+  return false;
 };
 
 export const handleComplexity = async (user) => {

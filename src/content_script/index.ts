@@ -1,6 +1,7 @@
 import { filtersData } from '../options/sampleFiltersData';
 import { waitForElement } from '../utils';
 import { applySelectedFilters, getFilters } from './filter_utils';
+import { payload } from './payload_data';
 import { applyToJobs } from './scraper';
 
 console.log('running from content script');
@@ -48,6 +49,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 window.addEventListener('load', async () => {
   console.log('window loaded bro');
+  const { filters, user, maxJobs } = payload;
+  await applyToJobs(filters, user, maxJobs);
   // await applyToJobs(filtersData, {
   //   experience: 1,
   //   notice: 2,

@@ -20,7 +20,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
   for (let i = 0; i < jobSideCards.length; i++) {
     const jobCard = jobSideCards[i];
-    console.log({ i, maxCount });
+    console.log({ i, count, maxCount });
 
     if (count++ > maxCount) break;
 
@@ -47,7 +47,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         continue;
       }
 
-      const applyButton: HTMLDivElement = document.querySelector(
+      const applyButton: HTMLButtonElement = document.querySelector(
         '.jobs-apply-button:not(.artdeco-button--disable)',
       );
       const externalLinkIcon = applyButton.querySelector(
@@ -55,9 +55,17 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       );
 
       if (externalLinkIcon) {
-        console.log('For applying to extenral site. Exiting..');
+        console.log('For applying to extenral site. Skipping..');
+        count--;
         continue;
       }
+
+      if (applyButton.disabled) {
+        console.log('Apply button disabled. Skipping and moving on');
+        failedJobs.push(jobCard);
+        continue;
+      }
+
       applyButton.click();
 
       let isFormComplete = false;
@@ -102,9 +110,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         }
 
         console.log({ isFinalStep });
-        console.log('before clicking');
         nextButton.click();
-        console.log('after clicking');
         const isTooComplex = await handleComplexity(user);
         if (isTooComplex) {
           console.log('breaking..');
@@ -126,7 +132,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           successfullJobs.push(jobObject);
         }
 
-        await sleep(1000);
+        await sleep(250);
       }
     } catch (error) {
       console.log('error bro: ', error);

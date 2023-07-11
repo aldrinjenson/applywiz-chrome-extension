@@ -92,7 +92,7 @@ export function getExperience() {
     const experienceInput = rows[i].querySelector("input[name='experience[]']");
 
     const skill = skillInput.value;
-    const experience = experienceInput.value;
+    const experience = +experienceInput.value;
 
     if (skill && experience) {
       const skillObject = { skill, experience };

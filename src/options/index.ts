@@ -22,7 +22,6 @@ const expectedCtcInput: HTMLInputElement = document.querySelector('#expected');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const maxJobsInput: HTMLInputElement = document.getElementById('numJobs');
-console.log(maxJobsInput.value);
 
 const messagToHiringManagerInput: HTMLInputElement =
   document.querySelector('#message');
@@ -52,6 +51,8 @@ const sendMessageToApplyToJobs = (
   filters: [],
   user?: { experience: string; notice: string },
 ) => {
+  console.log('inside bro');
+
   if (!user) {
     user = userData;
   }
@@ -62,11 +63,11 @@ const sendMessageToApplyToJobs = (
 
     const experienceObj = getExperience();
     console.log(experienceObj);
-    experienceObj['generalExp'] = workExpInput.value;
+    user.generalExp = workExpInput.value;
     user.experience = experienceObj;
     user.salary = user.ctc; // make this dynamic with multiple key values
 
-    const payload = { filters, user, maxJobs: maxJobsInput.value };
+    const payload = { filters, user, maxJobs: +maxJobsInput.value };
 
     console.log({ payload });
 
