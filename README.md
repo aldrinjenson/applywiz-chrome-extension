@@ -1,18 +1,12 @@
-![Chrome Extension Webpack](https://user-images.githubusercontent.com/21238816/147307879-a3cb179e-3368-412a-88db-284474183884.png)
-Get started with Chrome extensions development using webpack, TypeScript, Sass, and more.
+# Apply-Wiz-Chrome extension
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/sszczep)
+- A chrome extension to automate the boring tasks of applying to LinkedinJobs
+- Enter your details and apply to all EasyApply Jobs which matches the filters selected
 
-## Announcements
-
-*Nothing to see here yet.*
-
-## Features
-
-Chrome Extension Webpack is a simple boilerplate for fast extension development. It helps writing modern TypeScript code with SCSS support. 
-It is meant to be lightweight and scalable, hence easily adaptable to your needs.
+- Made with Chrome-extension-webpack. Meant to be lightweight and scalable, hence easily adaptable to your needs.
 
 It features:
+
 - [Chrome Extension Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/)
 - [Webpack 5](https://webpack.js.org)
 - [TypeScript](https://www.typescriptlang.org)
@@ -32,18 +26,19 @@ If you need React support, please check this awesome boilerplate created by [Mic
 2. Run `npm install`
 3. Run `npm run start` for development mode, `npm run build` for production build
 4. Add the extension to Chrome:
-    1. Go to `chrome://extensions/`
-    2. Enable the `Developer mode`
-    3. Click on `Load unpacked`
-    4. Choose the `dist` directory
+   1. Go to `chrome://extensions/`
+   2. Enable the `Developer mode`
+   3. Click on `Load unpacked`
+   4. Choose the `dist` directory
 5. You are good to go! You can also pin the extension to the toolbar for easy access.
 
 ### Project structure
 
 All TypeScript files are placed in `src` directory. There are few files already prepared for you:
+
 - `contentScript.ts` - the [content script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) to be run in the context of selected web pages
 - `serviceWorker.ts` - the [background script](https://developer.chrome.com/docs/extensions/mv3/service_workers/) usually used to initialize the extension and monitor events
-- `storage.ts` - little helper utility to easily manage the extension's [storage](https://developer.chrome.com/docs/extensions/reference/storage/). In this particular project we are using *synced* storage area
+- `storage.ts` - little helper utility to easily manage the extension's [storage](https://developer.chrome.com/docs/extensions/reference/storage/). In this particular project we are using _synced_ storage area
 - `popup.ts` and `options.ts` - per-page scripts
 
 Style files are placed in `styles` directory. There you can find per-page stylesheets and `common.scss` with stylings common across the pages.
@@ -60,13 +55,14 @@ Currently, there are two pages: `popup.html` and `options.html`, which can be fo
 #### Popup
 
 It's a default extension's page, visible after clicking on extension's icon in toolbar. According to the documentation:
+
 > The popup cannot be smaller than 25x25 and cannot be larger than 800x600.
 
 Read more [here](https://developer.chrome.com/docs/extensions/reference/browserAction/#popup).
 
 #### Options
 
-Options page shown by right-clicking the extension icon in the toolbar and selecting *Options*.
+Options page shown by right-clicking the extension icon in the toolbar and selecting _Options_.
 
 There are two available types of options pages: `full page` and `embedded`. By default it is set to `full page`. You can change that behaviour in the `manifest.json`:
 
@@ -77,9 +73,7 @@ There are two available types of options pages: `full page` and `embedded`. By d
 
 Read more [here](https://developer.chrome.com/docs/extensions/mv3/options/).
 
-### Storage
-
-I have prepared a bunch of helper functions to simplify storage usage:
+### Storage helper functions
 
 ```typescript
 function getStorageData(): Promise<Storage> {...}
@@ -137,45 +131,23 @@ interface Storage {
 
 **IMPORTANT!** Don't forget to change the interface according to your needs.
 
-*Check `src/storage.ts` for implementation details.*
+_Check `src/storage.ts` for implementation details._
 
 ### Content scripts
 
 Content scripts are files that run in the context of web pages. They live in an isolated world (private execution environment), so they do not conflict with the page or other extensions' content sripts.
 
-The content script can be *declared statically* or *programmatically injected*.
+The content script can be _declared statically_ or _programmatically injected_.
 
 #### Static declaration (match patterns)
 
-Statically declared scripts are registered in the manifest file under the `"content_scripts"` field. They all must specify corresponding [match patterns](https://developer.chrome.com/docs/extensions/mv3/match_patterns/). In this boilerplate, the content script will be injected under all URLs by default. You can change that behaviour in `manifest.json` file. 
+Statically declared scripts are registered in the manifest file under the `"content_scripts"` field. They all must specify corresponding [match patterns](https://developer.chrome.com/docs/extensions/mv3/match_patterns/). In this boilerplate, the content script will be injected under all URLs by default. You can change that behaviour in `manifest.json` file.
 
 You can edit the default content script at `src/contentScript.ts`.
 
 #### Programmatic injection
 
 You can also inject the scripts programmatically. It might come in handy when you want to inject the script only in response to certain events. You also need to set extra permissions in manifest file. Read more about programmatic injection [here](https://developer.chrome.com/docs/extensions/mv3/content_scripts/#programmatic).
-
-#### Adding new content script
-
-To add a new content script, create a new script file in `src` directory. You also need to create a new entry in the *webpack* config file - `webpack.common.js`:
-
-```javascript
-entry: {
-  serviceWorker: './src/serviceWorker.ts',
-  contentScript: './src/contentScript.ts',
-  popup: './src/popup.ts',
-  options: './src/options.ts',
-
-  // New entry down here
-  myNewContentScript: './src/myNewContentScript.ts',
-},
-```
-
-In case of static declaration, you might also need to modify the manifest file.
-
-### Service worker (*old background pages*)
-
-*If you are coming from Manifest V2, you might want to read this page first: [Migrating from background pages to service workers](https://developer.chrome.com/docs/extensions/mv3/migrating_to_service_workers/).*
 
 As per docs:
 
@@ -198,7 +170,7 @@ Read more about service workers [here](https://developer.chrome.com/docs/extensi
 
 ### Tests
 
-The boilerplate comes with a test suite using [mocha](https://mochajs.org/), and coverage tracking using [c8](https://github.com/bcoe/c8). 
+The boilerplate comes with a test suite using [mocha](https://mochajs.org/), and coverage tracking using [c8](https://github.com/bcoe/c8).
 
 Some basic tests that test the interaction with the chrome storage API have already been implemented to get you started. You can run the test suite using `npm test`.
 Testing the chrome API is especially interesting, as it is not available in the test environment. To get around this, you can use the `sinon-chrome` package to mock the API, some examples of this have been pre-implemented and can be found in `test/setup.js`. This setup file will run before the other tests.
