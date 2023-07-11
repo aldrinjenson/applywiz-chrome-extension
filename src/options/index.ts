@@ -39,10 +39,10 @@ const userData = {
   message: messagToHiringManagerInput.value,
 };
 
-const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
-startBtn.addEventListener('click', () => {
-  sendMessageToApplyToJobs(filtersData, userData);
-});
+// const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
+// startBtn.addEventListener('click', () => {
+//   sendMessageToApplyToJobs(filtersData, userData);
+// });
 const fetchFiltersBtn: HTMLButtonElement =
   document.querySelector('#fetchFiltersBtn');
 

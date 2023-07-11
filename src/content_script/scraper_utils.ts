@@ -20,10 +20,16 @@ export const fetchAllJobsInCurrPage = async () => {
     );
     if (!footer) {
       jobSideCards[numJobsFound - 1].scrollIntoView();
-      // console.log('sleeping for 1 second');
-      // await sleep(1000);
+      console.log('sleeping for 1 second');
+      await sleep(1000);
     } else {
       console.log('footer found. breaking..');
+      footer.scrollIntoView();
+      jobSideCards = Array.from(
+        document.querySelectorAll<HTMLElement>(
+          '.job-card-container--clickable',
+        ),
+      );
       break;
     }
   }
@@ -60,6 +66,7 @@ const handleAnyUnfilledColumns = async (user) => {
       label.click();
       console.log('marking Yes');
       fieldsFilled = true;
+
       continue;
     }
 
@@ -134,9 +141,9 @@ const handleAnyUnfilledColumns = async (user) => {
       return true;
     }
   }
-  // console.log('before sleeping');
-  // await sleep(2000);
-  // console.log('after 5 second sleep');
+  console.log('before sleeping');
+  await sleep(2000);
+  console.log('after 5 second sleep');
 };
 
 export const handleComplexity = async (user) => {
