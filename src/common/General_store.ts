@@ -1,11 +1,11 @@
 export class GeneralStore {
-  private state: any;
+  private state: object;
 
-  constructor(initialState: any = {}) {
+  constructor(initialState: object = {}) {
     this.state = initialState;
   }
 
-  setState(newState: any = {}) {
+  setState(newState: object = {}) {
     this.state = { ...this.state, ...newState };
   }
 

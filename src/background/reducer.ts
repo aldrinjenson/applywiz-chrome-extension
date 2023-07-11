@@ -1,6 +1,9 @@
+import { User } from 'firebase/auth';
 // for accessing and modifying the store values
 
-function reducer(state: any, action: string, data?: any) {
+export type bgStoreStateType = { counter: number; user: User };
+
+function reducer(state: bgStoreStateType, action: string, data?: unknown) {
   switch (action) {
     case 'INCREMENT_COUNTER':
       return { ...state, counter: state.counter + 1 };

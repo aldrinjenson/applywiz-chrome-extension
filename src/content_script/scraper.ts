@@ -32,18 +32,19 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       jobCard.click();
       await sleep(1000);
 
-      const isAlreadyApplied = await waitForElement(
-        'a.jobs-s-apply__application-link',
-        false,
-        document,
-        2500,
-      );
+      const isAlreadyApplied = await waitForElement({
+        selector: 'a.jobs-s-apply__application-link',
+        params: {
+          all: false,
+          timeout: 2500,
+        },
+      });
 
       if (isAlreadyApplied) {
         maxCount++;
         alreadyAppliedJobs.push(jobObject);
         console.log('Already applied; moving on to next');
-        alert('already applied; moving on');
+        // alert('already applied; moving on');
         continue;
       }
 
@@ -80,20 +81,23 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       let isFinalStep = false;
 
       while (!isFormComplete && formPageCount++ < 7) {
-        const nextButton: HTMLButtonElement = await waitForElement(
-          nextButtonSelector,
-          false,
-          document,
-          1500,
-        );
+        const nextButton = (await waitForElement({
+          selector: nextButtonSelector,
+          params: {
+            all: false,
+            timeout: 1500,
+          },
+        })) as HTMLButtonElement;
 
         if (!nextButton) {
-          const finalApplyButton: HTMLButtonElement = await waitForElement(
-            finalApplyButtonSelector,
-            false,
-            document,
-            1200,
-          );
+          const finalApplyButton = (await waitForElement({
+            selector: finalApplyButtonSelector,
+            params: {
+              all: false,
+              timeout: 1200,
+            },
+          })) as HTMLButtonElement;
+
           console.log({ finalApplyButton });
 
           if (!finalApplyButton) {
@@ -122,10 +126,11 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           // nextButton?.click();
           console.log('form complete');
           isFormComplete = true;
-          await waitForElement('li-icon[type="search"]'); // search icon which appears after the confirmation modal
-          const closeJobModalButton: HTMLButtonElement = await waitForElement(
-            'button[aria-label="Dismiss"]',
-          );
+          await waitForElement({ selector: 'li-icon[type="search"]' }); // search icon which appears after the confirmation modal
+          const closeJobModalButton = (await waitForElement({
+            selector: 'button[aria-label="Dismiss"]',
+          })) as HTMLButtonElement;
+
           console.log('closing');
           await sleep(1200);
           closeJobModalButton?.click();

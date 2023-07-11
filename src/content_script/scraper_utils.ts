@@ -15,12 +15,10 @@ export const fetchAllJobsInCurrPage = async () => {
     numJobsFound = jobSideCards.length;
     console.log('Total Jobs found = ' + numJobsFound);
 
-    const footer: HTMLDivElement = await waitForElement(
-      '#compactfooter-about',
-      false,
-      document,
-      1100,
-    );
+    const footer: HTMLDivElement = await waitForElement({
+      selector: '#compactfooter-about',
+      params: { all: false, timeout: 1100 },
+    });
     if (!footer) {
       jobSideCards[numJobsFound - 1].scrollIntoView({ behavior: 'smooth' });
       console.log('sleeping for 1 second');
@@ -96,8 +94,6 @@ const handleAnyUnfilledColumns = async (user) => {
         input.value = user.generalExp;
         console.log('filled experience with general exp');
         fieldsFilled = true;
-        // alert('bro why');
-        // sleep(5000);
       }
       input.dispatchEvent(inputEvent);
       continue;
@@ -122,7 +118,13 @@ const handleAnyUnfilledColumns = async (user) => {
     }
     // for handling selects
     if (!fieldsFilled) {
-      const select = await waitForElement('select', false, wrapper);
+      const select = await waitForElement({
+        selector: 'select',
+        params: {
+          all: false,
+          rootEl: wrapper,
+        },
+      });
       if (select) {
         const firstOption = select.options[1];
         select.value =
@@ -147,8 +149,8 @@ const handleAnyUnfilledColumns = async (user) => {
       return true;
     }
   }
-  console.log('before sleeping');
-  await sleep(4000);
+  // console.log('before sleeping');
+  // await sleep(4000);
   // console.log('after 5 second sleep');
   return false;
 };
@@ -160,13 +162,13 @@ export const handleComplexity = async (user) => {
   if (isTooComplexToFill) {
     alert('too complex');
     // close the job and throw error to try again
-    const closeJobModalButton: HTMLButtonElement = await waitForElement(
-      'button[aria-label="Dismiss"]',
-    );
+    const closeJobModalButton: HTMLButtonElement = await waitForElement({
+      selector: 'button[aria-label="Dismiss"]',
+    });
     closeJobModalButton?.click();
-    const confirmDiscardJobButton: HTMLButtonElement = await waitForElement(
-      '[data-control-name="discard_application_confirm_btn"]',
-    );
+    const confirmDiscardJobButton: HTMLButtonElement = await waitForElement({
+      selector: '[data-control-name="discard_application_confirm_btn"]',
+    });
     confirmDiscardJobButton.click();
     alert('dismissing');
     console.log(' Warning: Fields too complex to be filled. Skipping Job');

@@ -1,17 +1,17 @@
-import { sleep, waitForElement } from '../utils';
+import { waitForElement } from '../utils';
 
 export const applySelectedFilters = async (selectedFilters) => {
   console.log(selectedFilters);
   const filterButtonSelector = '.search-reusables__all-filters-pill-button';
-  const filterButton: HTMLButtonElement = await waitForElement(
-    filterButtonSelector,
-  );
+  const filterButton: HTMLButtonElement = await waitForElement({
+    selector: filterButtonSelector,
+  });
   filterButton.click();
 
   //   waiting for the filter modal to open up
-  const showResultsButton: HTMLButtonElement = await waitForElement(
-    '[data-test-reusables-filters-modal-show-results-button="true"]',
-  );
+  const showResultsButton: HTMLButtonElement = await waitForElement({
+    selector: '[data-test-reusables-filters-modal-show-results-button="true"]',
+  });
   console.log({ showResultsButton });
 
   for (const filter of selectedFilters) {
@@ -37,16 +37,16 @@ export const applySelectedFilters = async (selectedFilters) => {
 
 export const getFilters = async () => {
   const filterButtonSelector = '.search-reusables__all-filters-pill-button';
-  const filterButton: HTMLButtonElement = await waitForElement(
-    filterButtonSelector,
-  );
+  const filterButton: HTMLButtonElement = await waitForElement({
+    selector: filterButtonSelector,
+  });
   filterButton.click();
 
   const availableFilters: { [x: string]: [y: string] }[] = [];
-  const allFiltersLi = await waitForElement(
-    '.search-reusables__secondary-filters-filter',
-    true,
-  );
+  const allFiltersLi = await waitForElement({
+    selector: '.search-reusables__secondary-filters-filter',
+    params: { all: true },
+  });
 
   allFiltersLi.forEach((li) => {
     const type = li.querySelector('h3').innerText;

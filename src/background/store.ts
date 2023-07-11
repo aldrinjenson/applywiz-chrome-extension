@@ -1,11 +1,11 @@
-import reducer from './reducer';
+import reducer, { bgStoreStateType } from './reducer';
 
 class Store {
-  private state: any;
-  private listeners: ((state: any) => void)[];
+  private state: bgStoreStateType;
+  private listeners: ((state: bgStoreStateType) => void)[];
   private storageKey: string;
 
-  constructor(storageKey: string, initialState: any) {
+  constructor(storageKey: string, initialState: unknown) {
     this.storageKey = storageKey;
     this.listeners = [];
     this.initState(initialState);
@@ -43,7 +43,7 @@ class Store {
     return this.state;
   }
 
-  dispatch(action: string, data?: any) {
+  dispatch(action: string, data?: unknown) {
     const newState = reducer(this.state, action, data);
     if (newState !== this.state) {
       this.state = newState;
@@ -52,11 +52,11 @@ class Store {
     }
   }
 
-  subscribe(listener: (state: any) => void) {
+  subscribe(listener: (state: bgStoreStateType) => void) {
     this.listeners.push(listener);
   }
 
-  unsubscribe(listener: (state: any) => void) {
+  unsubscribe(listener: (state: bgStoreStateType) => void) {
     this.listeners = this.listeners.filter((l) => l !== listener);
   }
 

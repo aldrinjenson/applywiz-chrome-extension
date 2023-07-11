@@ -1,4 +1,4 @@
-import { filtersData } from '../options/sampleFiltersData';
+// import { filtersData } from '../options/sampleFiltersData';
 import { waitForElement } from '../utils';
 import { applySelectedFilters, getFilters } from './filter_utils';
 import { payload } from './payload_data';
@@ -30,9 +30,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       const { filters, user, maxJobs } = message.data;
       console.log(message.data);
       await applySelectedFilters(filters);
-      const noJobsExist: HTMLButtonElement = await waitForElement(
-        '.jobs-search-no-results-banner__image',
-      );
+      const noJobsExist: HTMLButtonElement = await waitForElement({
+        selector: '.jobs-search-no-results-banner__image',
+      });
       if (noJobsExist) {
         alert(
           'No job exists which matches these filters. Go back and modify filters and try again.',
