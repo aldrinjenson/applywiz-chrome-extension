@@ -18,6 +18,7 @@ const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
 const mainContentSection = document.querySelector('main#main-content');
 const noLoginSection = document.querySelector('#no-login');
 const workExpInput: HTMLInputElement = document.querySelector('#workExp');
+const expectedCtcInput: HTMLInputElement = document.querySelector('#expected');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const maxJobsInput: HTMLInputElement = document.getElementById('numJobs');
@@ -37,6 +38,7 @@ const userData = {
   ctc: ctcInput.value,
   compensation: ctcInput.value,
   message: messagToHiringManagerInput.value,
+  expected: expectedCtcInput.value,
 };
 
 // const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
@@ -62,13 +64,17 @@ const sendMessageToApplyToJobs = (
     console.log(experienceObj);
     experienceObj['generalExp'] = workExpInput.value;
     user.experience = experienceObj;
-    user.expected = user.ctc; // make this dynamic with multiple key values
+    user.salary = user.ctc; // make this dynamic with multiple key values
+
+    const payload = { filters, user, maxJobs: maxJobsInput.value };
+
+    console.log({ payload });
 
     chrome.tabs.sendMessage(
       tab.id,
       {
         action: 'START_AUTOMATION',
-        data: { filters, user, maxJobs: maxJobsInput.value },
+        data: payload,
       },
       () => {
         toastNotify('Automation starting..', 'Sit back and relax!');

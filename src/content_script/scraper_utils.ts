@@ -141,9 +141,9 @@ const handleAnyUnfilledColumns = async (user) => {
       return true;
     }
   }
-  console.log('before sleeping');
-  await sleep(2000);
-  console.log('after 5 second sleep');
+  // console.log('before sleeping');
+  // await sleep(2000);
+  // console.log('after 5 second sleep');
 };
 
 export const handleComplexity = async (user) => {

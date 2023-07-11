@@ -36,7 +36,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         'a.jobs-s-apply__application-link',
         false,
         document,
-        3500,
+        2500,
       );
 
       if (isAlreadyApplied) {
@@ -70,14 +70,21 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         'button[aria-label="Submit application"]';
 
       let isFinalStep = false;
+
       while (!isFormComplete && formPageCount++ < 7) {
         const nextButton: HTMLButtonElement = await waitForElement(
           nextButtonSelector,
+          false,
+          document,
+          1500,
         );
 
         if (!nextButton) {
           const finalApplyButton: HTMLButtonElement = await waitForElement(
             finalApplyButtonSelector,
+            false,
+            document,
+            1200,
           );
           console.log({ finalApplyButton });
 
@@ -101,6 +108,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         const isTooComplex = await handleComplexity(user);
         if (isTooComplex) {
           console.log('breaking..');
+          failedJobs.push(jobObject);
           break;
         }
 

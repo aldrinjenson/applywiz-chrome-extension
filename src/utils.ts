@@ -2,7 +2,7 @@ export function waitForElement(
   selector: string,
   all = false,
   root = document,
-  timeout = 5000,
+  timeout = 4000,
 ) {
   console.log('waiting for ' + selector);
   return new Promise((resolve) => {
