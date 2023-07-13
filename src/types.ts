@@ -9,5 +9,6 @@ export type jobObjectType = {
   companyName: string;
   companyImg: string;
   companyLocation: string;
+  base64Img?: string;
   status?: 'success' | 'failed';
 };

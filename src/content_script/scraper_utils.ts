@@ -39,8 +39,6 @@ export const fetchAllJobsInCurrPage = async () => {
 };
 
 const handleAnyUnfilledColumns = async (user) => {
-  console.log({ user });
-
   const errorDivs: HTMLDivElement[] = Array.from(
     document.querySelectorAll('li-icon[type="error-pebble-icon"]'),
   );

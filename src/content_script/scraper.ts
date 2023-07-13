@@ -1,6 +1,7 @@
 import { jobObjectType } from '../types';
 import { sleep, waitForElement } from '../utils';
 import { sendJobsDb } from './message_utils';
+import { convertImageToBase64 } from './misc_utils';
 import {
   fetchAllJobsInCurrPage,
   handleComplexity,
@@ -35,6 +36,9 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     const jobUrl = jobCard.querySelector('a').href;
     const companyImg =
       jobCard.querySelector('.ivm-view-attr__img--centered').src || '';
+
+    const base64Img = (await convertImageToBase64(companyImg)) as string;
+
     const companyName = jobCard.querySelector(
       '.job-card-container__primary-description',
     ).innerText as string;
@@ -44,6 +48,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       jobUrl,
       companyName,
       companyImg,
+      base64Img,
       companyLocation,
     };
 
