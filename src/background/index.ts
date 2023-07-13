@@ -3,13 +3,44 @@ import firebase from '../services/fbConfig';
 import { toastNotify } from '../common/common_utils';
 import { initializeStorageWithDefaults } from '../storage';
 import { Message } from '../types';
-import { handleEmailSignin, handleSignOut } from '../services/firebseUtils';
+import {
+  addJobsToDb,
+  handleEmailSignin,
+  handleSignOut,
+} from '../services/firebseUtils';
 
 import store from './store';
 
 chrome.runtime.onInstalled.addListener(async () => {
   await initializeStorageWithDefaults({});
   console.log('Extension successfully installed!');
+  const jobs = [
+    {
+      jobName: 'Dot Net Developer(TL) - API Team',
+      jobUrl:
+        'https://www.linkedin.com/jobs/view/3659374578/?eBP=JOB_SEARCH_ORGANIC&refId=qkdFpIS07KSv0TOek8N0KQ%3D%3D&trackingId=Al3knqP7Jb4hvmi18UzVRw%3D%3D&trk=flagship3_search_srp_jobs',
+      companyName: 'In4Velocity Systems',
+      companyImg:
+        'https://media.licdn.com/dms/image/C4D0BAQFVNuQGEIkeJg/company-logo_100_100/0/1625113773806?e=1697068800&v=beta&t=QSScAE27FMUe7TufkONpFTLmF_hS-yZP2Z8bow2X2AA',
+      companyLocation: 'Bengaluru, Karnataka, India (On-site)',
+      status: 'success',
+      userId: '5AADfhgj6OhMvgZoqEBPdJoNiER2',
+      createdAt: 1689263084342,
+    },
+    {
+      jobName: 'Vehicle Interface Software Developer',
+      jobUrl:
+        'https://www.linkedin.com/jobs/view/3662012344/?eBP=JOB_SEARCH_ORGANIC&refId=qkdFpIS07KSv0TOek8N0KQ%3D%3D&trackingId=sXFmx%2BKrCn%2B59%2FHuHZFK1w%3D%3D&trk=flagship3_search_srp_jobs',
+      companyName: 'Apidel Technologies',
+      companyImg:
+        'https://media.licdn.com/dms/image/C4D0BAQFq0dUVK8AgYA/company-logo_100_100/0/1656647085521?e=1697068800&v=beta&t=GD8tY5CjB9vhBRcP10jwaelLZiKFl36O51-UkRLX6Iw',
+      companyLocation: 'Bengaluru, Karnataka, India (On-site)',
+      status: 'success',
+      userId: '5AADfhgj6OhMvgZoqEBPdJoNiER2',
+      createdAt: 1689263084342,
+    },
+  ];
+  addJobsToDb(jobs, '5AADfhgj6OhMvgZoqEBPdJoNiER2');
 });
 
 // Log storage changes, might be safely removed
@@ -38,6 +69,16 @@ chrome.runtime.onMessage.addListener(
         const savedUser = store.getState().user;
         if (!savedUser) console.log('user not present bro!');
         sendReponse(savedUser);
+        break;
+
+      case 'ADD_JOBS_TO_DB':
+        const firebaseUser = store.getState().user;
+        console.log('data');
+
+        console.log(data);
+
+        const jobs = data;
+        addJobsToDb(jobs, firebaseUser.uid);
         break;
 
       case 'USER_SIGN_IN':
@@ -75,7 +116,6 @@ chrome.runtime.onMessage.addListener(
 );
 
 firebase.auth().onAuthStateChanged((user) => {
-  console.log({ user });
   if (user) {
     store.dispatch('SET_USER', user);
   } else {

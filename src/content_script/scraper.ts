@@ -1,4 +1,6 @@
+import { jobObjectType } from '../types';
 import { sleep, waitForElement } from '../utils';
+import { sendJobsDb } from './message_utils';
 import {
   fetchAllJobsInCurrPage,
   handleComplexity,
@@ -8,8 +10,13 @@ import {
 export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   console.log('getting job links');
   const failedJobs = [];
+  const skippedJobs = [];
   const successfullJobs = [];
   const alreadyAppliedJobs = [];
+
+  const slidingWindowSize = 2;
+
+  let successfullJobSlidingWindow: jobObjectType[] = [];
 
   let jobSideCards: HTMLElement[] = await fetchAllJobsInCurrPage();
   console.log(jobSideCards);
@@ -24,10 +31,25 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
     if (count++ > maxCount) break;
 
-    const jobName = jobCard.outerText.replace(/Easy Apply\n|Hide job/g, '');
+    const jobName = jobCard.querySelector('a').innerText.replace(/\s+/g, ' ');
     const jobUrl = jobCard.querySelector('a').href;
-    const jobObject = { jobUrl, jobName: jobName.replace(/\s{3,}/g, ' ') };
-    console.log('applying for job: ', count, ' with link = ', jobUrl);
+    const companyImg =
+      jobCard.querySelector('.ivm-view-attr__img--centered').src || '';
+    const companyName = jobCard.querySelector(
+      '.job-card-container__primary-description',
+    ).innerText as string;
+    const companyLocation = jobCard.querySelector('li').innerText;
+    const jobObject: jobObjectType = {
+      jobName,
+      jobUrl,
+      companyName,
+      companyImg,
+      companyLocation,
+    };
+
+    console.log(jobObject);
+    console.log(`applying for job: ${count}: ${jobName} by ${companyName}`);
+
     try {
       jobCard.click();
       await sleep(1000);
@@ -63,7 +85,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
       if (applyButton.disabled) {
         console.log('Apply button disabled. Skipping and moving on');
-        failedJobs.push(jobCard);
+        skippedJobs.push(jobCard);
         continue;
       }
 
@@ -98,8 +120,6 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
             },
           })) as HTMLButtonElement;
 
-          console.log({ finalApplyButton });
-
           if (!finalApplyButton) {
             nextButtonSelector = reviewButtonSelector;
           } else {
@@ -120,6 +140,10 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         if (isTooComplex) {
           console.log('breaking..');
           failedJobs.push(jobObject);
+          jobObject.status = 'failed';
+          console.log('sending failed job to db');
+
+          sendJobsDb([jobObject]);
           break;
         }
 
@@ -135,7 +159,14 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           console.log('closing');
           await sleep(1200);
           closeJobModalButton?.click();
+
+          jobObject.status = 'success';
+          successfullJobSlidingWindow.push(jobObject);
           successfullJobs.push(jobObject);
+          if (successfullJobSlidingWindow.length === slidingWindowSize) {
+            sendJobsDb(successfullJobSlidingWindow);
+            successfullJobSlidingWindow = [];
+          }
         }
 
         await sleep(250);
@@ -143,7 +174,19 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     } catch (error) {
       console.log('error bro: ', error);
       failedJobs.push(jobObject);
+      jobObject.status = 'failed';
     }
+
+    // if (i !== 0 && i % numbJobsToAddinDbWindowSize === 0) {
+    //   const batchJobBucket = iteratedJobCards.slice(
+    //     i - numbJobsToAddinDbWindowSize,
+    //     numbJobsToAddinDbWindowSize,
+    //   );
+    //   chrome.runtime.sendMessage({
+    //     action: 'ADD_JOBS_TO_DB',
+    //     data: batchJobBucket,
+    //   });
+    // }
 
     if (i === jobSideCards.length - 1 && count < maxCount - 1) {
       // if last card and less than
@@ -158,6 +201,12 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
   const status = { alreadyAppliedJobs, successfullJobs, failedJobs };
   console.log(status);
+
+  console.log(successfullJobSlidingWindow);
+
+  if (successfullJobSlidingWindow.length) {
+    sendJobsDb(successfullJobSlidingWindow);
+  }
 
   return status;
 };

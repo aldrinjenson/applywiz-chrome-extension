@@ -30,9 +30,9 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       const { filters, user, maxJobs } = message.data;
       console.log(message.data);
       await applySelectedFilters(filters);
-      const noJobsExist: HTMLButtonElement = await waitForElement({
+      const noJobsExist = (await waitForElement({
         selector: '.jobs-search-no-results-banner__image',
-      });
+      })) as HTMLButtonElement;
       if (noJobsExist) {
         alert(
           'No job exists which matches these filters. Go back and modify filters and try again.',
