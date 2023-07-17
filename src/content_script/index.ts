@@ -50,7 +50,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 window.addEventListener('load', async () => {
   console.log('window loaded bro');
   const { filters, user, maxJobs } = payload;
-  await applyToJobs(filters, user, maxJobs);
+  // await applyToJobs(filters, user, maxJobs);
   // await applyToJobs(filtersData, {
   //   experience: 1,
   //   notice: 2,

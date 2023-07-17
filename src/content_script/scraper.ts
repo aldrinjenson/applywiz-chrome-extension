@@ -47,7 +47,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       jobName,
       jobUrl,
       companyName,
-      companyImg,
+      // companyImg,
       base64Img,
       companyLocation,
     };

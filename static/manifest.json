@@ -8,7 +8,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://apply-wiz.vercel.app/"],
       "js": ["generalContent.js"]
     },
     {
@@ -16,14 +16,7 @@
       "js": ["contentScript.js"]
     }
   ],
-  "permissions": [
-    "storage",
-    "scripting",
-    "webRequest",
-    "activeTab",
-    "tabs",
-    "notifications"
-  ],
+  "permissions": ["storage", "tabs", "notifications"],
   "host_permissions": [
     "https://www.linkedin.com/*",
     "https://apis.google.com/*"
