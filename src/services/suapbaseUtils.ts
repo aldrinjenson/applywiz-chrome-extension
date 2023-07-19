@@ -1,7 +1,11 @@
 import { jobObjectType } from '../types';
 import firebase, { firestore } from './fbConfig';
 import { collection, writeBatch, doc } from 'firebase/firestore';
-import { supabase } from './supabase';
+import {
+  removeUserTokenFromStorage,
+  setUserTokenInStorage,
+  supabase,
+} from './supabase';
 
 export const handleEmailSignin = async (email: string, password: string) => {
   try {
@@ -17,6 +21,11 @@ export const handleEmailSignin = async (email: string, password: string) => {
       throw new Error(error.message);
     }
 
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    setUserTokenInStorage(session.access_token);
     console.log('User logged in:', user);
     return user;
   } catch (error) {
@@ -33,6 +42,7 @@ export const handleSignOut = async () => {
       throw new Error(error.message);
     }
 
+    removeUserTokenFromStorage();
     console.log('User signed out');
   } catch (error) {
     console.error('Error signing out:', error.message);
@@ -44,11 +54,16 @@ export const addJobsToDb = async (
   jobObjects: jobObjectType[],
   userId: string,
 ) => {
+  console.log('going to add jobs!');
+  console.log(jobObjects);
+  console.log(userId);
+
   try {
     const modifiedJobObjects = jobObjects.map((jobObj) => ({
       ...jobObj,
       userId,
     }));
+    console.log({ modifiedJobObjects });
 
     const { data, error } = await supabase
       .from('jobs')

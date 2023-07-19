@@ -7,7 +7,7 @@ import {
   addJobsToDb,
   handleEmailSignin,
   handleSignOut,
-} from '../services/firebseUtils';
+} from '../services/suapbaseUtils';
 
 import store from './store';
 import { supabase } from '../services/supabase';
@@ -46,13 +46,11 @@ chrome.runtime.onMessage.addListener(
         break;
 
       case 'ADD_JOBS_TO_DB':
-        const firebaseUser = store.getState().user;
+        const currentUser = store.getState().user;
         console.log('data');
-
         console.log(data);
-
         const jobs = data;
-        addJobsToDb(jobs, firebaseUser.id);
+        addJobsToDb(jobs, currentUser?.id);
         break;
 
       case 'USER_SIGN_IN':
@@ -109,7 +107,11 @@ chrome.runtime.onMessage.addListener(
 // });
 
 supabase.auth.onAuthStateChange((event, session) => {
-  const user = session.user;
+  const user = session?.user;
+  console.log('setting user status ');
+
+  console.log({ user });
+
   if (user) {
     store.dispatch('SET_USER', user);
   } else {
