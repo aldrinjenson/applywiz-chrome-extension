@@ -10,6 +10,7 @@ import {
 } from '../services/firebseUtils';
 
 import store from './store';
+import { supabase } from '../services/supabase';
 
 chrome.runtime.onInstalled.addListener(async () => {
   await initializeStorageWithDefaults({});
@@ -51,18 +52,28 @@ chrome.runtime.onMessage.addListener(
         console.log(data);
 
         const jobs = data;
-        addJobsToDb(jobs, firebaseUser.uid);
+        addJobsToDb(jobs, firebaseUser.id);
         break;
 
       case 'USER_SIGN_IN':
         const { email, password } = data;
         toastNotify('Logging in.', 'Hold on..');
-        handleEmailSignin(email, password).then((user) => {
-          console.log({ user });
-          store.dispatch('SET_USER', user);
-          chrome.runtime.sendMessage({ action: 'SIGN_IN_SUCCESS', data: user });
-          toastNotify('Successfully logged in');
-        });
+        handleEmailSignin(email, password)
+          .then((user) => {
+            console.log({ user });
+            store.dispatch('SET_USER', user);
+            chrome.runtime.sendMessage({
+              action: 'SIGN_IN_SUCCESS',
+              data: user,
+            });
+            toastNotify('Successfully logged in');
+          })
+          .catch((err) => {
+            console.log(err);
+            toastNotify(
+              'There seems to be some error in loggin in. Please check your credentials',
+            );
+          });
         break;
 
       case 'USER_SIGN_OUT':
@@ -88,7 +99,17 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-firebase.auth().onAuthStateChanged((user) => {
+// firebase.auth().onAuthStateChanged((user) => {
+//   if (user) {
+//     store.dispatch('SET_USER', user);
+//   } else {
+//     store.dispatch('SET_USER', null);
+//     chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user });
+//   }
+// });
+
+supabase.auth.onAuthStateChange((event, session) => {
+  const user = session.user;
   if (user) {
     store.dispatch('SET_USER', user);
   } else {

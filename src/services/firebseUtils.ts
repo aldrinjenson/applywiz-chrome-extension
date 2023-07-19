@@ -1,56 +1,68 @@
 import { jobObjectType } from '../types';
 import firebase, { firestore } from './fbConfig';
 import { collection, writeBatch, doc } from 'firebase/firestore';
+import { supabase } from './supabase';
 
 export const handleEmailSignin = async (email: string, password: string) => {
   try {
-    const userCredential = await firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password);
-    const user = userCredential.user;
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
     console.log('User logged in:', user);
     return user;
   } catch (error) {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.error('Login error:', errorCode, errorMessage);
+    console.error('Login error:', error.message);
+    throw error;
   }
 };
 
 export const handleSignOut = async () => {
   try {
-    await firebase.auth().signOut();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
     console.log('User signed out');
   } catch (error) {
-    console.error('Error signing out:', error);
+    console.error('Error signing out:', error.message);
+    throw error;
   }
 };
 
-export const addJobsToDb = async (jobObjects: jobObjectType[], userId) => {
-  console.log({ jobObjects, userId });
-
-  const batch = writeBatch(firestore);
-  const collectionRef = collection(firestore, 'jobs');
-
-  for (const jobObj of jobObjects) {
-    try {
-      const modifieddJobObj = {
-        ...jobObj,
-        userId,
-        createdAt: Date.now(),
-      };
-
-      const newDocRef = doc(collectionRef);
-      batch.set(newDocRef, modifieddJobObj);
-    } catch (error) {
-      console.log('error bro: ', error);
-    }
-  }
-
+export const addJobsToDb = async (
+  jobObjects: jobObjectType[],
+  userId: string,
+) => {
   try {
-    await batch.commit();
+    const modifiedJobObjects = jobObjects.map((jobObj) => ({
+      ...jobObj,
+      userId,
+    }));
+
+    const { data, error } = await supabase
+      .from('jobs')
+      .insert(modifiedJobObjects);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
     console.log('Batch write operation of jobs successful');
+    console.log('Inserted rows:', data);
   } catch (error) {
-    console.error('Error performing batch write operation:', error);
+    console.error('Error performing batch write operation:', error.message);
+    // You can handle the error or rethrow it to let the calling code handle it.
+    throw error;
   }
 };

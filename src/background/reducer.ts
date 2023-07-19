@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+import { User } from '@supabase/supabase-js';
 // for accessing and modifying the store values
 
 export type bgStoreStateType = { counter: number; user: User };

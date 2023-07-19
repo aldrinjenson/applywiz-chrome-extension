@@ -2,6 +2,7 @@
 import '../styles/popup.scss';
 import { GeneralStore } from './common/General_store';
 import { showNotification } from './common/common_utils';
+import { Message } from './types';
 const contentStore = new GeneralStore();
 
 const loginWithEmailForm: HTMLFormElement =
