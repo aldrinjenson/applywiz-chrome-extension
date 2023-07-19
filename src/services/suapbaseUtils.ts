@@ -20,12 +20,6 @@ export const handleEmailSignin = async (email: string, password: string) => {
     if (error) {
       throw new Error(error.message);
     }
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    setUserTokenInStorage(session.access_token);
     console.log('User logged in:', user);
     return user;
   } catch (error) {

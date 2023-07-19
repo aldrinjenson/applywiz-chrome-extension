@@ -1,7 +1,12 @@
 /* eslint-disable no-case-declarations */
 import firebase from '../services/fbConfig';
 import { toastNotify } from '../common/common_utils';
-import { initializeStorageWithDefaults } from '../storage';
+import {
+  getStorageItem,
+  initializeStorageWithDefaults,
+  setStorageData,
+  setStorageItem,
+} from '../storage';
 import { Message } from '../types';
 import {
   addJobsToDb,
@@ -22,7 +27,9 @@ chrome.storage.onChanged.addListener((changes) => {
   for (const [key, value] of Object.entries(changes)) {
     console.table(value);
     console.log(
-      `"${key}" changed from "${value.oldValue}" to "${value.newValue}"`,
+      `"${key}" changed from "${value.oldValue}" to "${JSON.stringify(
+        value.newValue,
+      )}"`,
     );
   }
 });
@@ -106,11 +113,29 @@ chrome.runtime.onMessage.addListener(
 //   }
 // });
 
-supabase.auth.onAuthStateChange((event, session) => {
+supabase.auth.onAuthStateChange(async (event, session) => {
+  console.log({ event, session });
   const user = session?.user;
-  console.log('setting user status ');
 
-  console.log({ user });
+  switch (event) {
+    case 'INITIAL_SESSION':
+      const sb_sesion = await getStorageItem('sb_session');
+      console.log('trying to get session from storage');
+      if (sb_sesion) {
+        console.log('setting supabase session');
+        supabase.auth.setSession(sb_sesion);
+      }
+      break;
+    case 'SIGNED_IN':
+      console.log('setting in storage');
+      await setStorageItem('sb_session', session);
+      break;
+    case 'SIGNED_OUT':
+      await setStorageItem('sb_session', null);
+      break;
+    default:
+      break;
+  }
 
   if (user) {
     store.dispatch('SET_USER', user);

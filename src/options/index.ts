@@ -142,8 +142,8 @@ const triggerMainSectionVisibility = (user?: JSON) => {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
   chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
-    // triggerMainSectionVisibility(user);
-    triggerMainSectionVisibility(true);
+    triggerMainSectionVisibility(user);
+    // triggerMainSectionVisibility(true); // temporary
   });
 });
 
