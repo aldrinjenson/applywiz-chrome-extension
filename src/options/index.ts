@@ -103,9 +103,9 @@ fetchFiltersBtn.addEventListener('click', async () => {
   }
   toastNotify('Fetching Filters for: ', jobKeyword);
   fetchFiltersBtn.disabled = true;
-  // const filters = await getFiltersFromContentScript(jobKeyword);
-  // toastNotify('Filters Received');
-  // createFilters(filters, filterContainer, submitHandler);
+  const filters = await getFiltersFromContentScript(jobKeyword);
+  toastNotify('Filters Received');
+  createFilters(filters, filterContainer, submitHandler);
   fetchFiltersBtn.disabled = false;
   saveUserPreferences();
 });

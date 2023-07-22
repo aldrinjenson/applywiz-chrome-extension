@@ -1,73 +1,58 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="styles/popup.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
-      rel="stylesheet"
-    />
-  </head>
 
-  <body class="container">
-   
-    <div>
-      <img src="icons/logo_only.png" alt="logo" height="80px" width="60px" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles/popup.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet" />
+</head>
+
+<body class="container">
+
+  <div>
+    <img src="icons/logo_only.png" alt="logo" height="80px" width="60px" />
+  </div>
+
+  <form id="loginForm">
+    <br />
+    <h2 style="margin: auto; color: black;">Login</h2>
+    <br />
+    <div class="input-field">
+      <input type="email" value="john@gmail.com" id="emailInput" name="email" required />
+      <div class="underline"></div>
     </div>
-  
-    <form id="loginForm">
-      <br />
-      <h2 style="margin-left: 4rem; color: black;">Login</h2>
-      <br />
-      <div class="input-field">
-        <input
-          type="email"
-          value="john@gmail.com"
-          id="emailInput"
-          name="email"
-          required
-        />
-        <div class="underline"></div>
-      </div>
-      <br>
-      <div class="input-field">
-        <input
-          type="password"
-          id="passwordInput"
-          value="123456"
-          name="password"
-          required
-        />
-        <div class="underline"></div>
-      </div>
-
-      <input type="submit" value="Login" />
-      <br />
-      <a href="#" id="signup"
-        ><p style="color:#0094a8; margin-left: 1rem ;">
-          Don't have account yet?
-        </p></a
-      >
-    </form>
-  
-
-    <div class="protected hidden" id="stats">
-      
-      <button id="go-to-options" class="button2" style="margin-top: 2rem">
-        Start
-      </button>
-      <br>
-      <p style="color: black; margin-left: 2rem; margin-top: 1rem;">30/50 Automations used today</p>
-      <br><br>
-      <p style="color: black; justify-content: center; margin-left: 2rem;">
-        Visit <a href="https://apply-wiz.com">apply-wiz.com</a> to upgrade to Pro
-        plan!
-      </p>
-      <button id="signOutBtn" class="button2">Sign Out</button>
+    <br>
+    <div class="input-field">
+      <input type="password" id="passwordInput" value="123456" name="password" required />
+      <div class="underline"></div>
     </div>
 
-    <script src="popup.js"></script>
-  </body>
+    <input type="submit" value="Login" />
+    <br />
+    <p id="signup" style="color:#0094a8; margin-left: 1rem ;">
+      Don't have account yet? <a href="https://apply-wiz.com/signup">Sign Up</a>
+    </p>
+    >
+  </form>
+
+
+  <div style="text-align: center;" class="protected hidden" id="stats">
+    <button id="go-to-options" class="button2" style="margin-top: 2rem">
+      Visit Dashboard
+    </button>
+    <br>
+    <p style="color: black;margin-top: 1rem;">30 Job Automations done today</p>
+    <br><br>
+    <p style="color: black;">
+      Visit <a href="https://apply-wiz.com">apply-wiz.com</a> to upgrade to Pro
+      plan!
+    </p>
+    <button id="signOutBtn" class="btn-outline">Sign Out</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
 </html>
