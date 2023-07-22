@@ -84,7 +84,6 @@ export function addNewSkillExperienceRow(
     container.removeChild(row);
   });
   row.appendChild(removeButton);
-
   container.appendChild(row);
 }
 
@@ -105,6 +104,5 @@ export function getExperience() {
     }
   }
 
-  console.log(skillsArray);
   return skillsArray;
 }

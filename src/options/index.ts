@@ -77,9 +77,6 @@ const sendMessageToApplyToJobs = (
     user.salary = user.ctc; // make this dynamic with multiple key values
 
     const payload = { filters, user, maxJobs: +maxJobsInput.value };
-
-    console.log({ payload });
-
     chrome.tabs.sendMessage(
       tab.id,
       {
@@ -95,7 +92,6 @@ const sendMessageToApplyToJobs = (
 
 const submitHandler = (selectedFilterOptions: []) => {
   sendMessageToApplyToJobs(selectedFilterOptions);
-  console.log(selectedFilterOptions);
 };
 
 fetchFiltersBtn.addEventListener('click', async () => {
@@ -148,14 +144,11 @@ const triggerMainSectionVisibility = (user) => {
     console.log('inside changing h1');
 
     alertMsgH1.innerHTML =
-      "Please subscribe to a plan at <a href='https://apply-wiz.com/pricing'>https://apply-wiz.com/pricing</a> to start applying to jobs!";
+      "Please subscribe to a plan at <a href='https://apply-wiz.com#pricing'>https://apply-wiz.com#pricing</a> to start applying to jobs!";
     return;
   }
   if (user?.id) {
     console.log('user id present bro');
-
-    console.log({ user });
-
     userGreetingH1.innerText = `Hello ${getFirstName(user.name)}, `;
     noLoginSection.classList.add('hidden');
     mainContentSection.classList.remove('hidden');
