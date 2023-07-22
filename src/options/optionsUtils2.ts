@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { GET_USER_PREFERENCES, SET_USER_PREFERENCES } from '../constants';
 import { addNewSkillExperienceRow, getExperience } from './optionUtils';
 
