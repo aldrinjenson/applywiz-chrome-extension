@@ -70,3 +70,11 @@ export async function sleep(ms: number) {
   console.log('sleeping for ' + ms + ' ms');
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const getFirstName = (fullName = '') => {
+  const words = fullName.trim().split(/\s+/);
+  if (words.length > 1 && words[0].length < 2) {
+    return words[1];
+  }
+  return words[0];
+};

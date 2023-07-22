@@ -11,15 +11,15 @@ export const getFullUser = async (user: User) => {
   try {
     if (user) {
       const {
-        data: [{ linkedin_url, is_subscribed }],
+        data: [{ name, linkedin_url, is_subscribed }],
         error,
       } = await supabase
         .from('profile_view')
-        .select('linkedin_url, is_subscribed')
+        .select('name, linkedin_url, is_subscribed')
         .eq('id', user.id);
 
       if (error) throw error;
-      const newUser = { ...user, linkedin_url, is_subscribed };
+      const newUser = { ...user, name, linkedin_url, is_subscribed };
       return newUser;
     }
   } catch (error) {

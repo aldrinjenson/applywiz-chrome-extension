@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-case-declarations */
 import '../../styles/options.scss';
-import { showNotification, toastNotify } from '../common/common_utils';
+import { toastNotify } from '../common/common_utils';
 import { GeneralStore } from '../common/General_store';
 import { Message } from '../types';
 import { createFilters } from './filterUtils';
@@ -17,10 +17,13 @@ import {
   saveUserPreferences,
 } from './optionsUtils2';
 import { GET_USER } from '../constants';
+import { getFirstName } from '../utils';
 
 const optionStore = new GeneralStore();
 
-const alertMsgH1: HTMLElement = document.querySelector('#alert-msg');
+const alertMsgH1: HTMLHeadingElement = document.querySelector('#alert-msg');
+const userGreetingH1: HTMLHeadingElement =
+  document.querySelector('#user-greeting');
 const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
 const mainContentSection = document.querySelector('main#main-content');
 const noLoginSection = document.querySelector('#no-login');
@@ -28,15 +31,14 @@ const workExpInput: HTMLInputElement = document.querySelector('#workExp');
 const expectedCtcInput: HTMLInputElement = document.querySelector('#expected');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
-const maxJobsInput: HTMLInputElement = document.getElementById('numJobs');
-
+const maxJobsInput: HTMLInputElement = document.querySelector('#numJobs');
 const messagToHiringManagerInput: HTMLInputElement =
   document.querySelector('#message');
-const addButton = document.getElementById('addButton');
-addButton.addEventListener('click', addNewSkillExperienceRow);
 
+const addButton = document.getElementById('addButton');
+addButton.addEventListener('click', () => addNewSkillExperienceRow());
 const filterContainer: HTMLDivElement =
-  document.getElementById('filter-container');
+  document.querySelector('#filter-container');
 
 const userData = {
   experience: workExpInput.value,
@@ -150,6 +152,11 @@ const triggerMainSectionVisibility = (user) => {
     return;
   }
   if (user?.id) {
+    console.log('user id present bro');
+
+    console.log({ user });
+
+    userGreetingH1.innerText = `Hello ${getFirstName(user.name)}, `;
     noLoginSection.classList.add('hidden');
     mainContentSection.classList.remove('hidden');
   } else {
