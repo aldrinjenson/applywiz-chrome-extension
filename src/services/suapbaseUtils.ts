@@ -1,13 +1,9 @@
 import { jobObjectType } from '../types';
-import firebase, { firestore } from './fbConfig';
-import { collection, writeBatch, doc } from 'firebase/firestore';
-import {
-  removeUserTokenFromStorage,
-  setUserTokenInStorage,
-  supabase,
-} from './supabase';
+import { getFullUser, supabase } from './supabase';
+import { toastNotify } from '../common/common_utils';
 
 export const handleEmailSignin = async (email: string, password: string) => {
+  toastNotify('Loggin In...');
   try {
     const {
       data: { user },
@@ -20,8 +16,11 @@ export const handleEmailSignin = async (email: string, password: string) => {
     if (error) {
       throw new Error(error.message);
     }
-    console.log('User logged in:', user);
-    return user;
+    const fullUser = await getFullUser(user);
+    console.log({ fullUser });
+
+    console.log('User logged in:', fullUser);
+    return fullUser;
   } catch (error) {
     console.error('Login error:', error.message);
     throw error;
@@ -36,7 +35,6 @@ export const handleSignOut = async () => {
       throw new Error(error.message);
     }
 
-    removeUserTokenFromStorage();
     console.log('User signed out');
   } catch (error) {
     console.error('Error signing out:', error.message);

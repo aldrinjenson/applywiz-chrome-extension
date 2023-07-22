@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-import firebase from '../services/fbConfig';
 import { toastNotify } from '../common/common_utils';
 import {
   getStorageItem,
@@ -15,7 +14,7 @@ import {
 } from '../services/suapbaseUtils';
 
 import store from './store';
-import { supabase } from '../services/supabase';
+import { getFullUser, supabase } from '../services/supabase';
 
 chrome.runtime.onInstalled.addListener(async () => {
   await initializeStorageWithDefaults({});
@@ -27,9 +26,7 @@ chrome.storage.onChanged.addListener((changes) => {
   for (const [key, value] of Object.entries(changes)) {
     console.table(value);
     console.log(
-      `"${key}" changed from "${value.oldValue}" to "${JSON.stringify(
-        value.newValue,
-      )}"`,
+      `"${key}" changed from "${value.oldValue}" to "${value.newValue}"`,
     );
   }
 });
@@ -54,8 +51,6 @@ chrome.runtime.onMessage.addListener(
 
       case 'ADD_JOBS_TO_DB':
         const currentUser = store.getState().user;
-        console.log('data');
-        console.log(data);
         const jobs = data;
         addJobsToDb(jobs, currentUser?.id);
         break;
@@ -114,7 +109,6 @@ chrome.runtime.onMessage.addListener(
 // });
 
 supabase.auth.onAuthStateChange(async (event, session) => {
-  console.log({ event, session });
   const user = session?.user;
 
   switch (event) {
@@ -127,20 +121,17 @@ supabase.auth.onAuthStateChange(async (event, session) => {
       }
       break;
     case 'SIGNED_IN':
+      const fullUser = await getFullUser(user);
       console.log('setting in storage');
+      store.dispatch('SET_USER', fullUser);
       await setStorageItem('sb_session', session);
       break;
     case 'SIGNED_OUT':
+      store.dispatch('SET_USER', null);
+      chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user: null });
       await setStorageItem('sb_session', null);
       break;
     default:
       break;
-  }
-
-  if (user) {
-    store.dispatch('SET_USER', user);
-  } else {
-    store.dispatch('SET_USER', null);
-    chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user });
   }
 });
