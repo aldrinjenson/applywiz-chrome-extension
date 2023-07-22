@@ -1,16 +1,23 @@
 import reducer, { bgStoreStateType } from './reducer';
+import { User } from '@supabase/supabase-js';
+
+const initialState: bgStoreStateType = {
+  user: null,
+  counter: 0,
+  extensionVersion: chrome.runtime.getManifest().version,
+};
 
 class Store {
   private state: bgStoreStateType;
   private listeners: ((state: bgStoreStateType) => void)[];
   private storageKey: string;
 
-  constructor(storageKey: string, initialState: unknown) {
+  constructor(storageKey: string, initialState: bgStoreStateType) {
     this.storageKey = storageKey;
     this.listeners = [];
     this.initState(initialState);
   }
-  private initState(initialState: JSON) {
+  private initState(initialState: bgStoreStateType) {
     this.state = initialState;
     // chrome.storage.sync.get(this.storageKey, (result) => {
     //   const storedData = result?.[this.storageKey];
@@ -44,10 +51,13 @@ class Store {
   }
 
   dispatch(action: string, data?: unknown) {
+    console.log('dispatching new action: ', action);
     const newState = reducer(this.state, action, data);
+    console.log({ newState });
+
     if (newState !== this.state) {
       this.state = newState;
-      this.saveState();
+      // this.saveState();
       this.notifyListeners();
     }
   }
@@ -74,11 +84,6 @@ class Store {
 }
 
 const storageKey = 'applyWizstoreData';
-const initialState = {
-  user: null,
-  counter: 0,
-  extensionVersion: chrome.runtime.getManifest().version,
-};
 
 const store = new Store(storageKey, initialState);
 

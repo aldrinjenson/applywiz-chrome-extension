@@ -1,8 +1,5 @@
 - create recording of product workflow
+- save the user's name to db and show them in dashboard as Hello Aldrin!
 - add privacy page
-
-- in options, store the user expeirence + other input field values to localstorage and rehydrate them next time the user loads options page.
-
-  - update the values in state when the user presses the fetchFilters button again
 
 - improve UI

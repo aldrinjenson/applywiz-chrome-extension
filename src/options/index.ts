@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-case-declarations */
 import '../../styles/options.scss';
 import { showNotification, toastNotify } from '../common/common_utils';
@@ -11,6 +12,11 @@ import {
   getExperience,
   waitForContentScriptLoad,
 } from './optionUtils';
+import {
+  updateWithSavedPreferences,
+  saveUserPreferences,
+} from './optionsUtils2';
+import { GET_USER } from '../constants';
 
 const optionStore = new GeneralStore();
 
@@ -97,10 +103,11 @@ fetchFiltersBtn.addEventListener('click', async () => {
   }
   toastNotify('Fetching Filters for: ', jobKeyword);
   fetchFiltersBtn.disabled = true;
-  const filters = await getFiltersFromContentScript(jobKeyword);
-  toastNotify('Filters Received');
-  createFilters(filters, filterContainer, submitHandler);
+  // const filters = await getFiltersFromContentScript(jobKeyword);
+  // toastNotify('Filters Received');
+  // createFilters(filters, filterContainer, submitHandler);
   fetchFiltersBtn.disabled = false;
+  saveUserPreferences();
 });
 
 // createFilters(filtersData, filterContainer);
@@ -131,15 +138,18 @@ chrome.runtime.onMessage.addListener(
 );
 
 const triggerMainSectionVisibility = (user) => {
+  if (user) {
+    console.log('user bpresent bro: ', user);
+  }
   console.log({ user });
-  console.log('inside trigger');
+  if (user && user.hasOwnProperty('is_subscribed') && !user.is_subscribed) {
+    console.log('inside changing h1');
 
-  if (!user?.is_subscribed) {
     alertMsgH1.innerHTML =
       "Please subscribe to a plan at <a href='https://apply-wiz.com/pricing'>https://apply-wiz.com/pricing</a> to start applying to jobs!";
     return;
   }
-  if (user) {
+  if (user?.id) {
     noLoginSection.classList.add('hidden');
     mainContentSection.classList.remove('hidden');
   } else {
@@ -150,12 +160,9 @@ const triggerMainSectionVisibility = (user) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
-  chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
+  chrome.runtime.sendMessage({ action: GET_USER }, (user) => {
     triggerMainSectionVisibility(user);
+    updateWithSavedPreferences();
     // triggerMainSectionVisibility(true); // temporary
   });
 });
-
-// setInterval(() => {
-//   getExperience();
-// }, 3000);

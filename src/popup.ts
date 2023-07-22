@@ -2,6 +2,7 @@
 import '../styles/popup.scss';
 import { GeneralStore } from './common/General_store';
 import { showNotification } from './common/common_utils';
+import { GET_USER } from './constants';
 import { Message } from './types';
 const contentStore = new GeneralStore();
 
@@ -47,7 +48,10 @@ document.getElementById('go-to-options').addEventListener('click', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Content Script: DOM Loaded');
-  chrome.runtime.sendMessage({ action: 'GET_USER' }, (user) => {
+  chrome.runtime.sendMessage({ action: GET_USER }, (user) => {
+    console.log('in popup: ');
+    console.log({ user });
+
     triggerMainSectionVisibility(user);
   });
 });

@@ -46,7 +46,10 @@ export const getFiltersFromContentScript = (
 };
 
 const container = document.getElementById('experienceContainer');
-export function addNewSkillExperienceRow() {
+export function addNewSkillExperienceRow(
+  skillName = '',
+  experienceForSkill = '',
+) {
   const row = document.createElement('div');
   row.className = 'row';
 
@@ -55,6 +58,7 @@ export function addNewSkillExperienceRow() {
   const skillInput = document.createElement('input');
   skillInput.type = 'text';
   skillInput.name = 'skill[]';
+  skillInput.value = skillName;
   skillColumn.appendChild(skillInput);
   row.appendChild(skillColumn);
 
@@ -63,13 +67,14 @@ export function addNewSkillExperienceRow() {
   const experienceInput = document.createElement('input');
   experienceInput.type = 'text';
   experienceInput.name = 'experience[]';
+  experienceInput.value = experienceForSkill;
   experienceColumn.appendChild(experienceInput);
   row.appendChild(experienceColumn);
 
   const addButton = document.createElement('div');
   addButton.className = 'button';
   addButton.innerHTML = '+';
-  addButton.addEventListener('click', addNewSkillExperienceRow);
+  addButton.addEventListener('click', () => addNewSkillExperienceRow());
   row.appendChild(addButton);
 
   const removeButton = document.createElement('div');

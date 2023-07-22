@@ -27,23 +27,23 @@
       <ol>
         <li>
           <label for="notice">How many days of notice period do you need?:</label>
-          <input type="number" id="notice" value="14" name="notice" placeholder="eg: 14" />
+          <input type="number" id="notice" value="" name="notice" placeholder="eg: 14" />
         </li>
         <li>
           <label for="city">What is the city you are based on?:</label>
-          <input type="text" id="city" value="Trivandrum" name="city" placeholder="eg: New York" />
+          <input type="text" id="city" value="" name="city" placeholder="eg: New York" />
         </li>
         <li>
           <label for="ctc">What is your current salary?:</label>
-          <input type="text" id="ctc" value="2" name="ctc" placeholder="eg: 10lpa" />
+          <input type="text" id="ctc" value="" name="ctc" placeholder="eg: 10lpa" />
         </li>
         <li>
           <label for="ctc">What is your current CTC?:</label>
-          <input type="text" id="ctc" value="2" name="ctc" placeholder="eg: 10lpa" />
+          <input type="text" id="ctc" value="" name="ctc" placeholder="eg: 10lpa" />
         </li>
         <li>
           <label for="keyword">What is your expected CTC?:</label>
-          <input type="text" id="expected" value="2" name="expected" placeholder="eg: 15lpa" />
+          <input type="text" id="expected" value="" name="expected" placeholder="eg: 15lpa" />
         </li>
         <li>
           <label for="message">Your personal message to Hiring Manager</label>
@@ -59,7 +59,7 @@
       <div id="experienceContainer">
         <div>
           <label for="workExp">How many years of general work experience do you have? :</label>
-          <input type="number" id="workExp" value="2" name="workExp" placeholder="eg: 2" />
+          <input type="number" id="workExp" value="" name="workExp" placeholder="eg: 2" />
         </div>
         <li class="row">
           <div class="column" style="font-weight: bold">Skill</div>
@@ -69,20 +69,10 @@
         </li>
         <li class="row">
           <div class="column">
-            <input type="text" name="skill[]" value="javascript" />
+            <input type="text" name="skill[]" value="" />
           </div>
           <div class="column">
-            <input type="number" name="experience[]" value="5" />
-          </div>
-          <div class="button" id="addButton">+</div>
-          <div class="dummy" style="opacity: 0;">-</div>
-        </li>
-        <li class="row">
-          <div class="column">
-            <input type="text" name="skill[]" value="sql" />
-          </div>
-          <div class="column">
-            <input type="number" name="experience[]" value="2" />
+            <input type="number" name="experience[]" value="" />
           </div>
           <div class="button" id="addButton">+</div>
           <div class="dummy" style="opacity: 0;">-</div>
@@ -94,8 +84,7 @@
 
     <section class="container">
       <label for="keyword">Job Keyword:</label>
-      <input type="text" id="jobKeyword" value="Software Engineer" name="keyword"
-        placeholder="eg: Software Developer" />
+      <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer" />
       <br />
       <br />
       <button id="fetchFiltersBtn">
