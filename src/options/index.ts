@@ -14,6 +14,7 @@ import {
 
 const optionStore = new GeneralStore();
 
+const alertMsgH1: HTMLElement = document.querySelector('#alert-msg');
 const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
 const mainContentSection = document.querySelector('main#main-content');
 const noLoginSection = document.querySelector('#no-login');
@@ -129,7 +130,15 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-const triggerMainSectionVisibility = (user?: JSON) => {
+const triggerMainSectionVisibility = (user) => {
+  console.log({ user });
+  console.log('inside trigger');
+
+  if (!user?.is_subscribed) {
+    alertMsgH1.innerHTML =
+      "Please subscribe to a plan at <a href='https://apply-wiz.com/pricing'>https://apply-wiz.com/pricing</a> to start applying to jobs!";
+    return;
+  }
   if (user) {
     noLoginSection.classList.add('hidden');
     mainContentSection.classList.remove('hidden');
