@@ -1,4 +1,4 @@
 - create recording of product workflow
-- add privacy page
-
 - improve UI
+- fix issue with not finding all jobs in page to queue
+- test with number greater than 10 applications

@@ -1,8 +1,7 @@
 /* eslint-disable no-case-declarations */
 import '../styles/popup.scss';
 import { GeneralStore } from './common/General_store';
-import { showNotification } from './common/common_utils';
-import { GET_USER } from './constants';
+import { GET_USER, USER_SIGN_IN, USER_SIGN_OUT } from './constants';
 import { Message } from './types';
 const contentStore = new GeneralStore();
 
@@ -14,7 +13,7 @@ const signOutButton = document.getElementById('signOutBtn');
 
 signOutButton.addEventListener('click', () => {
   chrome.runtime.sendMessage({
-    action: 'USER_SIGN_OUT',
+    action: USER_SIGN_OUT,
   });
 });
 
@@ -36,7 +35,7 @@ loginWithEmailForm.addEventListener('submit', (e) => {
   console.log('sending message');
 
   chrome.runtime.sendMessage({
-    action: 'USER_SIGN_IN',
+    action: USER_SIGN_IN,
     data: { email, password },
   });
 });

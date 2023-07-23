@@ -1,3 +1,6 @@
+import { toastNotify } from '../common/common_utils';
+import { IS_THIS_USER_LOGGED_IN } from '../constants';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export async function waitForContentScriptLoad(tabId: number) {
   return new Promise<void>((resolve) => {
@@ -106,3 +109,28 @@ export function getExperience() {
 
   return skillsArray;
 }
+
+export const isRegisteredUserLoggedInToLinkedIn = (profileLink = '') => {
+  return new Promise<string>((resolve) => {
+    chrome.tabs.create({ url: profileLink, active: false }, async (tab) => {
+      waitForContentScriptLoad(tab.id)
+        .then(() => {
+          console.log('sending new message');
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              action: IS_THIS_USER_LOGGED_IN,
+              data: { tabId: tab.id },
+            },
+            (resp) => {
+              resolve(resp);
+            },
+          );
+        })
+        .catch(() => {
+          console.log('error in waiting content script to load ');
+          toastNotify('Please check your network connection and try again!');
+        });
+    });
+  });
+};

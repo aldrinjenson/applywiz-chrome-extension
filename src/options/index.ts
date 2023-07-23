@@ -11,6 +11,7 @@ import {
   getFiltersFromContentScript,
   getExperience,
   waitForContentScriptLoad,
+  isRegisteredUserLoggedInToLinkedIn,
 } from './optionUtils';
 import {
   updateWithSavedPreferences,
@@ -18,6 +19,7 @@ import {
 } from './optionsUtils2';
 import { GET_USER } from '../constants';
 import { getFirstName } from '../utils';
+let signedInUser = null;
 
 const optionStore = new GeneralStore();
 
@@ -91,13 +93,35 @@ const sendMessageToApplyToJobs = (
 };
 
 const submitHandler = (selectedFilterOptions: []) => {
-  sendMessageToApplyToJobs(selectedFilterOptions);
+  // const user = {
+  //   linkedin_url: 'https://www.linkedin.com/in/john-geo-01b5aa281/',
+  // };
+  chrome.runtime.sendMessage({ action: GET_USER }, async (user) => {
+    toastNotify('Prepariing environment', 'Hold on...');
+    try {
+      if (!user || !user.linkedin_url) {
+        throw new Error('Not signed in to extension');
+      }
+      if (await isRegisteredUserLoggedInToLinkedIn(user.linkedin_url)) {
+        sendMessageToApplyToJobs(selectedFilterOptions);
+      } else {
+        throw new Error('not logged in to correct account');
+      }
+    } catch (error) {
+      console.log('error: ', error);
+      toastNotify(
+        'Please sign In to LinkedIn with your registered LinkedIn account',
+        user.linkedin_url,
+      );
+    }
+  });
 };
 
 fetchFiltersBtn.addEventListener('click', async () => {
-  const jobKeyword = jobKeywordInput.value;
+  let jobKeyword = jobKeywordInput.value;
   if (!jobKeyword) {
-    return alert('Please enter a job Keyword');
+    jobKeyword = 'Software Engineer';
+    // return alert('Please enter a job Keyword');
   }
   toastNotify('Fetching Filters for: ', jobKeyword);
   fetchFiltersBtn.disabled = true;
@@ -107,8 +131,6 @@ fetchFiltersBtn.addEventListener('click', async () => {
   fetchFiltersBtn.disabled = false;
   saveUserPreferences();
 });
-
-// createFilters(filtersData, filterContainer);
 
 chrome.runtime.onMessage.addListener(
   (message: Message, sender, sendReponse) => {
@@ -161,8 +183,9 @@ const triggerMainSectionVisibility = (user) => {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
   chrome.runtime.sendMessage({ action: GET_USER }, (user) => {
-    triggerMainSectionVisibility(user);
+    signedInUser = user;
+    // triggerMainSectionVisibility(user);
     updateWithSavedPreferences();
-    // triggerMainSectionVisibility(true); // temporary
+    triggerMainSectionVisibility(true); // temporary
   });
 });

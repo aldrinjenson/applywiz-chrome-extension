@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     background: './src/background/index.ts',
     generalContent: './src/common/generalContent.ts',
+    linkedInProfileContent: './src/content_script/linkedInProfileContent.ts',
     contentScript: './src/content_script/index.ts',
     popup: './src/popup.ts',
     options: './src/options/index.ts',

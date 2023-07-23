@@ -97,11 +97,8 @@ export function createFilters(
       };
     });
 
-    // Log the selected options JSON
-    console.log(selectedOptions);
     onClick(selectedOptions);
   });
 
-  // Append the form to the document body
   rootElement.appendChild(form);
 }

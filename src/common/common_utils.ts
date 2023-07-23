@@ -21,7 +21,3 @@ export const toastNotify = (title: string, message = '', type = 'basic') => {
     closeNotification(notificationId);
   }, 3000);
 };
-
-export function showNotification(text: string) {
-  chrome.runtime.sendMessage({ action: 'SHOW_NOTIFICATION', data: { text } });
-}
