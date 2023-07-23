@@ -188,7 +188,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     //     numbJobsToAddinDbWindowSize,
     //   );
     //   chrome.runtime.sendMessage({
-    //     action: 'ADD_JOBS_TO_DB',
+    //     action: ADD_JOBS_TO_DB,
     //     data: batchJobBucket,
     //   });
     // }

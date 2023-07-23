@@ -51,10 +51,7 @@ class Store {
   }
 
   dispatch(action: string, data?: unknown) {
-    console.log('dispatching new action: ', action);
     const newState = reducer(this.state, action, data);
-    console.log({ newState });
-
     if (newState !== this.state) {
       this.state = newState;
       // this.saveState();

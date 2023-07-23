@@ -1,5 +1,5 @@
 import { toastNotify } from '../common/common_utils';
-import { IS_THIS_USER_LOGGED_IN } from '../constants';
+import { GET_FILTERS, IS_THIS_USER_LOGGED_IN } from '../constants';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export async function waitForContentScriptLoad(tabId: number) {
@@ -25,7 +25,7 @@ export const getFiltersFromContentScript = (
     chrome.tabs.create({ url, active: false }, async (tab) => {
       await waitForContentScriptLoad(tab.id);
       chrome.tabs.sendMessage(tab.id, {
-        action: 'GET_FILTERS',
+        action: GET_FILTERS,
         data: { tabId: tab.id },
       });
     });

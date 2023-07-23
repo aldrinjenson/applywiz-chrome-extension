@@ -1,4 +1,5 @@
 // import { filtersData } from '../options/sampleFiltersData';
+import { GET_FILTERS, RECEIVE_FILTERS, START_AUTOMATION } from '../constants';
 import { waitForElement } from '../utils';
 import { applySelectedFilters, getFilters } from './filter_utils';
 import { payload } from './payload_data';
@@ -14,11 +15,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       sendResponse('working!');
       break;
     }
-    case 'GET_FILTERS': {
+    case GET_FILTERS: {
       getFilters().then((filters) => {
         console.log(filters);
         chrome.runtime.sendMessage(
-          { action: 'RECEIVE_FILTERS', data: filters },
+          { action: RECEIVE_FILTERS, data: filters },
           (resp) => {
             console.log('response', resp);
           },
@@ -26,7 +27,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       });
       break;
     }
-    case 'START_AUTOMATION': {
+    case START_AUTOMATION: {
       const { filters, user, maxJobs } = message.data;
       console.log(message.data);
       await applySelectedFilters(filters);

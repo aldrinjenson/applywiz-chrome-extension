@@ -17,3 +17,9 @@ export const GET_COUNTER = 'GET_COUNTER';
 export const INCREMENT_COUNTER = 'INCREMENT_COUNTER';
 
 export const IS_THIS_USER_LOGGED_IN = 'IS_THIS_USER_LOGGED_IN';
+
+// fitlers
+export const RECEIVE_FILTERS = 'RECEIVE_FILTERS';
+export const GET_FILTERS = 'GET_FILTERS';
+
+export const START_AUTOMATION = 'START_AUTOMATION';

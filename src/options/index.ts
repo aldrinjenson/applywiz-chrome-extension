@@ -17,9 +17,8 @@ import {
   updateWithSavedPreferences,
   saveUserPreferences,
 } from './optionsUtils2';
-import { GET_USER } from '../constants';
+import { GET_USER, START_AUTOMATION } from '../constants';
 import { getFirstName } from '../utils';
-let signedInUser = null;
 
 const optionStore = new GeneralStore();
 
@@ -62,8 +61,6 @@ const sendMessageToApplyToJobs = (
   filters: [],
   user?: { experience: string; notice: string },
 ) => {
-  console.log('inside bro');
-
   if (!user) {
     user = userData;
   }
@@ -82,7 +79,7 @@ const sendMessageToApplyToJobs = (
     chrome.tabs.sendMessage(
       tab.id,
       {
-        action: 'START_AUTOMATION',
+        action: START_AUTOMATION,
         data: payload,
       },
       () => {
@@ -133,7 +130,7 @@ fetchFiltersBtn.addEventListener('click', async () => {
 });
 
 chrome.runtime.onMessage.addListener(
-  (message: Message, sender, sendReponse) => {
+  (message: Message, _sender, sendReponse) => {
     const { action, data } = message;
     console.log('in options handler');
     console.log(message);
@@ -157,8 +154,12 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-const triggerMainSectionVisibility = (user) => {
-  if (user) {
+const triggerMainSectionVisibility = (user: {
+  id: string;
+  is_subscribed: boolean;
+  name: string;
+}) => {
+  if (user?.id) {
     console.log('user bpresent bro: ', user);
   }
   console.log({ user });
@@ -183,9 +184,8 @@ const triggerMainSectionVisibility = (user) => {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
   chrome.runtime.sendMessage({ action: GET_USER }, (user) => {
-    signedInUser = user;
-    // triggerMainSectionVisibility(user);
+    triggerMainSectionVisibility(user);
+    // triggerMainSectionVisibility(true); // temporary
     updateWithSavedPreferences();
-    triggerMainSectionVisibility(true); // temporary
   });
 });
