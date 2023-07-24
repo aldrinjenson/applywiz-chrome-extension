@@ -213,3 +213,63 @@ export const moveToNextPage = async () => {
   console.log('moving to next page');
   await sleep(2000);
 };
+
+export const handleErrorToastWhileSubmitting = async () => {
+  const errorDivs = (await waitForElement({
+    selector: 'div[data-test-artdeco-toast-item-type="error"]',
+    params: { all: true },
+  })) as HTMLElement[];
+
+  if (!errorDivs || !errorDivs?.length) return;
+
+  console.log('Error toast chances found');
+
+  const matchingErrorToast = errorDivs.find((divElement) => {
+    const spanElement = divElement.querySelector('span');
+    return spanElement;
+    // && spanElement.innerText
+    //   .trim()
+    //   .includes(
+    //     'There was an error while trying to submit your application, please try again.',
+    //   )
+  });
+
+  if (!matchingErrorToast) return;
+
+  console.log('Error toast found');
+  const toastCancelIcon: HTMLLIElement = matchingErrorToast.querySelector(
+    'li-icon[type="cancel-icon"]',
+  );
+  await sleep(1000);
+  toastCancelIcon.click();
+  const saveJobButton = (await waitForElement({
+    selector: 'button[data-control-name="save_application_btn"]',
+    params: { timeout: 5000 },
+  })) as HTMLButtonElement;
+  console.log({ saveJobButton });
+
+  if (saveJobButton) {
+    console.log('clicking save Job button');
+    saveJobButton.click();
+  }
+};
+
+export const getMaxProgressValue = async () => {
+  const completenessMeterDiv = (await waitForElement({
+    selector: '.artdeco-completeness-meter-linear',
+    params: { all: false, timeout: 5000 },
+  })) as HTMLDivElement;
+
+  const siblingSpan =
+    completenessMeterDiv?.nextElementSibling as HTMLSpanElement;
+
+  if (!siblingSpan) {
+    console.log('sibling span not found');
+
+    return 0;
+  }
+
+  const progress = +siblingSpan.innerText.match(/\d+/)[0];
+
+  return progress;
+};

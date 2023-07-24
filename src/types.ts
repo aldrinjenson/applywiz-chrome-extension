@@ -7,7 +7,7 @@ export type jobObjectType = {
   jobName: string;
   jobUrl: string;
   companyName: string;
-  companyImg: string;
+  companyImg?: string;
   companyLocation: string;
   base64Img?: string;
   status?: 'success' | 'failed';

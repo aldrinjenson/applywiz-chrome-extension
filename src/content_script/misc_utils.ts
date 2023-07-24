@@ -38,14 +38,3 @@ export const convertImageToBase64 = async (imageUrl = '') => {
     throw new Error('Failed to fetch the image URL.');
   }
 };
-
-// // Usage:
-// const imageUrl = 'https://media.licdn.com/dms/image/C560BAQHJBk6qu2-dhw/company-logo_100_100/0/1588230150518?e=1697068800&v=beta&t=94kQn81zJfK9TFMUCFMEK8Doht1QeaU3ccAaraKkt3U';
-
-// convertImageToBase64(imageUrl)
-//   .then(base64String => {
-//     console.log(base64String); // Base64 encoded image with "data:image/png;base64" part
-//   })
-//   .catch(error => {
-//     console.error(error);
-//   });

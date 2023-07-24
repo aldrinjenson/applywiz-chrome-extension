@@ -1,4 +1,3 @@
 - create recording of product workflow
 - improve UI for options page
-- fix issue with not finding all jobs in page to queue
 - test with number greater than 10 applications

@@ -1,5 +1,6 @@
 export const payload = {
   name: 'John Geo',
+  city: 'Trivandrum',
   filters: [
     {
       name: 'Sort by',

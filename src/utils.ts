@@ -10,7 +10,7 @@ export function waitForElement({
   };
 }): Promise<HTMLElement[] | HTMLElement> {
   const all = params?.all || false;
-  const timeout = params?.timeout || 4000;
+  const timeout = params?.timeout || 5000;
   const rootEl = params?.rootEl || document;
 
   console.log('waiting for ' + selector);

@@ -4,7 +4,9 @@ import { sendJobsDb } from './message_utils';
 import { convertImageToBase64 } from './misc_utils';
 import {
   fetchAllJobsInCurrPage,
+  getMaxProgressValue,
   handleComplexity,
+  handleErrorToastWhileSubmitting,
   moveToNextPage,
 } from './scraper_utils';
 
@@ -15,7 +17,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   const successfullJobs = [];
   const alreadyAppliedJobs = [];
 
-  const slidingWindowSize = 2;
+  const slidingWindowSize = 1;
 
   let successfullJobSlidingWindow: jobObjectType[] = [];
 
@@ -115,18 +117,34 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           },
         })) as HTMLButtonElement;
 
-        const currentProgressBar = (await waitForElement({
-          selector: 'progress',
-          params: { all: false, timeout: 1000 },
-        })) as HTMLProgressElement;
-        const currentProgressValue = currentProgressBar.value;
-        console.log({ currentProgressValue });
+        const currentProgressBarValue = await getMaxProgressValue();
 
-        if (currentProgressValue > 100) {
+        if (currentProgressBarValue > 100) {
           alert('Current Progress value > 100!');
-          console.log('sleeping for 2.5 seconds');
+          console.log('sleeping for 2.5 seconds and breaking..');
 
           await sleep(2500);
+          const dismissButton = document.querySelector(
+            'button[data-test-modal-close-btn][aria-label="Dismiss"]',
+          );
+
+          // modularise from here:
+          dismissButton.click();
+
+          const discardJobButton = (await waitForElement({
+            selector:
+              'button[data-control-name="discard_application_confirm_btn"]',
+            params: { timeout: 5000 },
+          })) as HTMLButtonElement;
+          console.log({ discardJobButton });
+
+          if (discardJobButton) {
+            console.log('clicking discard Job button');
+            discardJobButton.click();
+          }
+          i--; // for trying again
+          // till here. reuse both
+          break;
         }
 
         if (!nextButton) {
@@ -157,7 +175,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           jobObject.reason = complexityReason;
           failedJobs.push(jobObject);
           jobObject.status = 'failed';
-          jobObject.progress = currentProgressValue;
+          jobObject.progress = currentProgressBarValue;
           console.log('sending failed job to db');
 
           sendJobsDb([jobObject]);
@@ -170,6 +188,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           // nextButton?.click();
           console.log('form complete');
           isFormComplete = true;
+          await handleErrorToastWhileSubmitting();
           await waitForElement({ selector: 'li-icon[type="search"]' }); // search icon which appears after the confirmation modal
           const closeJobModalButton = (await waitForElement({
             selector: 'button[aria-label="Dismiss"]',
@@ -188,9 +207,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
             sendJobsDb(successfullJobSlidingWindow);
             successfullJobSlidingWindow = [];
           }
+          await sleep(1500);
         }
-
-        await sleep(250);
       }
     } catch (error) {
       console.log('error bro: ', error);
