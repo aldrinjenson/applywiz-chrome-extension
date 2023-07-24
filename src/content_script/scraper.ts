@@ -24,18 +24,17 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   console.log(jobSideCards.length, ' jobs found in this page');
 
   let count = 0;
-  // return;
 
-  for (let i = 0; i < jobSideCards.length; i++) {
+  // for (let i = 0; i < jobSideCards.length; i++) {
+  for (let i = 0; count < maxCount; i++, count++) {
+    console.log({ i });
     const jobCard = jobSideCards[i];
     console.log({ i, count, maxCount });
-
-    if (count++ > maxCount) break;
 
     const jobName = jobCard.querySelector('a').innerText.replace(/\s+/g, ' ');
     const jobUrl = jobCard.querySelector('a').href;
     const companyImg =
-      jobCard.querySelector('.ivm-view-attr__img--centered').src || '';
+      jobCard.querySelector('.ivm-view-attr__img--centered')?.src || '';
 
     const base64Img = (await convertImageToBase64(companyImg)) as string;
 
@@ -116,6 +115,20 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           },
         })) as HTMLButtonElement;
 
+        const currentProgressBar = (await waitForElement({
+          selector: 'progress',
+          params: { all: false, timeout: 1000 },
+        })) as HTMLProgressElement;
+        const currentProgressValue = currentProgressBar.value;
+        console.log({ currentProgressValue });
+
+        if (currentProgressValue > 100) {
+          alert('Current Progress value > 100!');
+          console.log('sleeping for 2.5 seconds');
+
+          await sleep(2500);
+        }
+
         if (!nextButton) {
           const finalApplyButton = (await waitForElement({
             selector: finalApplyButtonSelector,
@@ -131,26 +144,27 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
             nextButtonSelector = finalApplyButtonSelector;
             isFinalStep = true;
           }
-          // const completedModal: HTMLButtonElement = await waitForElement(
-          //   'div[aria-labelledby="post-apply-modal"]',
-          // );
-          // formPageCount++;
           continue;
         }
 
         console.log({ isFinalStep });
         await sleep(1500);
         nextButton.click();
-        const isTooComplex = await handleComplexity(user);
+        const { status: isTooComplex, reason: complexityReason } =
+          await handleComplexity(user);
         if (isTooComplex) {
           console.log('breaking..');
+          jobObject.reason = complexityReason;
           failedJobs.push(jobObject);
           jobObject.status = 'failed';
+          jobObject.progress = currentProgressValue;
           console.log('sending failed job to db');
 
           sendJobsDb([jobObject]);
           break;
         }
+        // console.log('chumma sleeping for 2 seconds');
+        // await sleep(2000);
 
         if (isFinalStep) {
           // nextButton?.click();
@@ -160,6 +174,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           const closeJobModalButton = (await waitForElement({
             selector: 'button[aria-label="Dismiss"]',
           })) as HTMLButtonElement;
+
+          // await waitForElement({})
 
           console.log('closing');
           await sleep(1200);
@@ -193,21 +209,32 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     //   });
     // }
 
-    if (i === jobSideCards.length - 1 && count < maxCount - 1) {
-      // if last card and less than
-      console.log('moving on to next page ');
+    if (i >= jobSideCards.length - 1 && count < maxCount - 1) {
+      // if last card and less than count
 
-      await moveToNextPage();
-      console.log('fetching jobsidecards again');
-      jobSideCards = await fetchAllJobsInCurrPage();
-      i = 0;
+      const newJobSideCards = await fetchAllJobsInCurrPage();
+      if (newJobSideCards.length === jobSideCards.length) {
+        // if all jobs have been parsed
+        console.log('moving on to next page ');
+        await moveToNextPage();
+        console.log('fetching jobsidecards again');
+        jobSideCards = await fetchAllJobsInCurrPage();
+        i = 0;
+      } else {
+        // if some jobs habe been missed, parse them first before mobing on to next page
+        for (const newJob of newJobSideCards) {
+          if (!jobSideCards.includes(newJob)) {
+            jobSideCards.push(newJob);
+          }
+        }
+      }
     }
   }
 
   const status = { alreadyAppliedJobs, successfullJobs, failedJobs };
   console.log(status);
 
-  console.log(successfullJobSlidingWindow);
+  console.log({ successfullJobSlidingWindow });
 
   if (successfullJobSlidingWindow.length) {
     sendJobsDb(successfullJobSlidingWindow);

@@ -50,23 +50,20 @@ export const addJobsToDb = async (
   console.log(jobObjects);
   console.log(userId);
 
+  // to do: change the userId to be dynamic
   try {
     const modifiedJobObjects = jobObjects.map((jobObj) => ({
       ...jobObj,
-      userId,
+      userId: userId || '254ef487-212f-4893-b73f-977cfd024e46',
     }));
     console.log({ modifiedJobObjects });
 
-    const { data, error } = await supabase
-      .from('jobs')
-      .insert(modifiedJobObjects);
+    const { error } = await supabase.from('jobs').insert(modifiedJobObjects);
 
     if (error) {
       throw new Error(error.message);
     }
-
-    console.log('Batch write operation of jobs successful');
-    console.log('Inserted rows:', data);
+    console.log('write operation of jobs successful');
   } catch (error) {
     console.error('Error performing batch write operation:', error.message);
     // You can handle the error or rethrow it to let the calling code handle it.

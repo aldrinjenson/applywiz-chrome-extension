@@ -11,4 +11,6 @@ export type jobObjectType = {
   companyLocation: string;
   base64Img?: string;
   status?: 'success' | 'failed';
+  reason?: string;
+  progress?: number;
 };

@@ -35,6 +35,9 @@ export const fetchAllJobsInCurrPage = async () => {
     document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
   );
   console.log('loop done');
+  console.log(jobSideCards);
+  console.log(jobSideCards.length + ' jobs found');
+
   return jobSideCards;
 };
 
@@ -43,7 +46,7 @@ const handleAnyUnfilledColumns = async (user) => {
     document.querySelectorAll('li-icon[type="error-pebble-icon"]'),
   );
 
-  if (!errorDivs.length) return false;
+  if (!errorDivs.length) return { status: false, reason: null };
 
   const errorInputWrappers = errorDivs.map(
     (div) => div.parentElement.parentElement.parentElement,
@@ -143,36 +146,38 @@ const handleAnyUnfilledColumns = async (user) => {
         'Not able to fill all fields based on given user object for label: ' +
           labelText,
       );
+      console.log(label);
+      const errorReason = `Cannot answer Input field: ${labelText}`;
       // await sleep(2500);
-      return true;
+      return { status: true, reason: errorReason };
     }
   }
   // console.log('before sleeping');
   // await sleep(4000);
   // console.log('after 5 second sleep');
-  return false;
+  return { status: false, reason: null };
 };
 
 export const handleComplexity = async (user) => {
-  const isTooComplexToFill: boolean = await handleAnyUnfilledColumns(user);
-  console.log({ isTooComplexToFill });
+  const complexityObj = await handleAnyUnfilledColumns(user);
+  const { status: isTooComplex, reason: complexityReason } = complexityObj;
+  console.log({ isTooComplex, complexityReason });
 
-  if (isTooComplexToFill) {
+  if (isTooComplex) {
     alert('too complex');
     // close the job and throw error to try again
-    const closeJobModalButton: HTMLButtonElement = await waitForElement({
+    const closeJobModalButton = (await waitForElement({
       selector: 'button[aria-label="Dismiss"]',
-    });
+    })) as HTMLButtonElement;
     closeJobModalButton?.click();
-    const confirmDiscardJobButton: HTMLButtonElement = await waitForElement({
+    const confirmDiscardJobButton = (await waitForElement({
       selector: '[data-control-name="discard_application_confirm_btn"]',
-    });
+    })) as HTMLButtonElement;
     confirmDiscardJobButton.click();
     alert('dismissing');
     console.log(' Warning: Fields too complex to be filled. Skipping Job');
-    return true;
   }
-  return false;
+  return complexityObj;
 };
 
 export const moveToNextPage = async () => {

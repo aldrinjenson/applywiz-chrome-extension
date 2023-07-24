@@ -25,6 +25,7 @@ const optionStore = new GeneralStore();
 const alertMsgH1: HTMLHeadingElement = document.querySelector('#alert-msg');
 const userGreetingH1: HTMLHeadingElement =
   document.querySelector('#user-greeting');
+const candidateNameInput: HTMLInputElement = document.querySelector('#name');
 const jobKeywordInput: HTMLInputElement = document.querySelector('#jobKeyword');
 const mainContentSection = document.querySelector('main#main-content');
 const noLoginSection = document.querySelector('#no-login');
@@ -41,15 +42,6 @@ addButton.addEventListener('click', () => addNewSkillExperienceRow());
 const filterContainer: HTMLDivElement =
   document.querySelector('#filter-container');
 
-const userData = {
-  experience: workExpInput.value,
-  notice: noticePeriodInput.value,
-  ctc: ctcInput.value,
-  compensation: ctcInput.value,
-  message: messagToHiringManagerInput.value,
-  expected: expectedCtcInput.value,
-};
-
 // const startBtn: HTMLButtonElement = document.querySelector('#applyBtn');
 // startBtn.addEventListener('click', () => {
 //   sendMessageToApplyToJobs(filtersData, userData);
@@ -61,6 +53,15 @@ const sendMessageToApplyToJobs = (
   filters: [],
   user?: { experience: string; notice: string },
 ) => {
+  const userData = {
+    name: candidateNameInput.value,
+    experience: workExpInput.value,
+    notice: noticePeriodInput.value,
+    ctc: ctcInput.value,
+    compensation: ctcInput.value,
+    message: messagToHiringManagerInput.value,
+    expected: expectedCtcInput.value,
+  };
   if (!user) {
     user = userData;
   }
@@ -120,13 +121,13 @@ fetchFiltersBtn.addEventListener('click', async () => {
     jobKeyword = 'Software Engineer';
     // return alert('Please enter a job Keyword');
   }
+  saveUserPreferences();
   toastNotify('Fetching Filters for: ', jobKeyword);
   fetchFiltersBtn.disabled = true;
   const filters = await getFiltersFromContentScript(jobKeyword);
   toastNotify('Filters Received');
   createFilters(filters, filterContainer, submitHandler);
   fetchFiltersBtn.disabled = false;
-  saveUserPreferences();
 });
 
 chrome.runtime.onMessage.addListener(

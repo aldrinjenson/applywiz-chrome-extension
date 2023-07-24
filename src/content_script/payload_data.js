@@ -1,4 +1,5 @@
 export const payload = {
+  name: 'John Geo',
   filters: [
     {
       name: 'Sort by',
@@ -126,12 +127,12 @@ export const payload = {
         {
           value: 'Changeleaders.in',
           id: 'advanced-filter-company-13469973',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'Cortex Consultants LLC',
           id: 'advanced-filter-company-1120803',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'EPAM Anywhere',
@@ -141,22 +142,22 @@ export const payload = {
         {
           value: 'Semtronics Limited',
           id: 'advanced-filter-company-11200462',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'Bluedot Designn',
           id: 'advanced-filter-company-13715406',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'Mphasis',
           id: 'advanced-filter-company-3586',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'Crossover',
           id: 'advanced-filter-company-9308035',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'EPAM Systems',
@@ -166,7 +167,7 @@ export const payload = {
         {
           value: 'SA 3D Solutions',
           id: 'advanced-filter-company-72638301',
-          isSelected: false,
+          isSelected: true,
         },
         {
           value: 'Add a company',
@@ -582,5 +583,5 @@ export const payload = {
     salary: '2',
     generalExp: 2,
   },
-  maxJobs: 5,
+  maxJobs: 50,
 };
