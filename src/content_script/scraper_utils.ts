@@ -220,7 +220,7 @@ export const handleErrorToastWhileSubmitting = async () => {
     params: { all: true },
   })) as HTMLElement[];
 
-  if (!errorDivs || !errorDivs?.length) return;
+  if (!errorDivs || !errorDivs?.length) return false;
 
   console.log('Error toast chances found');
 
@@ -234,7 +234,7 @@ export const handleErrorToastWhileSubmitting = async () => {
     //   )
   });
 
-  if (!matchingErrorToast) return;
+  if (!matchingErrorToast) return false;
 
   console.log('Error toast found');
   const toastCancelIcon: HTMLLIElement = matchingErrorToast.querySelector(
@@ -242,16 +242,25 @@ export const handleErrorToastWhileSubmitting = async () => {
   );
   await sleep(1000);
   toastCancelIcon.click();
-  const saveJobButton = (await waitForElement({
-    selector: 'button[data-control-name="save_application_btn"]',
+
+  const dismissButton = document.querySelector(
+    'button[data-test-modal-close-btn][aria-label="Dismiss"]',
+  ) as HTMLButtonElement;
+
+  // modularise from here:
+  dismissButton.click();
+
+  const discardJobButton = (await waitForElement({
+    selector: 'button[data-control-name="discard_application_confirm_btn"]',
     params: { timeout: 5000 },
   })) as HTMLButtonElement;
-  console.log({ saveJobButton });
+  console.log({ discardJobButton });
 
-  if (saveJobButton) {
-    console.log('clicking save Job button');
-    saveJobButton.click();
+  if (discardJobButton) {
+    console.log('clicking discard Job button');
+    discardJobButton.click();
   }
+  return true;
 };
 
 export const getMaxProgressValue = async () => {

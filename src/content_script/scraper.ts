@@ -17,11 +17,10 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   const successfullJobs = [];
   const alreadyAppliedJobs = [];
 
-  const slidingWindowSize = 1;
-
+  const slidingWindowSize = 2;
   let successfullJobSlidingWindow: jobObjectType[] = [];
-
   let jobSideCards: HTMLElement[] = await fetchAllJobsInCurrPage();
+
   console.log(jobSideCards);
   console.log(jobSideCards.length, ' jobs found in this page');
 
@@ -32,12 +31,12 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     console.log({ i });
     const jobCard = jobSideCards[i];
     console.log({ i, count, maxCount });
+    console.log({ jobSideCards, jobCard });
 
     const jobName = jobCard.querySelector('a').innerText.replace(/\s+/g, ' ');
     const jobUrl = jobCard.querySelector('a').href;
     const companyImg =
       jobCard.querySelector('.ivm-view-attr__img--centered')?.src || '';
-
     const base64Img = (await convertImageToBase64(companyImg)) as string;
 
     const companyName = jobCard.querySelector(
@@ -188,7 +187,11 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           // nextButton?.click();
           console.log('form complete');
           isFormComplete = true;
-          await handleErrorToastWhileSubmitting();
+          const shouldRetry = await handleErrorToastWhileSubmitting();
+          if (shouldRetry) {
+            i--;
+            break;
+          }
           await waitForElement({ selector: 'li-icon[type="search"]' }); // search icon which appears after the confirmation modal
           const closeJobModalButton = (await waitForElement({
             selector: 'button[aria-label="Dismiss"]',
