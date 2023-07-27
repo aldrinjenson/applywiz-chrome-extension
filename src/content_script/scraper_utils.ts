@@ -108,8 +108,10 @@ const handleAnyUnfilledColumns = async (user) => {
       const { tags = [], value = '' } = tagRow;
 
       let isMatchingAdvancedTagRowFound = true;
-      for (const tag in tags) {
+      for (const tag of tags) {
         const isNotIncluding = !labelText.includes(tag);
+        console.log(tag, labelText);
+
         if (isNotIncluding) {
           // if not all tags in advancedTagRow matches
           isMatchingAdvancedTagRowFound = false;
@@ -122,7 +124,10 @@ const handleAnyUnfilledColumns = async (user) => {
       if (!isMatchingAdvancedTagRowFound) continue;
       console.log('mathing row found: ', tagRow);
 
+      console.log({ input, value });
       input.value = value;
+      console.log(input);
+
       const inputEvent = new Event('input', { bubbles: true });
       console.log(
         'filling label: ',
@@ -132,9 +137,10 @@ const handleAnyUnfilledColumns = async (user) => {
       );
       input.dispatchEvent(inputEvent);
       fieldsFilled = true;
+      alert('match found!');
       break;
     }
-
+    // here
     // second priority given to other keys in user object
     for (const key in user) {
       if (labelText.includes(key.toLowerCase())) {

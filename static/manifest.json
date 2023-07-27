@@ -16,7 +16,7 @@
       "js": ["contentScript.js"]
     },
     {
-      "matches": ["https://www.linkedin.com/*/*"],
+      "matches": ["https://www.linkedin.com/[a-z]{2}/[^/ ]+/.+"],
       "js": ["linkedInProfileContent.js"]
     }
   ],

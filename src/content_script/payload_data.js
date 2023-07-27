@@ -576,27 +576,31 @@ export const payload = {
         experience: '2',
       },
     ],
-    notice: '14',
-    ctc: '2',
+    notice: '',
+    ctc: '',
     compensation: '2',
     message: 'I would be a good fit for this role!',
-    expected: '2',
-    salary: '2',
+    expected: '',
+    salary: '',
     generalExp: 2,
+    advancedTags: [
+      {
+        tags: ['ctc', 'expected'],
+        value: 15,
+      },
+      {
+        tags: ['notice'],
+        value: 14,
+      },
+      {
+        tags: ['city'],
+        value: 'trivandrum',
+      },
+      {
+        tags: ['ctc'],
+        value: 10,
+      },
+    ],
   },
-  advancedTags: [
-    {
-      tags: ['ctc', 'expected'],
-      value: '15',
-    },
-    {
-      tags: ['city'],
-      value: 'trivandrum',
-    },
-    {
-      tags: ['ctc'],
-      value: '10',
-    },
-  ],
-  maxJobs: 50,
+  maxJobs: 3,
 };
