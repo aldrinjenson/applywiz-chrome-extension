@@ -36,7 +36,7 @@ export const updateWithSavedPreferences = async () => {
 
       allInputFields.forEach((inp) => {
         const { id: inputId } = inp;
-        if (savedUserPreferrences.hasOwnProperty(inputId)) {
+        if (savedUserPreferrences?.hasOwnProperty(inputId)) {
           inp.value = savedUserPreferrences[inputId];
         }
       });

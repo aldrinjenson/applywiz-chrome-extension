@@ -67,6 +67,6 @@ export const addJobsToDb = async (
   } catch (error) {
     console.error('Error performing batch write operation:', error.message);
     // You can handle the error or rethrow it to let the calling code handle it.
-    throw error;
+    // throw error;
   }
 };

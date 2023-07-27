@@ -138,32 +138,28 @@ chrome.runtime.onMessage.addListener(
 supabase.auth.onAuthStateChange(async (event, session) => {
   const user = session?.user;
 
-  // switch (event) {
-  //   case 'INITIAL_SESSION':
-  //     const sb_sesion = await getStorageItem('sb_session');
-  //     console.log('trying to get session from storage');
-  //     if (sb_sesion) {
-  //       console.log({ sb_sesion });
-  //       console.log(sb_sesion.user);
-
-  //       // console.log('setting supabase session');
-  //       // supabase.auth.setSession(sb_sesion);
-  //     }
-  //     break;
-  //   case 'SIGNED_IN':
-  //     const fullUser = await getFullUser(user);
-  //     console.log('setting in storage');
-  //     store.dispatch(SET_USER, fullUser);
-  //     await setStorageItem('sb_session', session);
-  //     break;
-  //   case 'SIGNED_OUT':
-  //     store.dispatch(SET_USER, null);
-  //     chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user: null });
-  //     await setStorageItem('sb_session', null);
-  //     break;
-  //   default:
-  //     break;
-  // }
+  switch (event) {
+    case 'INITIAL_SESSION':
+      const sb_sesion = await getStorageItem('sb_session');
+      console.log('trying to get session from storage');
+      if (sb_sesion) {
+        // console.log({ sb_sesion });
+      }
+      break;
+    case 'SIGNED_IN':
+      const fullUser = await getFullUser(user);
+      console.log('setting in storage');
+      store.dispatch(SET_USER, fullUser);
+      await setStorageItem('sb_session', session);
+      break;
+    case 'SIGNED_OUT':
+      store.dispatch(SET_USER, null);
+      chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user: null });
+      await setStorageItem('sb_session', null);
+      break;
+    default:
+      break;
+  }
 });
 
 chrome.runtime.onStartup.addListener(async () => {

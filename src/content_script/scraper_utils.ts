@@ -164,7 +164,7 @@ export const handleComplexity = async (user) => {
   console.log({ isTooComplex, complexityReason });
 
   if (isTooComplex) {
-    alert('too complex');
+    console.log('too complex');
     // close the job and throw error to try again
     const closeJobModalButton = (await waitForElement({
       selector: 'button[aria-label="Dismiss"]',
@@ -174,7 +174,7 @@ export const handleComplexity = async (user) => {
       selector: '[data-control-name="discard_application_confirm_btn"]',
     })) as HTMLButtonElement;
     confirmDiscardJobButton.click();
-    alert('dismissing');
+    console.log('dismissing');
     console.log(' Warning: Fields too complex to be filled. Skipping Job');
   }
   return complexityObj;

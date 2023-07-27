@@ -17,7 +17,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   const successfullJobs = [];
   const alreadyAppliedJobs = [];
 
-  const slidingWindowSize = 2;
+  const slidingWindowSize = 1;
   let successfullJobSlidingWindow: jobObjectType[] = [];
   let jobSideCards: HTMLElement[] = await fetchAllJobsInCurrPage();
 
@@ -27,13 +27,21 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   let count = 0;
 
   // for (let i = 0; i < jobSideCards.length; i++) {
-  for (let i = 0; count < maxCount; i++, count++) {
+  for (let i = 0; count <= maxCount; i++, count++) {
     console.log({ i });
     const jobCard = jobSideCards[i];
     console.log({ i, count, maxCount });
     console.log({ jobSideCards, jobCard });
 
-    const jobName = jobCard.querySelector('a').innerText.replace(/\s+/g, ' ');
+    let jobName = '';
+    try {
+      jobName = jobCard.querySelector('a').innerText.replace(/\s+/g, ' ');
+    } catch (error) {
+      console.log('error in querySelector: ', error);
+      jobSideCards = await fetchAllJobsInCurrPage();
+      i--;
+      continue;
+    }
     const jobUrl = jobCard.querySelector('a').href;
     const companyImg =
       jobCard.querySelector('.ivm-view-attr__img--centered')?.src || '';
@@ -112,15 +120,15 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           selector: nextButtonSelector,
           params: {
             all: false,
-            timeout: 1500,
+            timeout: 2500,
           },
         })) as HTMLButtonElement;
 
         const currentProgressBarValue = await getMaxProgressValue();
 
         if (currentProgressBarValue > 100) {
-          alert('Current Progress value > 100!');
-          console.log('sleeping for 2.5 seconds and breaking..');
+          console.log('Current Progress value > 100!');
+          console.log('sleeping for 2.5 seconds and breaking to retry..');
 
           await sleep(2500);
           const dismissButton = document.querySelector(
