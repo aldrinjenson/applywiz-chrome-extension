@@ -6,7 +6,7 @@ import { GeneralStore } from '../common/General_store';
 import { Message } from '../types';
 import { createFilters } from './filterUtils';
 import { filtersData } from './sampleFiltersData';
-import { addNewSkillExperienceRow, getExperience } from './optionUtils';
+import { addNewSkillExperienceRow, getExperience } from './tagRowUtils';
 import { updateWithSavedPreferences, saveUserPreferences } from './userPrefs';
 import { GET_USER, START_AUTOMATION } from '../constants';
 import { getFirstName } from '../utils';
@@ -54,9 +54,12 @@ const sendMessageToApplyToJobs = (
     experience: workExpInput.value,
     notice: noticePeriodInput.value,
     ctc: ctcInput.value,
+    salary: ctcInput.value,
+    lpa: ctcInput.value,
     compensation: ctcInput.value,
     message: messagToHiringManagerInput.value,
     expected: expectedCtcInput.value,
+    generalExp: workExpInput.value,
   };
   if (!user) {
     user = userData;
@@ -68,9 +71,8 @@ const sendMessageToApplyToJobs = (
 
     const experienceObj = getExperience();
     console.log(experienceObj);
-    user.generalExp = workExpInput.value;
+    // user.generalExp = workExpInput.value;
     user.experience = experienceObj;
-    user.salary = user.ctc; // make this dynamic with multiple key values
 
     const payload = { filters, user, maxJobs: +maxJobsInput.value };
     chrome.tabs.sendMessage(

@@ -39,10 +39,6 @@
             <input type="text" id="city" value="" name="city" placeholder="eg: New York" />
           </li>
           <li>
-            <label for="ctc">What is your current salary?:</label>
-            <input type="text" id="ctc" value="" name="ctc" placeholder="eg: 250000" />
-          </li>
-          <li>
             <label for="ctc">What is your current CTC?:</label>
             <input type="text" id="ctc" value="" name="ctc" placeholder="eg: 250000" />
           </li>
@@ -94,37 +90,38 @@
           <p>Use this only if many jobs are shown as failed in <a href="https://apply-wiz.com/report">Daily Reports</a>
           </p>
           <p>Separate by comma those that you want to match</p>
-
-          <li class="row">
-            <div class="column">
-              <input type="text" name="skill[]" value="ctc,current,dollar" />
-            </div>
-            <div class="column">
-              <input type="number" name="experience[]" value="50000" />
-            </div>
-            <div class="button" id="addButton">+</div>
-            <div class="button" style="opacity: 0;">-</div>
-          </li>
-          <li class="row">
-            <div class="column">
-              <input type="text" name="skill[]" value="ctc,current" />
-            </div>
-            <div class="column">
-              <input type="number" name="experience[]" value="" />
-            </div>
-            <div class="button" id="addButton">+</div>
-            <div class="button">-</div>
-          </li>
-          <li class="row">
-            <div class="column">
-              <input type="text" name="skill[]" value="ctc,current" />
-            </div>
-            <div class="column">
-              <input type="number" name="experience[]" value="" />
-            </div>
-            <div class="button" id="addButton">+</div>
-            <div class="button">-</div>
-          </li>
+          <div id="advanced-tags-container">
+            <li class="row">
+              <div class="column">
+                <input type="text" name="skill[]" value="ctc,current,dollar" />
+              </div>
+              <div class="column">
+                <input type="number" name="experience[]" value="50000" />
+              </div>
+              <div class="button" id="addButton">+</div>
+              <div class="button" style="opacity: 0;">-</div>
+            </li>
+            <li class="row">
+              <div class="column">
+                <input type="text" name="skill[]" value="ctc,current" />
+              </div>
+              <div class="column">
+                <input type="number" name="experience[]" value="" />
+              </div>
+              <div class="button" id="addButton">+</div>
+              <div class="button">-</div>
+            </li>
+            <li class="row">
+              <div class="column">
+                <input type="text" name="skill[]" value="ctc,current" />
+              </div>
+              <div class="column">
+                <input type="number" name="experience[]" value="" />
+              </div>
+              <div class="button" id="addButton">+</div>
+              <div class="button">-</div>
+            </li>
+          </div>
 
         </div>
 
