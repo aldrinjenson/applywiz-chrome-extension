@@ -6,19 +6,15 @@ import { GeneralStore } from '../common/General_store';
 import { Message } from '../types';
 import { createFilters } from './filterUtils';
 import { filtersData } from './sampleFiltersData';
-import {
-  addNewSkillExperienceRow,
-  getFiltersFromContentScript,
-  getExperience,
-  waitForContentScriptLoad,
-  isRegisteredUserLoggedInToLinkedIn,
-} from './optionUtils';
-import {
-  updateWithSavedPreferences,
-  saveUserPreferences,
-} from './optionsUtils2';
+import { addNewSkillExperienceRow, getExperience } from './optionUtils';
+import { updateWithSavedPreferences, saveUserPreferences } from './userPrefs';
 import { GET_USER, START_AUTOMATION } from '../constants';
 import { getFirstName } from '../utils';
+import {
+  getFiltersFromContentScript,
+  isRegisteredUserLoggedInToLinkedIn,
+  waitForContentScriptLoad,
+} from './option_content_script_related';
 
 const optionStore = new GeneralStore();
 
