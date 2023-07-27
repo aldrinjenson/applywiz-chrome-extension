@@ -1,29 +1,76 @@
-@import 'common.scss';
+/* Import common styles if required */
+// @import 'common.scss';
+
+/* Global Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #eafbff;
+  color: #333;
+  
+}
 
 .container {
-  // min-height: 100vh;
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
-  // margin: 0.5%;
+  margin-bottom: 20px;
   padding: 1%;
   margin-bottom: 0;
   padding-bottom: 0;
+
+
 }
 
-#filter-container {
-  margin: 3%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+.center-align {
+  text-align: center;
 }
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
 .row {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  width: 55vw;
+  width: 100%; /* Make the row take 100% of the container width */
+
 }
+.row .column {
+  flex: 1;
+  padding: 5px;
+}
+
+
 
 .column {
   flex: 1;
@@ -33,15 +80,93 @@
 .button {
   margin-left: 5px;
   cursor: pointer;
+  font-size: 30px; /* Adjust the value as needed for the desired size */
+  
 }
 
-// input[type='text'] {
-//   width: 10%; /* Adjust the width as needed */
-// }
+/* Centered Content */
+#no-login {
+  display: none;
+}
 
-// input[type='number'] {
-//   width: 20%; /* Adjust the width as needed */
-// }
-input {
-  margin-left: 1rem;
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Main Content */
+#main-content {
+  margin: 3%;
+}
+
+#main-content .hidden {
+  display: none;
+}
+
+/* Experience Section */
+#experienceContainer {
+  margin-bottom: 20px;
+}
+
+#skills-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Apply Button Section */
+#filter-container {
+  margin: 3%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+/* Note Section */
+.note {
+  font-size: 14px;
+  color: #777;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Each child section will take 50% of the screen width */
+.flex-container > .container {
+  width: 50%;
+  box-sizing: border-box; /* Include padding in the width calculation */
+  padding: 2rem; /* Optional: Add some padding to each section */
+ margin-right: 3rem;
+ margin-left: 3rem;
+}
+
+.row input[type="text"],
+.row input[type="number"] {
+  width: 75%;
+}
+
+.row input[type="number"] {
+  margin-left: 1.2rem;
+}
+
+.button2 {
+  margin-top: 1rem;
+  padding: 0.4rem;
+  width: 20%;
+  background: #0094a8;
+  cursor: pointer;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 300;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  border-color: transparent;
+
+}
+.button2:hover {
+  letter-spacing: 0.5px;
+  background: #7edefc;
 }
