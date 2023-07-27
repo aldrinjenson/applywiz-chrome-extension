@@ -6,7 +6,11 @@ import { GeneralStore } from '../common/General_store';
 import { Message } from '../types';
 import { createFilters } from './filterUtils';
 import { filtersData } from './sampleFiltersData';
-import { addNewSkillExperienceRow, getExperience } from './tagRowUtils';
+import {
+  addNewSkillExperienceRow,
+  getAdvancedTagValues,
+  getExperience,
+} from './tagRowUtils';
 import { updateWithSavedPreferences, saveUserPreferences } from './userPrefs';
 import { GET_USER, START_AUTOMATION } from '../constants';
 import { getFirstName } from '../utils';
@@ -60,6 +64,7 @@ const sendMessageToApplyToJobs = (
     message: messagToHiringManagerInput.value,
     expected: expectedCtcInput.value,
     generalExp: workExpInput.value,
+    advancedTags: [],
   };
   if (!user) {
     user = userData;
@@ -73,6 +78,8 @@ const sendMessageToApplyToJobs = (
     console.log(experienceObj);
     // user.generalExp = workExpInput.value;
     user.experience = experienceObj;
+    user.advancedTags = getAdvancedTagValues();
+    console.log(user.advancedTags);
 
     const payload = { filters, user, maxJobs: +maxJobsInput.value };
     chrome.tabs.sendMessage(
@@ -95,10 +102,11 @@ const submitHandler = (selectedFilterOptions: []) => {
   chrome.runtime.sendMessage({ action: GET_USER }, async (user) => {
     toastNotify('Prepariing environment', 'Hold on...');
     try {
-      if (!user || !user.linkedin_url) {
+      // change false
+      if (false || !user || !user.linkedin_url) {
         throw new Error('Not signed in to extension');
       }
-      if (await isRegisteredUserLoggedInToLinkedIn(user.linkedin_url)) {
+      if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
         sendMessageToApplyToJobs(selectedFilterOptions);
       } else {
         throw new Error('not logged in to correct account');
@@ -107,7 +115,7 @@ const submitHandler = (selectedFilterOptions: []) => {
       console.log('error: ', error);
       toastNotify(
         'Please sign In to LinkedIn with your registered LinkedIn account',
-        user.linkedin_url,
+        user?.linkedin_url,
       );
     }
   });

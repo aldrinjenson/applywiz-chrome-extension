@@ -1,8 +1,8 @@
-- create recording of product workflow
-- finalise flow for stripe payments in production
+# Stuff to do
 
-- make proper payment with stripe production card
-- add supabaseUser utils for filling name, showing number of automations done today etc.
+- create recording of product workflow
+
+- add supabaseUser utils for filling name, showing number of automations done today etc
 - fix forgot password issue in website
 - add counter in website for total number of jobs
 
@@ -11,9 +11,12 @@
 - feature to support multiple resumes
 - minimise FAQs
 
+- stopping with a job application currently in progress
+
 ---
 
-- being able to add multipe rows
-- reading all key value pairs
-- splitting based on comma and then adding it to an array of sorts
 - reading through the array and filling it later during job
+
+# #To ask users to do
+
+- ask them to fill personal demographic information here: https://www.linkedin.com/mypreferences/d/demographic-info-copy

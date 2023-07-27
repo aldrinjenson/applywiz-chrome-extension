@@ -1,19 +1,28 @@
 /* eslint-disable no-prototype-builtins */
 import { GET_USER_PREFERENCES, SET_USER_PREFERENCES } from '../constants';
-import { addNewSkillExperienceRow, getExperience } from './tagRowUtils';
+import {
+  addNewSkillExperienceRow,
+  addNewTagRow,
+  getAdvancedTagValues,
+  getExperience,
+} from './tagRowUtils';
 
 const allInputFields = document.querySelectorAll('input');
 export const saveUserPreferences = () => {
   console.log('gonna save user preferences');
 
-  console.log(allInputFields);
-
-  const searchPreferences = {};
+  const searchPreferences: {
+    experiences: { skill: string; experience: string | number };
+    advancedTags: { tags: string[]; value: string }[];
+    [x: string]: string | { tags: string[]; value: string }[];
+  } = {};
 
   allInputFields.forEach((inp) => {
     if (inp.id) searchPreferences[inp.id] = inp.value;
   });
   searchPreferences.experiences = getExperience();
+  searchPreferences.advancedTags = getAdvancedTagValues();
+
   console.log({ searchPreferences });
 
   console.log('sending request to save users');
@@ -33,6 +42,7 @@ export const updateWithSavedPreferences = async () => {
     { action: GET_USER_PREFERENCES },
     (savedUserPreferrences) => {
       console.log({ savedUserPreferrences });
+      if (!savedUserPreferrences) return;
 
       allInputFields.forEach((inp) => {
         const { id: inputId } = inp;
@@ -41,10 +51,16 @@ export const updateWithSavedPreferences = async () => {
         }
       });
 
-      savedUserPreferrences.experiences.forEach(
+      savedUserPreferrences?.experiences.forEach(
         (exp: { skill: string; experience: string }) => {
           const { skill, experience: years } = exp;
           addNewSkillExperienceRow(skill, years);
+        },
+      );
+
+      savedUserPreferrences?.advancedTags?.forEach(
+        (tagRow: { tags: string[]; value: string }) => {
+          addNewTagRow(tagRow.tags.join(', '), tagRow.value);
         },
       );
     },

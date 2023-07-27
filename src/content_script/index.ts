@@ -40,6 +40,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         );
         return;
       }
+      console.log({ user });
+
       await applyToJobs(filters, user, maxJobs);
       break;
     }

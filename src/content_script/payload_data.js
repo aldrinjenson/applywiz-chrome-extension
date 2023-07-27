@@ -584,5 +584,19 @@ export const payload = {
     salary: '2',
     generalExp: 2,
   },
+  advancedTags: [
+    {
+      tags: ['ctc', 'expected'],
+      value: '15',
+    },
+    {
+      tags: ['city'],
+      value: 'trivandrum',
+    },
+    {
+      tags: ['ctc'],
+      value: '10',
+    },
+  ],
   maxJobs: 50,
 };

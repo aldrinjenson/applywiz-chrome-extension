@@ -77,6 +77,7 @@ const handleAnyUnfilledColumns = async (user) => {
       continue;
     }
 
+    console.log({ user });
     // for handling experience input fields
     if (labelText.includes('experience')) {
       const inputEvent = new Event('input', { bubbles: true });
@@ -90,8 +91,6 @@ const handleAnyUnfilledColumns = async (user) => {
         }
       }
       if (!fieldsFilled) {
-        console.log(user);
-
         input.value = user.generalExp;
         console.log('filled experience with general exp');
         fieldsFilled = true;
@@ -101,6 +100,42 @@ const handleAnyUnfilledColumns = async (user) => {
     }
 
     // for handling normal input fields other than experience
+    // first priority given to advancedTags
+    for (const tagRow of user.advancedTags) {
+      console.log('searching in tags row');
+      console.log(tagRow, labelText);
+
+      const { tags = [], value = '' } = tagRow;
+
+      let isMatchingAdvancedTagRowFound = true;
+      for (const tag in tags) {
+        const isNotIncluding = !labelText.includes(tag);
+        if (isNotIncluding) {
+          // if not all tags in advancedTagRow matches
+          isMatchingAdvancedTagRowFound = false;
+          console.log('breaking');
+
+          break;
+        }
+      }
+
+      if (!isMatchingAdvancedTagRowFound) continue;
+      console.log('mathing row found: ', tagRow);
+
+      input.value = value;
+      const inputEvent = new Event('input', { bubbles: true });
+      console.log(
+        'filling label: ',
+        labelText,
+        ' with advanced row : ',
+        tagRow,
+      );
+      input.dispatchEvent(inputEvent);
+      fieldsFilled = true;
+      break;
+    }
+
+    // second priority given to other keys in user object
     for (const key in user) {
       if (labelText.includes(key.toLowerCase())) {
         try {
@@ -266,7 +301,7 @@ export const handleErrorToastWhileSubmitting = async () => {
 export const getMaxProgressValue = async () => {
   const completenessMeterDiv = (await waitForElement({
     selector: '.artdeco-completeness-meter-linear',
-    params: { all: false, timeout: 5000 },
+    params: { all: false, timeout: 4000 },
   })) as HTMLDivElement;
 
   const siblingSpan =
