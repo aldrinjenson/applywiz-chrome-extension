@@ -10,7 +10,6 @@ body {
   padding: 0;
   background-color: #eafbff;
   color: #333;
-  
 }
 
 .container {
@@ -18,8 +17,6 @@ body {
   padding: 1%;
   margin-bottom: 0;
   padding-bottom: 0;
-
-
 }
 
 .center-align {
@@ -47,8 +44,8 @@ label {
   margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="number"],
+input[type='text'],
+input[type='number'],
 textarea {
   width: 100%;
   padding: 10px;
@@ -63,14 +60,11 @@ textarea {
   align-items: center;
   margin-bottom: 10px;
   width: 100%; /* Make the row take 100% of the container width */
-
 }
 .row .column {
   flex: 1;
   padding: 5px;
 }
-
-
 
 .column {
   flex: 1;
@@ -81,7 +75,6 @@ textarea {
   margin-left: 5px;
   cursor: pointer;
   font-size: 30px; /* Adjust the value as needed for the desired size */
-  
 }
 
 /* Centered Content */
@@ -139,18 +132,18 @@ textarea {
   width: 50%;
   box-sizing: border-box; /* Include padding in the width calculation */
   padding: 2rem; /* Optional: Add some padding to each section */
- margin-right: 3rem;
- margin-left: 3rem;
+  margin-right: 3rem;
+  margin-left: 3rem;
 }
 
-.row input[type="text"],
-.row input[type="number"] {
+.row input[type='text'],
+.row input[type='number'] {
   width: 75%;
 }
 
-.row input[type="number"] {
-  margin-left: 1.2rem;
-}
+// .row input[type="number"] {
+//   margin-left: 1.2rem;
+// }
 
 .button2 {
   margin-top: 1rem;
@@ -164,9 +157,21 @@ textarea {
   border-radius: 4px;
   transition: all 0.3s ease;
   border-color: transparent;
-
 }
 .button2:hover {
   letter-spacing: 0.5px;
   background: #7edefc;
+}
+
+.filter-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  h3 {
+    width: 100%; // to move everything else downward
+  }
+}
+
+.filter-wrapper .radio-group {
+  display: flex;
 }

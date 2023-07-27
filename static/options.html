@@ -14,15 +14,17 @@
   </div>
 
   <main id="main-content" class="hidden" style="margin: 3%;">
-    <div style="margin-left: 7rem; margin-top: 7rem;"><h1 id="user-greeting">Hello,</h1>
-      <h3>30 automations done today</h3></div>
-    
+    <div style="margin-left: 7rem; margin-top: 7rem;">
+      <h1 id="user-greeting">Hello,</h1>
+      <h3>30 automations done today</h3>
+    </div>
+
     <div class="flex-container">
       <!-- Questions Section -->
       <section class="container" style="flex: 1;">
-        
+
         <h2 style="margin-left: 2rem; margin-bottom: 20px;">Questions</h2>
-        
+
         <ol>
           <li>
             <label for="name">Your professional Name: </label>
@@ -51,8 +53,7 @@
           <li>
             <label for="message">Your personal message to Hiring Manager</label>
             <textarea id="message" name="message" cols="20" rows="4" draggable="true"
-              placeholder="I would be a good fit for this role!">
-   I would be a good fit for this role!</textarea>
+              placeholder="I would be a good fit for this role!">I would be a good fit for this role!</textarea>
           </li>
         </ol>
       </section>
@@ -60,7 +61,7 @@
       <!-- Experience Section -->
       <section class="container" style="flex: 1;">
         <h2 style=" margin-bottom: 20px;">Experience</h2>
-        
+
         <div id="experienceContainer">
           <div>
             <label for="workExp">How many years of general work experience do you have? :</label>
@@ -68,7 +69,9 @@
           </div>
           <br><br>
           <li class="row">
-            <div class="column" style="font-weight: bold"><h3>Skills</h3></div>
+            <div class="column" style="font-weight: bold">
+              <h3>Skills</h3>
+            </div>
             <div class="column" style="font-weight: bold">
               <h3>Experience in Years</h3>
             </div>
@@ -81,30 +84,36 @@
               <input type="number" name="experience[]" value="" />
             </div>
             <div class="button" id="addButton">+</div>
-            <div class="dummy" style="opacity: 0;">-</div>
+            <div class="button" style="opacity: 0;">-</div>
           </li>
         </div>
-        </div>
-      </section>
+    </div>
+    </section>
     </div>
     <!-- Apply Button -->
 
     <section class="container" style="margin-left: 6.5rem; margin-top: -1rem;">
-      <label for="keyword" ><h4>Job Keyword:</h4></label>
-      <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer" style="width: 40%;" />
+      <label for="keyword">
+        <h4>Job Keyword:</h4>
+      </label>
+      <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer"
+        style="width: 40%;" />
       <br />
       <br />
       <button id="fetchFiltersBtn" class="button2">
         Fetch filters<span id="keywordPlaceholder"></span>
       </button>
+
     </section>
 
     <section class="container" style="margin-left: 6.5rem;">
       <div id="filter-container"></div>
       <div>
         <br />
-        <label for="maxJobs" style=" margin-top: -3rem;"><h4>How many jobs do you want to apply? </h4></label>
-        <input type="text" id="numJobs" value="5" name="numJobs" placeholder="eg: 20" style="width: 40%;"/>
+        <label for="maxJobs" style=" margin-top: -3rem;">
+          <h4>How many jobs do you want to apply? </h4>
+        </label>
+        <input type="text" id="numJobs" value="5" name="numJobs" placeholder="eg: 20" style="width: 40%;" />
       </div>
 
       <br />

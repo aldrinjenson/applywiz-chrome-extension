@@ -23,9 +23,12 @@ export function createFilters(
   data.forEach(
     (filter: { name: string; options: { id: string; value: string }[] }) => {
       const { name: filterName, options: filterOptions } = filter;
+
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.classList.add('filter-wrapper');
       const heading = document.createElement('h3');
       heading.textContent = filterName;
-      form.appendChild(heading);
+      wrapperDiv.appendChild(heading);
 
       if (
         filterName.includes('Sort by') ||
@@ -50,7 +53,8 @@ export function createFilters(
           radioGroup.appendChild(radio);
           radioGroup.appendChild(label);
         });
-        form.appendChild(radioGroup);
+        // wrapperDiv.appendChild(radioGroup)
+        wrapperDiv.appendChild(radioGroup);
       } else {
         // Create checkbox elements for other filters
         filterOptions.forEach((option) => {
@@ -66,14 +70,17 @@ export function createFilters(
           label.htmlFor = option.id;
 
           // Append the checkbox and label to the form
-          form.appendChild(checkbox);
-          form.appendChild(label);
+          wrapperDiv.appendChild(checkbox);
+          wrapperDiv.appendChild(label);
         });
       }
+
+      form.appendChild(wrapperDiv);
     },
   );
 
   const submitButton = document.createElement('button');
+  submitButton.classList.add('button2');
   submitButton.textContent = 'Start Applying';
   form.appendChild(submitButton);
 
