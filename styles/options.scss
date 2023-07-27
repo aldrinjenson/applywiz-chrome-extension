@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 1%;
   margin-bottom: 0;
   padding-bottom: 0;
@@ -169,6 +169,13 @@ textarea {
   align-items: center;
   h3 {
     width: 100%; // to move everything else downward
+  }
+  label {
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  input {
+    cursor: pointer;
   }
 }
 

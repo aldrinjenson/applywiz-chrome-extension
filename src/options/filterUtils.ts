@@ -19,6 +19,12 @@ export function createFilters(
   h2.innerText = 'Select Preferred Filters';
   form.appendChild(h2);
 
+  const filterMessage = document.createElement('p');
+  filterMessage.innerText =
+    'Note: If not selected, by default all will options be considered. Better to select less rows to find maximum jobs';
+  form.appendChild(h2);
+  form.appendChild(filterMessage);
+
   // Iterate over the data
   data.forEach(
     (filter: { name: string; options: { id: string; value: string }[] }) => {

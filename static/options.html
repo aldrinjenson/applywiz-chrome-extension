@@ -22,8 +22,7 @@
     <div class="flex-container">
       <!-- Questions Section -->
       <section class="container" style="flex: 1;">
-
-        <h2 style="margin-left: 2rem; margin-bottom: 20px;">Questions</h2>
+        <h2 style="margin-left: 2rem; margin-bottom: 10px;">Questions</h2>
 
         <ol>
           <li>
@@ -60,14 +59,13 @@
 
       <!-- Experience Section -->
       <section class="container" style="flex: 1;">
-        <h2 style=" margin-bottom: 20px;">Experience</h2>
+        <h2 style="margin-bottom: 10px;">Experience</h2>
 
         <div id="experienceContainer">
           <div>
             <label for="workExp">How many years of general work experience do you have? :</label>
             <input type="number" id="workExp" value="" name="workExp" placeholder="eg: 2" style="width: 33%;" />
           </div>
-          <br><br>
           <li class="row">
             <div class="column" style="font-weight: bold">
               <h3>Skills</h3>
@@ -101,15 +99,16 @@
       <br />
       <br />
       <button id="fetchFiltersBtn" class="button2">
-        Fetch filters<span id="keywordPlaceholder"></span>
+        Fetch filters
       </button>
 
     </section>
 
-    <section class="container" style="margin-left: 6.5rem;">
-      <div id="filter-container"></div>
-      <div>
-        <br />
+    <section class="container">
+      <div id="filter-container" style="margin-left:6rem">
+      </div>
+      <br />
+      <div style="margin-left: 6rem">
         <label for="maxJobs" style=" margin-top: -3rem;">
           <h4>How many jobs do you want to apply? </h4>
         </label>
@@ -117,8 +116,9 @@
       </div>
 
       <br />
-      <button id="applyBtn" class="button2">Apply for jobs</button>
-      <p>Note: Last Used Resume will be used for applying to jobs. If you want to make changes, please go and maually
+      <!-- <button id="applyBtn" class="button2">Apply for jobs</button> -->
+      <p style="margin-left: 6rem;">Note: Last Used Resume will be used for applying to jobs. If you want to make
+        changes, please go and maually
         apply to a job with the resume you want to use for futher automations.</p>
     </section>
   </main>
