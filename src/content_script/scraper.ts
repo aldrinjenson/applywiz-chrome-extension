@@ -129,6 +129,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
           // modularise from here:
           dismissButton.click();
+          await sleep(1500);
 
           const discardJobButton = (await waitForElement({
             selector:

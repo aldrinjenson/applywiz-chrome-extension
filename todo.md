@@ -1,3 +1,3 @@
 - create recording of product workflow
-- improve UI for options page
-- test with number greater than 10 applications
+- fix login issue with supabase
+- finalise flow for stripe payments in production

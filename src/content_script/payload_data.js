@@ -1,5 +1,4 @@
 export const payload = {
-  name: 'John Geo',
   city: 'Trivandrum',
   filters: [
     {
@@ -566,6 +565,7 @@ export const payload = {
     },
   ],
   user: {
+    name: 'John Geo',
     experience: [
       {
         skill: 'javascript',

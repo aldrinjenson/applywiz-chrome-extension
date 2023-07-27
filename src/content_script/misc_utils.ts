@@ -31,10 +31,11 @@ export const convertImageToBase64 = async (imageUrl = '') => {
       };
 
       reader.onerror = () => {
-        reject(new Error('Failed to read the image file.'));
+        // reject(new Error('Failed to read the image file.'));
+        resolve('');
       };
     });
   } catch (error) {
-    throw new Error('Failed to fetch the image URL.');
+    console.log('Error in fetching the company image URL.');
   }
 };
