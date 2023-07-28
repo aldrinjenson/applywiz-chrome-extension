@@ -39,3 +39,8 @@ export const convertImageToBase64 = async (imageUrl = '') => {
     console.log('Error in fetching the company image URL.');
   }
 };
+
+export const selectChosenResume = () => {
+  document.querySelector('span');
+  // Be sure to include an updated resume
+};

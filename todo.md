@@ -23,3 +23,10 @@
 - advanced tag based filling fieds
 - location based job searching
 - password reset
+
+## For multiple resumes:
+
+- go to this link https://www.linkedin.com/jobs/application-settings/
+- get inner texts from ".ui-attachment**filename.jobs-resume-card**filedata" to get saved resume names
+- create data list with these names
+- modify content script to choose this particular resume during application

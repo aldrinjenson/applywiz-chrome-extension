@@ -47,6 +47,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           'Change filters and try again.',
         );
         break;
+      } else {
+        jobSideCards = newJobCards;
       }
 
       i--;
@@ -182,6 +184,13 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           }
           continue;
         }
+
+        // add check here for resume adding
+        // sfds
+        // sd
+        // sfsd
+        // fds
+        // sdfds
 
         console.log({ isFinalStep });
         await sleep(1500);
