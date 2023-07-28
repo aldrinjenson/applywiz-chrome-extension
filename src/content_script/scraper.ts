@@ -1,3 +1,4 @@
+import { toastNotify } from '../common/common_utils';
 import { jobObjectType } from '../types';
 import { sleep, waitForElement } from '../utils';
 import { sendJobsDb } from './message_utils';
@@ -38,7 +39,16 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       jobName = jobCard.querySelector('a').innerText.replace(/\s+/g, ' ');
     } catch (error) {
       console.log('error in querySelector: ', error);
-      jobSideCards = await fetchAllJobsInCurrPage();
+      const newJobCards = await fetchAllJobsInCurrPage();
+      if (newJobCards.length === jobSideCards.length) {
+        console.log('all jobs parsed. not enough jobs');
+        toastNotify(
+          'Number of jobs with the selected filters is lesser than the jobs you wanted to apply. Exiting.',
+          'Change filters and try again.',
+        );
+        break;
+      }
+
       i--;
       continue;
     }
@@ -246,7 +256,12 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       if (newJobSideCards.length === jobSideCards.length) {
         // if all jobs have been parsed
         console.log('moving on to next page ');
-        await moveToNextPage();
+        const canMoveToNextPage = await moveToNextPage();
+        if (!canMoveToNextPage) {
+          toastNotify('Maximum jobs with this filter is done');
+          console.log('breaking as no more jobs available');
+          break;
+        }
         console.log('fetching jobsidecards again');
         jobSideCards = await fetchAllJobsInCurrPage();
         i = 0;

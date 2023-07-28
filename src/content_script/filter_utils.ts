@@ -1,17 +1,17 @@
-import { waitForElement } from '../utils';
+import { sleep, waitForElement } from '../utils';
 
 export const applySelectedFilters = async (selectedFilters) => {
   console.log(selectedFilters);
   const filterButtonSelector = '.search-reusables__all-filters-pill-button';
-  const filterButton: HTMLButtonElement = await waitForElement({
+  const filterButton = (await waitForElement({
     selector: filterButtonSelector,
-  });
+  })) as HTMLButtonElement;
   filterButton.click();
 
   //   waiting for the filter modal to open up
-  const showResultsButton: HTMLButtonElement = await waitForElement({
+  const showResultsButton = (await waitForElement({
     selector: '[data-test-reusables-filters-modal-show-results-button="true"]',
-  });
+  })) as HTMLButtonElement;
   console.log({ showResultsButton });
 
   for (const filter of selectedFilters) {
@@ -26,11 +26,6 @@ export const applySelectedFilters = async (selectedFilters) => {
       }
     }
   }
-
-  // console.log('sleping for 3 seconds before closing filter');
-  // await sleep(3000);
-  // console.log('sleping for 3 seconds done');
-  console.log('clicking show results button');
 
   showResultsButton.click();
 };
@@ -67,4 +62,22 @@ export const getFilters = async () => {
   });
   console.log(availableFilters);
   return availableFilters;
+};
+
+export const applyCountryNameInSearch = async (countryName = '') => {
+  const searchButton = (await waitForElement({
+    selector: '.jobs-search-box__submit-button',
+  })) as HTMLButtonElement;
+  const locationSearchInput = (await waitForElement({
+    selector: 'input[aria-label="City, state, or zip code"]',
+  })) as HTMLInputElement;
+  console.log(locationSearchInput, searchButton);
+
+  locationSearchInput.value = countryName;
+  console.log('clicking..');
+
+  const inputEvent = new Event('input', { bubbles: true });
+  locationSearchInput.dispatchEvent(inputEvent);
+  searchButton.click();
+  await sleep(2500);
 };

@@ -19,6 +19,7 @@ import {
   isRegisteredUserLoggedInToLinkedIn,
   waitForContentScriptLoad,
 } from './option_content_script_related';
+import allCountriesList from './countriesList';
 
 const optionStore = new GeneralStore();
 
@@ -34,6 +35,8 @@ const expectedCtcInput: HTMLInputElement = document.querySelector('#expected');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const maxJobsInput: HTMLInputElement = document.querySelector('#numJobs');
+const chosenCountryInput: HTMLInputElement =
+  document.querySelector('#chosen-country');
 const messagToHiringManagerInput: HTMLInputElement =
   document.querySelector('#message');
 
@@ -64,6 +67,7 @@ const sendMessageToApplyToJobs = (
     message: messagToHiringManagerInput.value,
     expected: expectedCtcInput.value,
     generalExp: workExpInput.value,
+    chosenCountry: chosenCountryInput.value,
     advancedTags: [],
   };
   if (!user) {
@@ -79,6 +83,7 @@ const sendMessageToApplyToJobs = (
     // user.generalExp = workExpInput.value;
     user.experience = experienceObj;
     user.advancedTags = getAdvancedTagValues();
+
     console.log(user.advancedTags);
 
     const payload = { filters, user, maxJobs: +maxJobsInput.value };
@@ -106,7 +111,9 @@ const submitHandler = (selectedFilterOptions: []) => {
       if (false || !user || !user.linkedin_url) {
         throw new Error('Not signed in to extension');
       }
-      if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
+      // if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
         sendMessageToApplyToJobs(selectedFilterOptions);
       } else {
         throw new Error('not logged in to correct account');
@@ -123,6 +130,9 @@ const submitHandler = (selectedFilterOptions: []) => {
 
 fetchFiltersBtn.addEventListener('click', async () => {
   let jobKeyword = jobKeywordInput.value;
+  const chosenCountry = chosenCountryInput.value;
+  console.log({ chosenCountry });
+
   if (!jobKeyword) {
     jobKeyword = 'Software Engineer';
     // return alert('Please enter a job Keyword');
@@ -130,7 +140,7 @@ fetchFiltersBtn.addEventListener('click', async () => {
   saveUserPreferences();
   toastNotify('Fetching Filters for: ', jobKeyword);
   fetchFiltersBtn.disabled = true;
-  const filters = await getFiltersFromContentScript(jobKeyword);
+  const filters = await getFiltersFromContentScript(jobKeyword, chosenCountry);
   toastNotify('Filters Received');
   createFilters(filters, filterContainer, submitHandler);
   // createFilters(filtersData, filterContainer, submitHandler);
@@ -189,11 +199,21 @@ const triggerMainSectionVisibility = (user: {
   }
 };
 
+const fillCountriesList = () => {
+  const datalist = document.getElementById('country-list');
+  allCountriesList.forEach((country) => {
+    const option = document.createElement('option');
+    option.value = country.name;
+    datalist.appendChild(option);
+  });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Options Page: DOM Loaded');
   chrome.runtime.sendMessage({ action: GET_USER }, (user) => {
     triggerMainSectionVisibility(user);
     // triggerMainSectionVisibility(true); // temporary
+    fillCountriesList();
     updateWithSavedPreferences();
   });
 });

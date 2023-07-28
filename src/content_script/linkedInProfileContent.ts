@@ -1,8 +1,7 @@
 import { IS_THIS_USER_LOGGED_IN } from '../constants';
 
 const isPaidUserLoggedIn = () => {
-  console.log('inside bro');
-
+  console.log('inside user check func');
   const editButton = document.querySelector('button[aria-label="Edit intro"]');
   console.log(editButton);
   if (editButton) {

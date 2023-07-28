@@ -1,7 +1,11 @@
 // import { filtersData } from '../options/sampleFiltersData';
 import { GET_FILTERS, RECEIVE_FILTERS, START_AUTOMATION } from '../constants';
 import { waitForElement } from '../utils';
-import { applySelectedFilters, getFilters } from './filter_utils';
+import {
+  applyCountryNameInSearch,
+  applySelectedFilters,
+  getFilters,
+} from './filter_utils';
 import { payload } from './payload_data';
 import { applyToJobs } from './scraper';
 
@@ -16,6 +20,10 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
     }
     case GET_FILTERS: {
+      const { chosenCountry = '' } = message.data;
+      console.log(chosenCountry);
+      await applyCountryNameInSearch(chosenCountry);
+
       getFilters().then((filters) => {
         console.log(filters);
         chrome.runtime.sendMessage(
@@ -30,6 +38,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     case START_AUTOMATION: {
       const { filters, user, maxJobs } = message.data;
       console.log(message.data);
+      const { chosenCountry } = user;
+      await applyCountryNameInSearch(chosenCountry);
       await applySelectedFilters(filters);
       const noJobsExist = (await waitForElement({
         selector: '.jobs-search-no-results-banner__image',
@@ -52,6 +62,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 window.addEventListener('load', async () => {
   console.log('window loaded bro');
+  // applyCountryNameInSearch('France');
   // const stopBtn = document.createElement('btn')
   // document.body.appendChild(stopBtn)
   const { filters, user, maxJobs } = payload;

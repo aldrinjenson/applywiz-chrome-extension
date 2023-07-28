@@ -19,6 +19,7 @@ export async function waitForContentScriptLoad(tabId: number) {
 
 export const getFiltersFromContentScript = (
   jobKeyword: string,
+  chosenCountry: string,
 ): Promise<string | []> => {
   return new Promise<string>((resolve) => {
     const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
@@ -26,7 +27,7 @@ export const getFiltersFromContentScript = (
       await waitForContentScriptLoad(tab.id);
       chrome.tabs.sendMessage(tab.id, {
         action: GET_FILTERS,
-        data: { tabId: tab.id },
+        data: { tabId: tab.id, chosenCountry },
       });
     });
 

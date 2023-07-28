@@ -51,6 +51,7 @@
             <textarea id="message" name="message" cols="20" rows="4" draggable="true"
               placeholder="I would be a good fit for this role!">I would be a good fit for this role!</textarea>
           </li>
+          <hr>
         </ol>
       </section>
 
@@ -110,6 +111,16 @@
     <!-- Apply Button -->
 
     <section class="container" style="margin-left: 6.5rem; margin-top: -1rem;">
+
+      <div class="chosen-country-wrapper">
+        <label for="message">Preferred Country for Job Search</label>
+        <p>Keep this blank to use the default search in LinkedIn. Usually automatically uses the last used search.
+        </p>
+        <input type="text" style="width: 40%;" id="chosen-country" name="country" list="country-list"
+          placeholder="eg: United Kingdom">
+        <datalist id="country-list"></datalist>
+      </div>
+
       <label for="keyword">
         <h4>Job Keyword:</h4>
       </label>

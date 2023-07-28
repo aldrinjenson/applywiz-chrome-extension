@@ -229,7 +229,7 @@ export const moveToNextPage = async () => {
 
   if (!paginationLis?.length) {
     console.log('only one page results exist! Returning..');
-    return;
+    return false;
   }
 
   const currSelectedLi = paginationLis.find((li) =>

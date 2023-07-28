@@ -162,6 +162,9 @@ textarea {
   letter-spacing: 0.5px;
   background: #7edefc;
 }
+.button2:disabled {
+  background-color: gray;
+}
 
 .filter-wrapper {
   display: flex;

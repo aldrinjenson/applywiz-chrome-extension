@@ -1,10 +1,7 @@
 # Stuff to do
 
-- advanced tag based filling fieds
-- location based job searching
 - feature to support multiple resumes
 - add supabaseUser utils for filling name, showing number of automations done today etc
-- adjust manifest.json regex
 
 ---
 
@@ -20,3 +17,9 @@
 
 - ask them to fill personal demographic information here: https://www.linkedin.com/mypreferences/d/demographic-info-copy
 - ask them to run the extension in full screen/ maximised mode
+
+# To review
+
+- advanced tag based filling fieds
+- location based job searching
+- password reset
