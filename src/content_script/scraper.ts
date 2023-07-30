@@ -2,7 +2,7 @@ import { toastNotify } from '../common/common_utils';
 import { jobObjectType } from '../types';
 import { sleep, waitForElement } from '../utils';
 import { sendJobsDb } from './message_utils';
-import { convertImageToBase64 } from './misc_utils';
+import { convertImageToBase64, selectChosenResume } from './misc_utils';
 import {
   fetchAllJobsInCurrPage,
   getMaxProgressValue,
@@ -185,15 +185,9 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           continue;
         }
 
-        // add check here for resume adding
-        // sfds
-        // sd
-        // sfsd
-        // fds
-        // sdfds
-
+        await selectChosenResume(user.chosenResume);
         console.log({ isFinalStep });
-        await sleep(1500);
+        // await sleep(1500);
         nextButton.click();
         const { status: isTooComplex, reason: complexityReason } =
           await handleComplexity(user);
@@ -208,8 +202,6 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           sendJobsDb([jobObject]);
           break;
         }
-        // console.log('chumma sleeping for 2 seconds');
-        // await sleep(2000);
 
         if (isFinalStep) {
           // nextButton?.click();

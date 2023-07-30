@@ -3,15 +3,12 @@ import { GET_RESUMES, RECEIVE_RESUMES } from '../constants';
 import { waitForElement } from '../utils';
 import { toastNotify } from './common_utils';
 
-console.log('bro');
-
 const getResumeNames = async () => {
   try {
     let resumes = await waitForElement({
       selector: '.ui-attachment__filename.jobs-resume-card__filedata',
       params: { all: true },
     });
-    console.log(resumes);
 
     resumes = Array.from(resumes);
     console.log(resumes);

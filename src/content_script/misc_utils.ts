@@ -40,7 +40,24 @@ export const convertImageToBase64 = async (imageUrl = '') => {
   }
 };
 
-export const selectChosenResume = () => {
-  document.querySelector('span');
-  // Be sure to include an updated resume
+export const selectChosenResume = async (chosenResume = '') => {
+  if (!chosenResume) {
+    await sleep(1000);
+    return;
+  }
+  const availableResumes = (await waitForElement({
+    selector: '.jobs-document-upload-redesign-card__container h3',
+    params: { all: true, timeout: 2000 },
+  })) as HTMLElement[];
+
+  if (!availableResumes?.length) return false;
+
+  for (const resumeH3 of availableResumes) {
+    const resumeName = resumeH3.innerText;
+    if (resumeName === chosenResume) {
+      resumeH3.click();
+      console.log('clicking chosen resume..');
+      return;
+    }
+  }
 };

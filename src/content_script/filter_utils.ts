@@ -65,6 +65,7 @@ export const getFilters = async () => {
 };
 
 export const applyCountryNameInSearch = async (countryName = '') => {
+  if (!countryName) return;
   const searchButton = (await waitForElement({
     selector: '.jobs-search-box__submit-button',
   })) as HTMLButtonElement;

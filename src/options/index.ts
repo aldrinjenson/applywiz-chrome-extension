@@ -43,6 +43,8 @@ const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const maxJobsInput: HTMLInputElement = document.querySelector('#numJobs');
 const fetchResumeButton: HTMLButtonElement =
   document.querySelector('#fetch-resumes');
+const chosenResumeInput: HTMLInputElement =
+  document.querySelector('#chosen-resume');
 const chosenCountryInput: HTMLInputElement =
   document.querySelector('#chosen-country');
 const messagToHiringManagerInput: HTMLInputElement =
@@ -73,6 +75,8 @@ const sendMessageToApplyToJobs = (
     lpa: ctcInput.value,
     compensation: ctcInput.value,
     message: messagToHiringManagerInput.value,
+    cover: messagToHiringManagerInput.value,
+    letter: messagToHiringManagerInput.value,
     expected: expectedCtcInput.value,
     generalExp: workExpInput.value,
     chosenCountry: chosenCountryInput.value,
@@ -82,6 +86,8 @@ const sendMessageToApplyToJobs = (
   if (!user) {
     user = userData;
   }
+  console.log({ user });
+
   const jobKeyword = jobKeywordInput.value;
   const url = `https://www.linkedin.com/jobs/search/?f_AL=true&keywords=${jobKeyword}`;
   chrome.tabs.create({ url, active: true }, async (tab) => {
@@ -226,10 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+fetchResumeButton.addEventListener('click', fillResumeList);
 setTimeout(() => {
   // fillResumeList();
   const user = optionStore.getState();
   console.log(user);
-}, 500);
-
-fetchResumeButton.addEventListener('click', () => fillResumeList);
+  toastNotify('bro');
+}, 1000);

@@ -2,12 +2,7 @@ import { toastNotify } from '../common/common_utils';
 import { GET_RESUMES, RECEIVE_RESUMES } from '../constants';
 import { waitForContentScriptLoad } from './option_content_script_related';
 
-const chosenResumeInput: HTMLInputElement =
-  document.querySelector('#chosen-resume');
-
 export const fillResumeList = () => {
-  console.log('yo');
-
   toastNotify('Fetching Resumes from LinkedIn: ');
 
   chrome.tabs.create(
@@ -36,12 +31,21 @@ export const fillResumeList = () => {
       );
     },
   );
-  const fillDataList = (resumeList: string[]) => {
-    const resumeDataList = document.getElementById('resume-list');
-    resumeList.forEach((res: string) => {
+  const fillDataList = (resumes: string[]) => {
+    const resumeDataList = document.getElementById(
+      'resume-list',
+    ) as HTMLDataListElement;
+
+    const resumeInputField = document.getElementById(
+      'chosen-resume',
+    ) as HTMLInputElement;
+
+    resumeDataList.innerHTML = '';
+    resumes.forEach((res: string) => {
       const option = document.createElement('option');
       option.value = res;
       resumeDataList.appendChild(option);
     });
+    resumeInputField.value = resumes[0];
   };
 };

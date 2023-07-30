@@ -120,26 +120,29 @@
         <datalist id="country-list"></datalist>
       </div>
 
+      <div class="resume-collect">
+        <label for="keyword">
+          <h4>Resume</h4>
+          <p>Choose only if you have multiple resumes added in your linkedIn</p>
+          <div>
+            <button id="fetch-resumes" class="btn">Fetch Added Resumes from LinkedIn</button>
+          </div>
+          <p>If you haven't added a resume yet, add one here: <a
+              href="https://www.linkedin.com/jobs/application-settings/">https://www.linkedin.com/jobs/application-settings/</a>
+          </p>
+        </label>
+
+        <input type="text" style="width: 40%;" id="chosen-resume" name="resume" list="resume-list"
+          placeholder="eg: Default">
+        <datalist id="resume-list"></datalist>
+      </div>
+
       <label for="keyword">
         <h4>Job Keyword:</h4>
       </label>
       <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer"
         style="width: 40%;" />
 
-      <label for="keyword">
-        <h4>Resume</h4>
-        <p>Choose only if you have multiple resumes added in your linkedIn</p>
-        <div>
-          <button id="fetch-resumes" class="btn">Fetch Added Resumes from LinkedIn</button>
-        </div>
-        <p>If you haven't added a resume yet, add one here: <a
-            href="https://www.linkedin.com/jobs/application-settings/">https://www.linkedin.com/jobs/application-settings/</a>
-        </p>
-      </label>
-
-      <input type="text" style="width: 40%;" id="chosen-resume" name="resume" list="resume-list"
-        placeholder="eg: Default">
-      <datalist id="resume-list"></datalist>
       <br />
       <br />
       <button id="fetchFiltersBtn" class="button2">
@@ -161,9 +164,9 @@
 
       <br />
       <!-- <button id="applyBtn" class="button2">Apply for jobs</button> -->
-      <p style="margin-left: 6rem;">Note: Last Used Resume will be used for applying to jobs. If you want to make
+      <!-- <p style="margin-left: 6rem;">Note: Last Used Resume will be used for applying to jobs. If you want to make
         changes, please go and maually
-        apply to a job with the resume you want to use for futher automations.</p>
+        apply to a job with the resume you want to use for futher automations.</p> -->
     </section>
   </main>
 

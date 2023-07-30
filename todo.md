@@ -1,6 +1,8 @@
 # Stuff to do
 
-- feature to support multiple resumes
+- check why notification is not wokring
+- create reusable api for awaiting and getting answers to async tasks
+
 - show inProgress bar for the popup page
 - show stop button to stop automation in the popup
 

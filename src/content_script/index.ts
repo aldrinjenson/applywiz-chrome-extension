@@ -39,6 +39,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       const { filters, user, maxJobs } = message.data;
       console.log(message.data);
       const { chosenCountry } = user;
+
       await applyCountryNameInSearch(chosenCountry);
       await applySelectedFilters(filters);
       const noJobsExist = (await waitForElement({
