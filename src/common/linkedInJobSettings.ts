@@ -5,10 +5,10 @@ import { toastNotify } from './common_utils';
 
 const getResumeNames = async () => {
   try {
-    let resumes = await waitForElement({
+    let resumes = (await waitForElement({
       selector: '.ui-attachment__filename.jobs-resume-card__filedata',
       params: { all: true },
-    });
+    })) as HTMLElement[];
 
     resumes = Array.from(resumes);
     console.log(resumes);

@@ -1,4 +1,5 @@
 import { toastNotify } from '../common/common_utils';
+import { SET_AUTOMATION_STATUS } from '../constants';
 import { jobObjectType } from '../types';
 import { sleep, waitForElement } from '../utils';
 import { sendJobsDb } from './message_utils';
@@ -11,6 +12,7 @@ import {
   moveToNextPage,
 } from './scraper_utils';
 
+let shouldStopAutomation = false;
 export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   console.log('getting job links');
   const failedJobs = [];
@@ -101,6 +103,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       const externalLinkIcon = applyButton.querySelector(
         'li-icon[aria-hidden="true"][type="link-external"]',
       );
+      console.log({ applyButton });
 
       if (externalLinkIcon) {
         console.log('For applying to extenral site. Skipping..');
@@ -126,6 +129,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         'button[aria-label="Submit application"]';
 
       let isFinalStep = false;
+
+      console.log({ shouldStopAutomation });
 
       while (!isFormComplete && formPageCount++ < 7) {
         const nextButton = (await waitForElement({
@@ -183,6 +188,13 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
             isFinalStep = true;
           }
           continue;
+        }
+
+        console.log({ shouldStopAutomation });
+
+        if (shouldStopAutomation) {
+          console.log('stopping automation');
+          break;
         }
 
         await selectChosenResume(user.chosenResume);
@@ -250,6 +262,10 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     //   });
     // }
 
+    if (shouldStopAutomation) {
+      console.log('stopping automation');
+      break;
+    }
     if (i >= jobSideCards.length - 1 && count < maxCount - 1) {
       // if last card and less than count
 
@@ -288,3 +304,23 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
   return status;
 };
+
+// chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+//   console.log('inside scraper content script');
+
+//   switch (message.action) {
+//     case SET_AUTOMATION_STATUS:
+//       if (message.data === false) {
+//         console.log(message.data);
+
+//         toastNotify('received instruction to stop');
+//         shouldStopAutomation = true;
+//         console.log('gonna stop');
+
+//         sendResponse('okay bro');
+//       }
+//       break;
+//     default:
+//       break;
+//   }
+// });

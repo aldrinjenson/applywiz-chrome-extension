@@ -4,6 +4,8 @@ import { User } from '@supabase/supabase-js';
 const initialState: bgStoreStateType = {
   user: null,
   counter: 0,
+  automationStatus: false,
+  userPrefs: null,
   extensionVersion: chrome.runtime.getManifest().version,
 };
 

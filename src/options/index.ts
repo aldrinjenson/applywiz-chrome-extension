@@ -233,9 +233,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 fetchResumeButton.addEventListener('click', fillResumeList);
-setTimeout(() => {
-  // fillResumeList();
-  const user = optionStore.getState();
-  console.log(user);
-  toastNotify('bro');
-}, 1000);
+// setTimeout(() => {
+// }, 1000);

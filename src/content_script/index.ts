@@ -1,5 +1,10 @@
 // import { filtersData } from '../options/sampleFiltersData';
-import { GET_FILTERS, RECEIVE_FILTERS, START_AUTOMATION } from '../constants';
+import {
+  GET_FILTERS,
+  RECEIVE_FILTERS,
+  SET_AUTOMATION_STATUS,
+  START_AUTOMATION,
+} from '../constants';
 import { waitForElement } from '../utils';
 import {
   applyCountryNameInSearch,
@@ -51,9 +56,13 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         );
         return;
       }
-      console.log({ user });
 
+      chrome.runtime.sendMessage({ action: SET_AUTOMATION_STATUS, data: true });
       await applyToJobs(filters, user, maxJobs);
+      chrome.runtime.sendMessage({
+        action: SET_AUTOMATION_STATUS,
+        data: false,
+      });
       break;
     }
     default:

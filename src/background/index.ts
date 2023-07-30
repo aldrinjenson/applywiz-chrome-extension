@@ -18,14 +18,17 @@ import { getFullUser, supabase } from '../services/supabase';
 import {
   ADD_JOBS_TO_DB,
   AW_USER_PREFERENCES,
+  GET_AUTOMATION_STATUS,
   GET_COUNTER,
   GET_USER,
   GET_USER_PREFERENCES,
+  SET_AUTOMATION_STATUS,
   SET_USER,
   SET_USER_PREFERENCES,
   SHOW_NOTIFICATION,
   SIGN_IN_SUCCESS,
   SIGN_OUT_SUCCESS,
+  START_AUTOMATION,
   USER_SIGN_IN,
   USER_SIGN_OUT,
 } from '../constants';
@@ -116,6 +119,14 @@ chrome.runtime.onMessage.addListener(
         const savedPreferences = store.getState().userPrefs;
         console.log({ savedPreferences });
         sendReponse(savedPreferences);
+        break;
+
+      case SET_AUTOMATION_STATUS:
+        store.dispatch(SET_AUTOMATION_STATUS, data);
+        break;
+
+      case GET_AUTOMATION_STATUS:
+        sendReponse(store.getState().automationStatus);
         break;
 
       default:
