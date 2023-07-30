@@ -6,10 +6,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
-    background: './src/background/index.ts',
     generalContent: './src/common/generalContent.ts',
+    linkedInJobSettings: './src/common/linkedInJobSettings.ts',
     linkedInProfileContent: './src/content_script/linkedInProfileContent.ts',
     contentScript: './src/content_script/index.ts',
+    background: './src/background/index.ts',
     popup: './src/popup.ts',
     options: './src/options/index.ts',
   },

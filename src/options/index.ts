@@ -12,7 +12,12 @@ import {
   getExperience,
 } from './tagRowUtils';
 import { updateWithSavedPreferences, saveUserPreferences } from './userPrefs';
-import { GET_USER, START_AUTOMATION } from '../constants';
+import {
+  GET_USER,
+  SIGN_IN_SUCCESS,
+  SIGN_OUT_SUCCESS,
+  START_AUTOMATION,
+} from '../constants';
 import { getFirstName } from '../utils';
 import {
   getFiltersFromContentScript,
@@ -20,6 +25,7 @@ import {
   waitForContentScriptLoad,
 } from './option_content_script_related';
 import allCountriesList from './countriesList';
+import { fillResumeList } from './misc_utils';
 
 const optionStore = new GeneralStore();
 
@@ -35,6 +41,8 @@ const expectedCtcInput: HTMLInputElement = document.querySelector('#expected');
 const ctcInput: HTMLInputElement = document.querySelector('#ctc');
 const noticePeriodInput: HTMLInputElement = document.querySelector('#notice');
 const maxJobsInput: HTMLInputElement = document.querySelector('#numJobs');
+const fetchResumeButton: HTMLButtonElement =
+  document.querySelector('#fetch-resumes');
 const chosenCountryInput: HTMLInputElement =
   document.querySelector('#chosen-country');
 const messagToHiringManagerInput: HTMLInputElement =
@@ -68,6 +76,7 @@ const sendMessageToApplyToJobs = (
     expected: expectedCtcInput.value,
     generalExp: workExpInput.value,
     chosenCountry: chosenCountryInput.value,
+    chosenResume: chosenResumeInput.value,
     advancedTags: [],
   };
   if (!user) {
@@ -154,18 +163,17 @@ chrome.runtime.onMessage.addListener(
     console.log(message);
 
     switch (action) {
-      case 'SIGN_IN_SUCCESS':
+      case SIGN_IN_SUCCESS:
         console.log('successfull signin');
         const user = data;
         optionStore.setState({ user });
         triggerMainSectionVisibility(user);
         break;
 
-      case 'SIGN_OUT_SUCCESS':
+      case SIGN_OUT_SUCCESS:
         optionStore.setState({ user: null });
         triggerMainSectionVisibility(null);
         break;
-
       default:
         console.log(' Warning: Unhandled action:', action);
     }
@@ -217,3 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
     updateWithSavedPreferences();
   });
 });
+
+setTimeout(() => {
+  // fillResumeList();
+  const user = optionStore.getState();
+  console.log(user);
+}, 500);
+
+fetchResumeButton.addEventListener('click', () => fillResumeList);

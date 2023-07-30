@@ -13,6 +13,8 @@ export function waitForElement({
   const timeout = params?.timeout || 5000;
   const rootEl = params?.rootEl || document;
 
+  console.log(params);
+
   console.log('waiting for ' + selector);
   return new Promise((resolve) => {
     const startTime = Date.now();
