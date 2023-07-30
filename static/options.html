@@ -125,6 +125,18 @@
       </label>
       <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer"
         style="width: 40%;" />
+
+      <label for="keyword">
+        <h4>Resume</h4>
+        <p>Choose only if you have multiple resumes added in your linkedIn</p>
+        <p>If you haven't added a resume yet, add one here: <a
+            href="https://www.linkedin.com/jobs/application-settings/">https://www.linkedin.com/jobs/application-settings/</a>
+        </p>
+      </label>
+
+      <input type="text" style="width: 40%;" id="chosen-resume" name="resume" list="resume-list"
+        placeholder="eg: Default">
+      <datalist id="resume-list"></datalist>
       <br />
       <br />
       <button id="fetchFiltersBtn" class="button2">

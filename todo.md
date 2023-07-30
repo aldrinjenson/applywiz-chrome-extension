@@ -1,7 +1,8 @@
 # Stuff to do
 
 - feature to support multiple resumes
-- add supabaseUser utils for filling name, showing number of automations done today etc
+- show inProgress bar for the popup page
+- show stop button to stop automation in the popup
 
 ---
 
