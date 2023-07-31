@@ -12,7 +12,7 @@ import {
   moveToNextPage,
 } from './scraper_utils';
 
-let shouldStopAutomation = false;
+const shouldStopAutomation = false;
 export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   console.log('getting job links');
   const failedJobs = [];
