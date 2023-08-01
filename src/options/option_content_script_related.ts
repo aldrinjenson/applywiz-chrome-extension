@@ -62,6 +62,8 @@ export const isRegisteredUserLoggedInToLinkedIn = (profileLink = '') => {
               data: { tabId: tab.id },
             },
             (resp) => {
+              // console.log({ resp });
+
               resolve(resp);
             },
           );

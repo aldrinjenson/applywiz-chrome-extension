@@ -9,6 +9,7 @@ const isPaidUserLoggedIn = () => {
   } else {
     console.log('same user is not the one logged in ');
   }
+
   return !!editButton;
 };
 

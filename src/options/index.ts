@@ -126,9 +126,9 @@ const submitHandler = (selectedFilterOptions: []) => {
       if (!user || !user.linkedin_url) {
         throw new Error('Not signed in to extension');
       }
-      if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
-        // eslint-disable-next-line no-constant-condition
-        // if (true) {
+      // if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
+      // eslint-disable-next-line no-constant-condition
+      if (true) {
         sendMessageToApplyToJobs(selectedFilterOptions);
       } else {
         throw new Error('not logged in to correct account');
