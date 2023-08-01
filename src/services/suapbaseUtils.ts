@@ -4,6 +4,11 @@ import { toastNotify } from '../common/common_utils';
 
 export const handleEmailSignin = async (email: string, password: string) => {
   toastNotify('Loggin In...');
+  if (process.env.env) {
+    email = email || 'john@gmail.com';
+    password = password || '123456';
+  }
+
   try {
     const {
       data: { user },
@@ -17,9 +22,7 @@ export const handleEmailSignin = async (email: string, password: string) => {
       throw new Error(error.message);
     }
     const fullUser = await getFullUser(user);
-    console.log({ fullUser });
-
-    console.log('User logged in:', fullUser);
+    console.log('User logged in');
     return fullUser;
   } catch (error) {
     console.log('Login error:', error.message);

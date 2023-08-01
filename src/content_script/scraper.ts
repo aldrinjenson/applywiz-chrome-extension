@@ -1,8 +1,7 @@
-import { toastNotify } from '../common/common_utils';
 import { SET_AUTOMATION_STATUS } from '../constants';
 import { jobObjectType } from '../types';
 import { sleep, waitForElement } from '../utils';
-import { sendJobsDb } from './message_utils';
+import { contentNotify, sendJobsDb } from './message_utils';
 import { convertImageToBase64, selectChosenResume } from './misc_utils';
 import {
   fetchAllJobsInCurrPage,
@@ -28,9 +27,10 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   console.log(jobSideCards.length, ' jobs found in this page');
 
   let count = 0;
+  let i, formPageCount;
 
   // for (let i = 0; i < jobSideCards.length; i++) {
-  for (let i = 0; count <= maxCount; i++, count++) {
+  for (i = 0; count <= maxCount; i++, count++) {
     console.log({ i });
     const jobCard = jobSideCards[i];
     console.log({ i, count, maxCount });
@@ -44,7 +44,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       const newJobCards = await fetchAllJobsInCurrPage();
       if (newJobCards.length === jobSideCards.length) {
         console.log('all jobs parsed. not enough jobs');
-        toastNotify(
+        contentNotify(
           'Number of jobs with the selected filters is lesser than the jobs you wanted to apply. Exiting.',
           'Change filters and try again.',
         );
@@ -76,6 +76,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
     console.log(jobObject);
     console.log(`applying for job: ${count}: ${jobName} by ${companyName}`);
+    contentNotify(`applying for job: ${count}: ${jobName} by ${companyName}`);
 
     try {
       jobCard.click();
@@ -103,7 +104,6 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       const externalLinkIcon = applyButton.querySelector(
         'li-icon[aria-hidden="true"][type="link-external"]',
       );
-      console.log({ applyButton });
 
       if (externalLinkIcon) {
         console.log('For applying to extenral site. Skipping..');
@@ -120,7 +120,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       applyButton.click();
 
       let isFormComplete = false;
-      let formPageCount = 0;
+      formPageCount = 0;
 
       let nextButtonSelector = 'button[aria-label="Continue to next step"]';
       const reviewButtonSelector =
@@ -198,8 +198,6 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         }
 
         await selectChosenResume(user.chosenResume);
-        console.log({ isFinalStep });
-        // await sleep(1500);
         nextButton.click();
         const { status: isTooComplex, reason: complexityReason } =
           await handleComplexity(user);
@@ -251,17 +249,6 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       jobObject.status = 'failed';
     }
 
-    // if (i !== 0 && i % numbJobsToAddinDbWindowSize === 0) {
-    //   const batchJobBucket = iteratedJobCards.slice(
-    //     i - numbJobsToAddinDbWindowSize,
-    //     numbJobsToAddinDbWindowSize,
-    //   );
-    //   chrome.runtime.sendMessage({
-    //     action: ADD_JOBS_TO_DB,
-    //     data: batchJobBucket,
-    //   });
-    // }
-
     if (shouldStopAutomation) {
       console.log('stopping automation');
       break;
@@ -275,7 +262,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         console.log('moving on to next page ');
         const canMoveToNextPage = await moveToNextPage();
         if (!canMoveToNextPage) {
-          toastNotify('Maximum jobs with this filter is done');
+          contentNotify('Maximum jobs with this filter is done');
           console.log('breaking as no more jobs available');
           break;
         }
@@ -301,26 +288,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   if (successfullJobSlidingWindow.length) {
     sendJobsDb(successfullJobSlidingWindow);
   }
+  console.log({ i, count, maxCount, formPageCount });
 
   return status;
 };
-
-// chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-//   console.log('inside scraper content script');
-
-//   switch (message.action) {
-//     case SET_AUTOMATION_STATUS:
-//       if (message.data === false) {
-//         console.log(message.data);
-
-//         toastNotify('received instruction to stop');
-//         shouldStopAutomation = true;
-//         console.log('gonna stop');
-
-//         sendResponse('okay bro');
-//       }
-//       break;
-//     default:
-//       break;
-//   }
-// });

@@ -78,9 +78,6 @@ textarea {
 }
 
 /* Centered Content */
-#no-login {
-  display: none;
-}
 
 .centered {
   display: flex;
@@ -92,6 +89,13 @@ textarea {
 /* Main Content */
 #main-content {
   margin: 3%;
+}
+
+// #no-login {
+//   display: block;
+// }
+.hidden {
+  display: none;
 }
 
 #main-content .hidden {

@@ -110,10 +110,7 @@ export const addNewTagRow = (tags = '', tagsValue = ''): void => {
   advancedTagsContainer.appendChild(newRow);
 };
 
-// Attach event listener to the initial + button
 const initialAddButton = document.getElementById('addTagButton');
-console.log({ initialAddButton });
-
 if (initialAddButton) {
   initialAddButton.addEventListener('click', () => addNewTagRow());
 }

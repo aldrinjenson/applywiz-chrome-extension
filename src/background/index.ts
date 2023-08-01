@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener(
 
     switch (action) {
       case SHOW_NOTIFICATION:
-        toastNotify(data?.text);
+        toastNotify(data.title, data.message, data.type);
         break;
       case GET_COUNTER:
         const state = store.getState();
@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener(
         break;
       case GET_USER:
         const savedUser = store.getState().user;
-        if (!savedUser) console.log('user not present bro!');
+        if (!savedUser) console.log('user not present br!');
         sendReponse(savedUser);
         break;
 
@@ -73,7 +73,6 @@ chrome.runtime.onMessage.addListener(
         break;
 
       case USER_SIGN_IN:
-        console.log('inside USER_SIGN IN in background');
         const { email, password } = data;
         toastNotify('Logging in.', 'Hold on..');
         handleEmailSignin(email, password)
@@ -114,8 +113,6 @@ chrome.runtime.onMessage.addListener(
         break;
 
       case GET_USER_PREFERENCES:
-        console.log({ store });
-
         const savedPreferences = store.getState().userPrefs;
         console.log({ savedPreferences });
         sendReponse(savedPreferences);
@@ -128,9 +125,7 @@ chrome.runtime.onMessage.addListener(
       case GET_AUTOMATION_STATUS:
         sendReponse(store.getState().automationStatus);
         break;
-
       default:
-        console.log(' Warning: Unhandled action:', action);
     }
 
     return true;
@@ -148,6 +143,7 @@ chrome.runtime.onMessage.addListener(
 
 supabase.auth.onAuthStateChange(async (event, session) => {
   const user = session?.user;
+  console.log({ event, session });
 
   switch (event) {
     case 'INITIAL_SESSION':

@@ -35,6 +35,10 @@ export const getFilters = async () => {
   const filterButton: HTMLButtonElement = await waitForElement({
     selector: filterButtonSelector,
   });
+  if (!filterButton) {
+    alert('Error in fetching filters. Reload extension page and try again.');
+    return [];
+  }
   filterButton.click();
 
   const availableFilters: { [x: string]: [y: string] }[] = [];

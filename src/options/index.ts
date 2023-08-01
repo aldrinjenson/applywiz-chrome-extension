@@ -120,15 +120,15 @@ const submitHandler = (selectedFilterOptions: []) => {
   //   linkedin_url: 'https://www.linkedin.com/in/john-geo-01b5aa281/',
   // };
   chrome.runtime.sendMessage({ action: GET_USER }, async (user) => {
-    toastNotify('Prepariing environment', 'Hold on...');
+    toastNotify('Preparing environment', 'Hold on...');
     try {
       // change false
-      if (false || !user || !user.linkedin_url) {
+      if (!user || !user.linkedin_url) {
         throw new Error('Not signed in to extension');
       }
-      // if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
-      // eslint-disable-next-line no-constant-condition
-      if (true) {
+      if (await isRegisteredUserLoggedInToLinkedIn(user?.linkedin_url)) {
+        // eslint-disable-next-line no-constant-condition
+        // if (true) {
         sendMessageToApplyToJobs(selectedFilterOptions);
       } else {
         throw new Error('not logged in to correct account');
@@ -154,6 +154,7 @@ fetchFiltersBtn.addEventListener('click', async () => {
   }
   saveUserPreferences();
   toastNotify('Fetching Filters for: ', jobKeyword);
+  toastNotify('Saving preferences locally');
   fetchFiltersBtn.disabled = true;
   const filters = await getFiltersFromContentScript(jobKeyword, chosenCountry);
   toastNotify('Filters Received');
@@ -194,7 +195,7 @@ const triggerMainSectionVisibility = (user: {
   if (user?.id) {
     console.log('user present: ', user);
   }
-  console.log({ user });
+
   if (user && user?.hasOwnProperty('is_subscribed') && !user.is_subscribed) {
     console.log('inside changing h1');
 

@@ -1,14 +1,12 @@
-import { toastNotify } from '../common/common_utils';
 import { sleep, waitForElement } from '../utils';
+import { contentNotify } from './message_utils';
 
 export const fetchAllJobsInCurrPage = async () => {
   // to handle lazy loading or cards🙂
   let jobSideCards: HTMLElement[] = [];
   let numJobsFound = 0;
 
-  // temporary, change max to 7
-  const max = 1;
-  // const max = 7
+  const max = 7;
   for (let i = 0; i < max; i++) {
     jobSideCards = Array.from(
       document.querySelectorAll<HTMLElement>('.job-card-container--clickable'),
@@ -203,7 +201,6 @@ const handleAnyUnfilledColumns = async (user) => {
 export const handleComplexity = async (user) => {
   const complexityObj = await handleAnyUnfilledColumns(user);
   const { status: isTooComplex, reason: complexityReason } = complexityObj;
-  console.log({ isTooComplex, complexityReason });
 
   if (isTooComplex) {
     console.log('too complex');
@@ -217,7 +214,7 @@ export const handleComplexity = async (user) => {
     })) as HTMLButtonElement;
     confirmDiscardJobButton.click();
     console.log('dismissing');
-    toastNotify('Warning: Fields too complex to be filled. Skipping Job');
+    contentNotify('Warning: Fields too complex to be filled. Skipping Job');
     console.log('Warning: Fields too complex to be filled. Skipping Job');
   }
   return complexityObj;

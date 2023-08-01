@@ -3,6 +3,9 @@ const common = require('./webpack.common.cjs');
 const DotenvPlugin = require('dotenv-webpack');
 const path = require('path');
 
+console.log(path.resolve(__dirname, '.env.local'));
+console.log(__dirname);
+
 module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',

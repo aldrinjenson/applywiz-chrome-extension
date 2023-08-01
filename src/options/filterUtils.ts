@@ -13,6 +13,7 @@ export function createFilters(
   ) => void = () => {},
 ) {
   // Create a form element
+
   rootElement.innerHTML = '';
   const form = document.createElement('form');
   const h2 = document.createElement('h2');
@@ -24,6 +25,13 @@ export function createFilters(
     'Note: If not selected, by default all will options be considered. Better to select less rows to find maximum jobs';
   form.appendChild(h2);
   form.appendChild(filterMessage);
+
+  if (!data?.length) {
+    alert(
+      'Error from LinkedIn page in fetching extension. Please reload this page and try again.',
+    );
+    return;
+  }
 
   // Iterate over the data
   data.forEach(

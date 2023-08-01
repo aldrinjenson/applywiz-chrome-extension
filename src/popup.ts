@@ -104,12 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     triggerMainSectionVisibility(user);
   });
-  chrome.runtime.sendMessage({ action: GET_AUTOMATION_STATUS }, (status) => {
-    console.log({ status });
-    if (status) {
-      inProgressWrapper.classList.remove('hidden');
-    } else {
-      inProgressWrapper.classList.add('hidden');
-    }
-  });
+  // chrome.runtime.sendMessage({ action: GET_AUTOMATION_STATUS }, (status) => {
+  //   console.log({ status });
+  //   if (status) {
+  //     inProgressWrapper.classList.remove('hidden');
+  //   } else {
+  //     inProgressWrapper.classList.add('hidden');
+  //   }
+  // });
 });
