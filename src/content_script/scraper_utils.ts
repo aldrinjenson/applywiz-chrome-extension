@@ -187,7 +187,10 @@ const handleAnyUnfilledColumns = async (user) => {
           labelText,
       );
       console.log(label);
+
+      alert('resume error ');
       const errorReason = `Cannot answer Input field: ${labelText}`;
+      await sleep(5000);
       // await sleep(2500);
       return { status: true, reason: errorReason };
     }

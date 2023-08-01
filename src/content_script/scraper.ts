@@ -76,7 +76,9 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
     console.log(jobObject);
     console.log(`applying for job: ${count}: ${jobName} by ${companyName}`);
-    contentNotify(`applying for job: ${count}: ${jobName} by ${companyName}`);
+    contentNotify(
+      `applying for job: ${count + 1}: ${jobName} by ${companyName}`,
+    );
 
     try {
       jobCard.click();
@@ -96,14 +98,19 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         console.log('Already applied; moving on to next');
         // alert('already applied; moving on');
         continue;
+      } else {
+        console.log('Not already applied');
       }
 
-      const applyButton: HTMLButtonElement = document.querySelector(
-        '.jobs-apply-button:not(.artdeco-button--disable)',
-      );
+      const applyButton = (await waitForElement({
+        selector: '.jobs-apply-button:not(.artdeco-button--disable)',
+      })) as HTMLButtonElement;
       const externalLinkIcon = applyButton.querySelector(
         'li-icon[aria-hidden="true"][type="link-external"]',
       );
+      if (!applyButton) {
+        console.log('Cannot find Apply Button!');
+      }
 
       if (externalLinkIcon) {
         console.log('For applying to extenral site. Skipping..');
@@ -118,6 +125,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       }
 
       applyButton.click();
+      console.log('clicked i think');
 
       let isFormComplete = false;
       formPageCount = 0;
@@ -238,6 +246,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           successfullJobs.push(jobObject);
           if (successfullJobSlidingWindow.length === slidingWindowSize) {
             sendJobsDb(successfullJobSlidingWindow);
+            contentNotify('Successfully applied to ', jobName);
             successfullJobSlidingWindow = [];
           }
           await sleep(1500);
