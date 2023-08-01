@@ -1,3 +1,4 @@
+import { toastNotify } from '../common/common_utils';
 import { sleep, waitForElement } from '../utils';
 
 export const fetchAllJobsInCurrPage = async () => {
@@ -216,7 +217,8 @@ export const handleComplexity = async (user) => {
     })) as HTMLButtonElement;
     confirmDiscardJobButton.click();
     console.log('dismissing');
-    console.log(' Warning: Fields too complex to be filled. Skipping Job');
+    toastNotify('Warning: Fields too complex to be filled. Skipping Job');
+    console.log('Warning: Fields too complex to be filled. Skipping Job');
   }
   return complexityObj;
 };

@@ -192,7 +192,7 @@ const triggerMainSectionVisibility = (user: {
   name: string;
 }) => {
   if (user?.id) {
-    console.log('user bpresent bro: ', user);
+    console.log('user present: ', user);
   }
   console.log({ user });
   if (user && user?.hasOwnProperty('is_subscribed') && !user.is_subscribed) {
@@ -203,7 +203,7 @@ const triggerMainSectionVisibility = (user: {
     return;
   }
   if (user?.id) {
-    console.log('user id present bro');
+    console.log('user id present');
     userGreetingH1.innerText = `Hello ${getFirstName(user.name)}, `;
     noLoginSection.classList.add('hidden');
     mainContentSection.classList.remove('hidden');

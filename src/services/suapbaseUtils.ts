@@ -22,7 +22,7 @@ export const handleEmailSignin = async (email: string, password: string) => {
     console.log('User logged in:', fullUser);
     return fullUser;
   } catch (error) {
-    console.error('Login error:', error.message);
+    console.log('Login error:', error.message);
     throw error;
   }
 };
@@ -37,7 +37,7 @@ export const handleSignOut = async () => {
 
     console.log('User signed out');
   } catch (error) {
-    console.error('Error signing out:', error.message);
+    console.log('Error signing out:', error.message);
     throw error;
   }
 };
@@ -65,8 +65,6 @@ export const addJobsToDb = async (
     }
     console.log('write operation of jobs successful');
   } catch (error) {
-    console.error('Error performing batch write operation:', error.message);
-    // You can handle the error or rethrow it to let the calling code handle it.
-    // throw error;
+    console.log('Error performing batch write operation:', error.message);
   }
 };

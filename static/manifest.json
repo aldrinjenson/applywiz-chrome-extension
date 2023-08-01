@@ -1,7 +1,7 @@
 {
   "name": "apply-wiz",
   "description": "Chrome extension to automatically apply to jobs on several sites, making you much productive ",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"

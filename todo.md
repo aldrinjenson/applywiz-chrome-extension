@@ -3,7 +3,14 @@
 - check why notification is not wokring
 - create reusable api for awaiting and getting answers to async tasks
 
+- notification issue
+- add correct logo
+- add description for extension
 <!-- - show stop button to stop automation in the popup -->
+
+logout issue.
+allow .doc files in resume
+notification issues
 
 ---
 
