@@ -41,6 +41,8 @@ export const convertImageToBase64 = async (imageUrl = '') => {
 };
 
 export const selectChosenResume = async (chosenResume = '') => {
+  console.log({ chosenResume });
+
   if (!chosenResume) {
     await sleep(1000);
     return;
@@ -59,7 +61,7 @@ export const selectChosenResume = async (chosenResume = '') => {
     if (resumeName === chosenResume) {
       resumeH3.click();
       console.log('clicking chosen resume..');
-      return;
+      return true;
     }
   }
 };

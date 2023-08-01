@@ -27,13 +27,20 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   console.log(jobSideCards.length, ' jobs found in this page');
 
   let count = 0;
-  let i, formPageCount;
+  let i = 0,
+    formPageCount;
 
   // for (let i = 0; i < jobSideCards.length; i++) {
-  for (i = 0; count <= maxCount; i++, count++) {
+  for (i = 0, count = 0; successfullJobs.length < maxCount; i++, count++) {
+    // successfullJobs = 0; count <= maxCount; i++, count++
     console.log({ i });
     const jobCard = jobSideCards[i];
-    console.log({ i, count, maxCount });
+    console.log({
+      i,
+      count,
+      maxCount,
+      successfullJobLength: successfullJobs.length,
+    });
     console.log({ jobSideCards, jobCard });
 
     let jobName = '';
@@ -43,12 +50,18 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       console.log('error in querySelector: ', error);
       const newJobCards = await fetchAllJobsInCurrPage();
       if (newJobCards.length === jobSideCards.length) {
-        console.log('all jobs parsed. not enough jobs');
-        contentNotify(
-          'Number of jobs with the selected filters is lesser than the jobs you wanted to apply. Exiting.',
-          'Change filters and try again.',
-        );
-        break;
+        if (await moveToNextPage()) {
+          jobSideCards = await fetchAllJobsInCurrPage();
+          i = 0;
+          continue;
+        } else {
+          console.log('all jobs parsed. not enough jobs');
+          contentNotify(
+            'Number of jobs with the selected filters is lesser than the jobs you wanted to apply. Exiting.',
+            'Change filters and try again.',
+          );
+          break;
+        }
       } else {
         jobSideCards = newJobCards;
       }
@@ -77,7 +90,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
     console.log(jobObject);
     console.log(`applying for job: ${count}: ${jobName} by ${companyName}`);
     contentNotify(
-      `applying for job: ${count + 1}: ${jobName} by ${companyName}`,
+      `applying for job: ${successfullJobs.length}: ${jobName}, by ${companyName}`,
     );
 
     try {
@@ -113,8 +126,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       }
 
       if (externalLinkIcon) {
-        console.log('For applying to extenral site. Skipping..');
-        count--;
+        console.log('For applying to external site. Skipping..');
+        // count--;
         continue;
       }
 
@@ -124,6 +137,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         continue;
       }
 
+      await sleep(1000);
       applyButton.click();
       console.log('clicked i think');
 
@@ -198,14 +212,11 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           continue;
         }
 
-        console.log({ shouldStopAutomation });
-
         if (shouldStopAutomation) {
           console.log('stopping automation');
           break;
         }
 
-        await selectChosenResume(user.chosenResume);
         nextButton.click();
         const { status: isTooComplex, reason: complexityReason } =
           await handleComplexity(user);
@@ -220,6 +231,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           sendJobsDb([jobObject]);
           break;
         }
+
+        await selectChosenResume(user.chosenResume);
 
         if (isFinalStep) {
           // nextButton?.click();
@@ -246,7 +259,9 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           successfullJobs.push(jobObject);
           if (successfullJobSlidingWindow.length === slidingWindowSize) {
             sendJobsDb(successfullJobSlidingWindow);
-            contentNotify('Successfully applied to ', jobName);
+            contentNotify(
+              `successfully applied to: ${jobName}, by ${companyName}`,
+            );
             successfullJobSlidingWindow = [];
           }
           await sleep(1500);
@@ -262,14 +277,16 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
       console.log('stopping automation');
       break;
     }
-    if (i >= jobSideCards.length - 1 && count < maxCount - 1) {
-      // if last card and less than count
+    if (i >= jobSideCards.length - 1 && successfullJobs.length < maxCount - 1) {
+      // if last card and still there are many jobs to be applied
 
       const newJobSideCards = await fetchAllJobsInCurrPage();
       if (newJobSideCards.length === jobSideCards.length) {
         // if all jobs have been parsed
         console.log('moving on to next page ');
         const canMoveToNextPage = await moveToNextPage();
+        console.log({ canMoveToNextPage });
+
         if (!canMoveToNextPage) {
           contentNotify('Maximum jobs with this filter is done');
           console.log('breaking as no more jobs available');
@@ -297,7 +314,13 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
   if (successfullJobSlidingWindow.length) {
     sendJobsDb(successfullJobSlidingWindow);
   }
-  console.log({ i, count, maxCount, formPageCount });
+  console.log({
+    i,
+    count,
+    maxCount,
+    formPageCount,
+    successfullJobsLength: successfullJobs.length,
+  });
 
   return status;
 };

@@ -32,6 +32,7 @@ import {
   USER_SIGN_IN,
   USER_SIGN_OUT,
 } from '../constants';
+import { Session } from '@supabase/supabase-js';
 
 chrome.runtime.onInstalled.addListener(async () => {
   await initializeStorageWithDefaults({});
@@ -132,13 +133,14 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-// firebase.auth().onAuthStateChanged((user) => {
-//   if (user) {
-//     store.dispatch('SET_USER', user);
-//   } else {
-//     store.dispatch('SET_USER', null);
-//     chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user });
-//   }
+// let spSession: Session | null = null;
+
+// supabase.auth.getSession().then(({ data: { session } }) => {
+//   spSession = session;
+// });
+
+// supabase.auth.onAuthStateChange((_event, session) => {
+//   spSession = session;
 // });
 
 supabase.auth.onAuthStateChange(async (event, session) => {
@@ -150,7 +152,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
       const sb_sesion = await getStorageItem('sb_session');
       console.log('trying to get session from storage');
       if (sb_sesion) {
-        // console.log({ sb_sesion });
+        console.log({ sb_sesion });
       }
       break;
     case 'SIGNED_IN':

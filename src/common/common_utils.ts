@@ -15,7 +15,7 @@ export const toastNotify = (title: string, message = '', type = 'basic') => {
         message,
       },
       (notificationId) => {
-        // console.log('notification sent with id: ', notificationId);
+        console.log('Last notification error:', chrome.runtime.lastError);
       },
     );
     setTimeout(() => {

@@ -188,7 +188,7 @@ const handleAnyUnfilledColumns = async (user) => {
       );
       console.log(label);
 
-      alert('resume error ');
+      alert('too complex');
       const errorReason = `Cannot answer Input field: ${labelText}`;
       await sleep(5000);
       // await sleep(2500);
@@ -224,9 +224,10 @@ export const handleComplexity = async (user) => {
 };
 
 export const moveToNextPage = async () => {
-  const paginationLis = Array.from(
-    document.querySelectorAll('.artdeco-pagination__indicator'),
-  );
+  const paginationLis = await waitForElement({
+    selector: '.artdeco-pagination__indicator',
+    params: { all: true },
+  });
   console.log(paginationLis);
 
   if (!paginationLis?.length) {
@@ -250,11 +251,13 @@ export const moveToNextPage = async () => {
   );
   if (!nextLiElement) {
     console.log('Next page does not exist!');
+    return false;
   }
   const nextButton = nextLiElement.querySelector('button');
   nextButton.click();
   console.log('moving to next page');
   await sleep(2000);
+  return true;
 };
 
 export const handleErrorToastWhileSubmitting = async () => {
