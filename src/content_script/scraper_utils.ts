@@ -58,8 +58,13 @@ const handleAnyUnfilledColumns = async (user) => {
     const label = wrapper.querySelector('label');
     const labelText = label?.innerText?.toLowerCase() || '';
     const input = wrapper.querySelector('input');
-
     let fieldsFilled = false;
+
+    if (labelText.includes('resume')) {
+      console.log('skipping resume error box');
+      fieldsFilled = true;
+      continue;
+    }
 
     // for handling checkboxes
     if (labelText === 'yes') {
@@ -136,7 +141,7 @@ const handleAnyUnfilledColumns = async (user) => {
       );
       input.dispatchEvent(inputEvent);
       fieldsFilled = true;
-      alert('match found!');
+      // alert('match found!');
       break;
     }
     // here
@@ -188,7 +193,7 @@ const handleAnyUnfilledColumns = async (user) => {
       );
       console.log(label);
 
-      alert('too complex');
+      // alert('too complex');
       const errorReason = `Cannot answer Input field: ${labelText}`;
       await sleep(5000);
       // await sleep(2500);

@@ -89,9 +89,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
     console.log(jobObject);
     console.log(`applying for job: ${count}: ${jobName} by ${companyName}`);
-    contentNotify(
-      `applying for job: ${successfullJobs.length}: ${jobName}, by ${companyName}`,
-    );
+    contentNotify(`applying for job: ${successfullJobs.length}: ${jobName}`);
 
     try {
       jobCard.click();
@@ -139,7 +137,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
       await sleep(1000);
       applyButton.click();
-      console.log('clicked i think');
+      console.log('clicked hopefully');
 
       let isFormComplete = false;
       formPageCount = 0;

@@ -6,7 +6,6 @@ export const toastNotify = (title: string, message = '', type = 'basic') => {
   const notificationId = `notification_${Date.now()}`;
   try {
     chrome.notifications.create(
-      // '7878',
       notificationId,
       {
         type: 'basic',
@@ -15,7 +14,7 @@ export const toastNotify = (title: string, message = '', type = 'basic') => {
         message,
       },
       (notificationId) => {
-        console.log('Last notification error:', chrome.runtime.lastError);
+        // console.log('notification sent');
       },
     );
     setTimeout(() => {

@@ -41,8 +41,6 @@ export const convertImageToBase64 = async (imageUrl = '') => {
 };
 
 export const selectChosenResume = async (chosenResume = '') => {
-  console.log({ chosenResume });
-
   if (!chosenResume) {
     await sleep(1000);
     return;

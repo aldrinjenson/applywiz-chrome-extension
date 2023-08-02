@@ -1,7 +1,42 @@
 import { sleep, waitForElement } from '../utils';
+import { contentNotify } from './message_utils';
 
-export const applySelectedFilters = async (selectedFilters) => {
-  console.log(selectedFilters);
+const calculateAvailableJobsBasedOnFilter = async (
+  showResultsButton: HTMLButtonElement,
+) => {
+  await sleep(1500);
+  const showResultsSpan = showResultsButton.querySelector('span');
+  const innerText = showResultsSpan.innerText;
+  console.log({ showResultsSpan, innerText });
+
+  contentNotify(innerText);
+  await sleep(5000);
+  console.log({ buttonInnerText: innerText });
+
+  const kPlusPattern = /k\+/;
+  const hasKPlus = kPlusPattern.test(innerText);
+
+  if (hasKPlus) {
+    console.log('More than 1 k+ jobs available it seems');
+    return 1001;
+  }
+
+  const numberPattern = /\d+/;
+  const matches = innerText.match(numberPattern);
+
+  let number = null;
+  if (matches && matches.length > 0) {
+    number = parseInt(matches[0], 10);
+  }
+  console.log(number);
+
+  return number;
+};
+
+export const applySelectedFilters = async (
+  selectedFilters: [],
+  maxJobs: number,
+) => {
   const filterButtonSelector = '.search-reusables__all-filters-pill-button';
   const filterButton = (await waitForElement({
     selector: filterButtonSelector,
@@ -12,19 +47,30 @@ export const applySelectedFilters = async (selectedFilters) => {
   const showResultsButton = (await waitForElement({
     selector: '[data-test-reusables-filters-modal-show-results-button="true"]',
   })) as HTMLButtonElement;
-  console.log({ showResultsButton });
 
   for (const filter of selectedFilters) {
     for (const option of filter.options) {
       if (option.isSelected) {
         try {
           const input = document.getElementById(option.id);
+          // const input = document.getElementById(option.id);
           input.click();
         } catch (error) {
           console.log('Error:', error);
         }
       }
     }
+  }
+
+  const availableJobs = await calculateAvailableJobsBasedOnFilter(
+    showResultsButton,
+  );
+  console.log({ isNum: isNaN(availableJobs), availableJobs });
+
+  if (availableJobs && !isNaN(availableJobs) && +availableJobs < maxJobs - 5) {
+    alert(
+      'Number of jobs available based on the filters applied is lesser than the maxJobs you have entered! Hit okay to proceed with maximum available jobs. Else close this tab and change filters in the Apply-Wiz options',
+    );
   }
 
   showResultsButton.click();
@@ -70,6 +116,8 @@ export const getFilters = async () => {
 
 export const applyCountryNameInSearch = async (countryName = '') => {
   if (!countryName) return;
+  console.log('applying country name');
+
   const searchButton = (await waitForElement({
     selector: '.jobs-search-box__submit-button',
   })) as HTMLButtonElement;
@@ -84,5 +132,4 @@ export const applyCountryNameInSearch = async (countryName = '') => {
   const inputEvent = new Event('input', { bubbles: true });
   locationSearchInput.dispatchEvent(inputEvent);
   searchButton.click();
-  await sleep(2500);
 };

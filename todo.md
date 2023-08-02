@@ -1,6 +1,8 @@
 # Stuff to do
 
-- check why notification is not wokring
+- logout issue
+
+- change icons
 - create reusable api for awaiting and getting answers to async tasks
 
 - notification issue
@@ -24,6 +26,7 @@ notification issues
 
 # #To ask users to do
 
+- show how to turn on notification
 - ask them to fill personal demographic information here: https://www.linkedin.com/mypreferences/d/demographic-info-copy
 - ask them to run the extension in full screen/ maximised mode
 
@@ -32,3 +35,8 @@ notification issues
 - advanced tag based filling fieds
 - location based job searching
 - password reset
+
+# Future Version fixes
+
+- handle gender
+- in reports page, maybe show the top reason for failing and handle that.

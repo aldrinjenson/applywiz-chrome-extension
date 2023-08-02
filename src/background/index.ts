@@ -28,23 +28,24 @@ import {
   SHOW_NOTIFICATION,
   SIGN_IN_SUCCESS,
   SIGN_OUT_SUCCESS,
-  START_AUTOMATION,
   USER_SIGN_IN,
   USER_SIGN_OUT,
 } from '../constants';
-import { Session } from '@supabase/supabase-js';
+import { AuthSession } from '@supabase/supabase-js';
 
 chrome.runtime.onInstalled.addListener(async () => {
-  await initializeStorageWithDefaults({});
+  // await initializeStorageWithDefaults({});
   console.log('Extension successfully installed!');
 });
 
 // Log storage changes, might be safely removed
 chrome.storage.onChanged.addListener((changes) => {
   for (const [key, value] of Object.entries(changes)) {
-    console.table(value);
+    // console.table(value);
     console.log(
-      `"${key}" changed from "${value.oldValue}" to "${value.newValue}"`,
+      `"${JSON.stringify(key)}" changed from "${value.oldValue}" to "${
+        value.newValue
+      }"`,
     );
   }
 });
@@ -133,29 +134,35 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-// let spSession: Session | null = null;
-
-// supabase.auth.getSession().then(({ data: { session } }) => {
-//   spSession = session;
-// });
-
-// supabase.auth.onAuthStateChange((_event, session) => {
-//   spSession = session;
-// });
-
 supabase.auth.onAuthStateChange(async (event, session) => {
-  const user = session?.user;
+  console.log('auth status changed');
   console.log({ event, session });
 
   switch (event) {
     case 'INITIAL_SESSION':
-      const sb_sesion = await getStorageItem('sb_session');
-      console.log('trying to get session from storage');
+      const sb_sesion: AuthSession = await getStorageItem('sb_session');
       if (sb_sesion) {
+        console.log('sb session present');
         console.log({ sb_sesion });
+        const { user, refresh_token, access_token } = sb_sesion;
+        const { error } = await supabase.auth.setSession({
+          access_token,
+          refresh_token,
+        });
+
+        if (error) {
+          console.log({ error });
+          console.log('error in setting session; breaking');
+          break;
+        }
+
+        const fullUser = await getFullUser(user);
+        console.log({ fullUser });
+        store.dispatch(SET_USER, fullUser);
       }
       break;
     case 'SIGNED_IN':
+      const user = session?.user;
       const fullUser = await getFullUser(user);
       console.log('setting in storage');
       store.dispatch(SET_USER, fullUser);

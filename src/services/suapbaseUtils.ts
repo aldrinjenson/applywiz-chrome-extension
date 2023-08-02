@@ -53,7 +53,6 @@ export const addJobsToDb = async (
   console.log(jobObjects);
   console.log(userId);
 
-  // to do: change the userId to be dynamic
   try {
     const modifiedJobObjects = jobObjects.map((jobObj) => ({
       ...jobObj,

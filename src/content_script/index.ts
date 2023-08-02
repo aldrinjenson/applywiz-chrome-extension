@@ -5,7 +5,7 @@ import {
   SET_AUTOMATION_STATUS,
   START_AUTOMATION,
 } from '../constants';
-import { waitForElement } from '../utils';
+import { sleep, waitForElement } from '../utils';
 import {
   applyCountryNameInSearch,
   applySelectedFilters,
@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   switch (message.action) {
     case 'TEST': {
       // startAutomation();
-      alert('set aayi bro!');
+      alert('working fine');
       sendResponse('working!');
       break;
     }
@@ -41,13 +41,15 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       break;
     }
     case START_AUTOMATION: {
+      sendResponse();
       const { filters, user, maxJobs } = message.data;
       console.log(message.data);
       const { chosenCountry } = user;
-      sendResponse();
 
       await applyCountryNameInSearch(chosenCountry);
-      await applySelectedFilters(filters);
+      await sleep(2500);
+      const canApplyFilters = await applySelectedFilters(filters, maxJobs);
+
       const noJobsExist = (await waitForElement({
         selector: '.jobs-search-no-results-banner__image',
       })) as HTMLButtonElement;
