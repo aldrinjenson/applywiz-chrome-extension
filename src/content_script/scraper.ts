@@ -258,7 +258,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
           if (successfullJobSlidingWindow.length === slidingWindowSize) {
             sendJobsDb(successfullJobSlidingWindow);
             contentNotify(
-              `successfully applied to: ${jobName}, by ${companyName}`,
+              `successfully applied to: ${jobName}, by ${companyName.trim()}`,
             );
             successfullJobSlidingWindow = [];
           }
@@ -266,7 +266,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
         }
       }
     } catch (error) {
-      console.log('error bro: ', error);
+      console.log('error br: ', error);
       failedJobs.push(jobObject);
       jobObject.status = 'failed';
     }

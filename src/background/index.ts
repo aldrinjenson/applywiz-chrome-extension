@@ -178,9 +178,16 @@ supabase.auth.onAuthStateChange(async (event, session) => {
   }
 });
 
-chrome.runtime.onStartup.addListener(async () => {
-  console.log('starting up..');
+const initialSetUp = async () => {
+  console.log('bg script starting up');
   const savedUserPreferences = await getStorageItem(AW_USER_PREFERENCES);
   console.log({ savedUserPreferences });
   store.dispatch(SET_USER_PREFERENCES, savedUserPreferences);
-});
+};
+initialSetUp();
+
+// chrome.runtime.onStartup.addListener(async () => {
+//   console.log('starting up..');
+// });
+
+// setTimeout(() => initialSetUp, 1000);

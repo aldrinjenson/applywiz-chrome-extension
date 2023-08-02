@@ -74,11 +74,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   }
 });
 window.addEventListener('load', async () => {
-  console.log('window loaded bro');
+  console.log('window loaded!');
   // applyCountryNameInSearch('France');
   // const stopBtn = document.createElement('btn')
   // document.body.appendChild(stopBtn)
-  const { filters, user, maxJobs } = payload;
+  // const { filters, user, maxJobs } = payload;
   // await applyToJobs(filters, user, 30);
   // await applyToJobs(filtersData, {
   //   experience: 1,
