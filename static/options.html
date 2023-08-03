@@ -126,7 +126,7 @@
         <datalist id="country-list"></datalist>
       </div>
 
-      <div class="resume-collect">
+      <s="resume-collect">
         <label for="keyword">
           <h4>Resume</h4>
           <p>Choose only if you have multiple resumes added in your linkedIn</p>
@@ -140,20 +140,20 @@
 
         <input type="text" style="width: 40%;" id="chosen-resume" name="resume" list="resume-list"
           placeholder="Filled automatically after fetching resumes">
+        <button id="clear-btn">Clear</button>
         <datalist id="resume-list"></datalist>
-      </div>
 
-      <label for="keyword">
-        <h4>Job Keyword:</h4>
-      </label>
-      <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer"
-        style="width: 40%;" />
+        <label for="keyword">
+          <h4>Job Keyword:</h4>
+        </label>
+        <input type="text" id="jobKeyword" value="" name="keyword" placeholder="eg: Software Developer"
+          style="width: 40%;" />
 
-      <br />
-      <br />
-      <button id="fetchFiltersBtn" class="button2">
-        Fetch filters
-      </button>
+        <br />
+        <br />
+        <button id="fetchFiltersBtn" class="button2">
+          Fetch filters
+        </button>
 
     </section>
 
