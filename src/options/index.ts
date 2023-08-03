@@ -183,7 +183,7 @@ chrome.runtime.onMessage.addListener(
         triggerMainSectionVisibility(null);
         break;
       default:
-        console.log(' Warning: Unhandled action:', action);
+      // console.log(' Warning: Unhandled action:', action);
     }
   },
 );

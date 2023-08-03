@@ -1,6 +1,9 @@
 import { toastNotify } from '../common/common_utils';
 import { GET_RESUMES, RECEIVE_RESUMES } from '../constants';
+import { contentNotify } from '../content_script/message_utils';
 import { waitForContentScriptLoad } from './option_content_script_related';
+
+const clearResumesBtn: HTMLButtonElement = document.querySelector('#clear-btn');
 
 export const fillResumeList = () => {
   toastNotify('Fetching Resumes from LinkedIn: ');
@@ -46,6 +49,12 @@ export const fillResumeList = () => {
       option.value = res;
       resumeDataList.appendChild(option);
     });
+
+    toastNotify('Resumes received from LinkedIn');
     resumeInputField.value = resumes[0];
+    clearResumesBtn.addEventListener('click', () => {
+      resumeInputField.placeholder = 'Click here and start typing..';
+      resumeInputField.value = '';
+    });
   };
 };
