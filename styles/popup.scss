@@ -162,3 +162,22 @@ form input[type='submit']:hover {
   text-decoration: underline;
   color: blue;
 }
+
+
+.button3 {
+  margin-top: 5rem;
+  padding: 0.3rem;
+  width: 50%;
+  background:#0094a8;
+  cursor: pointer;
+  color:white;
+  font-size: 0.8rem;
+  font-weight: 300;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+.button3:hover {
+  letter-spacing: 0.2px;
+  background: #7edefc;
+  color:#005c68;
+}
