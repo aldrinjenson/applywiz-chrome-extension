@@ -7,14 +7,21 @@
 </head>
 
 <body>
-  <div id="no-login" style="margin-top: 40vh">
+  <div id="no-login" style="margin-top: 20vh">
+    <div>
+      <img src="icons/logo_only.png" alt="logo" height="150px" width="120px" style="margin-left: 625px;" />
+    </div>
     <h1 class="center-align" id="alert-msg">
-      Please Login from the extension popup to continue
+      Please Login from the extension to continue
     </h1>
+    
   </div>
 
   <main id="main-content" class="hidden" style="margin: 3%;">
-    <div style="margin-left: 7rem; margin-top: 7rem;">
+    <div style="margin-left: 34rem;">
+      <img src="icons/Logo_text_hori.png" alt="logo" />
+    </div>
+    <div style="margin-left: 7rem; margin-top: 2rem;">
       <h1 id="user-greeting">Hello,</h1>
       <h3>Check Automation Report <a target="_blank" rel="noopener noreferrer" href="https://apply-wiz.com/report">in
           your dashboard </a></h3>
@@ -25,7 +32,7 @@
       <section class="container" style="flex: 1;">
         <div style="margin-left: 2rem; ">
           <h2 style="margin-bottom: 10px;">Base Questions</h2>
-          <p>Please ensure that all these are filled before applying to jobs</p>
+          <p>**Please ensure that all these are filled before applying to jobs</p>
         </div>
 
         <ol>
@@ -70,10 +77,11 @@
           </div>
           <li class="row">
             <div class="column" style="font-weight: bold">
-              <h3>Skills</h3>
+              <h2>Skills</h2>
             </div>
-            <div class="column" style="font-weight: bold">
-              <h3>Experience in Years</h3>
+            <div class="column" style="font-weight: bold; position: absolute;
+            right: 150px">
+              <h2>Experience in Years</h2>
             </div>
           </li>
           <li class="row">
@@ -87,14 +95,15 @@
             <div class="button" style="opacity: 0;">-</div>
           </li>
         </div>
-
+<br>
 
         <div id="advanced-matching">
-          <h2>Advanced Tag matching</h2>
-          <p>Use this only if many jobs are shown as failed in <a target="_blank" rel="noopener noreferrer"
+          <h2>Advanced Tag matching(Optional)</h2>
+          <p>**Use this only if many jobs are shown as failed in <a target="_blank" rel="noopener noreferrer"
               href="https://apply-wiz.com/report">Daily Reports</a>
           </p>
-          <p>Separate by comma those that you want to match</p>
+          <p>Separate by comma those keywords that you want to match with a value</p>
+          <p>eg. ctc,current,dollar => 50000</p>
           <div id="advanced-tags-container">
             <li class="row">
               <div class="column">
@@ -118,8 +127,8 @@
     <section class="container" style="margin-left: 6.5rem; margin-top: -1rem;">
 
       <div class="chosen-country-wrapper">
-        <label for="message">Preferred Country for Job Search</label>
-        <p>Keep this blank to use the default search in LinkedIn. Usually automatically uses the last used search.
+        <label for="message"><<h2>Preferred Country for Job Search</h2></label>
+        <p>**Keep this blank to use the default search in LinkedIn. Usually automatically uses the last used search.
         </p>
         <input type="text" style="width: 40%;" id="chosen-country" name="country" list="country-list"
           placeholder="eg: United Kingdom">
@@ -128,10 +137,10 @@
 
       <div class="resume-collect">
         <label for="keyword">
-          <h4>Resume</h4>
-          <p>Choose only if you have multiple resumes added in your linkedIn</p>
+          <h2>Resume(optional)</h2>
+          <p>Choose only if you have multiple resumes added in your linkedIn. Else skip this section</p>
           <div>
-            <button id="fetch-resumes" class="btn">Fetch Added Resumes from LinkedIn</button>
+            <button id="fetch-resumes" class="button2">Fetch Resumes from LinkedIn</button>
           </div>
           <p>If you haven't added a resume yet, add one here: <a target="_blank" rel="noopener noreferrer"
               href="https://www.linkedin.com/jobs/application-settings/">https://www.linkedin.com/jobs/application-settings/</a>
