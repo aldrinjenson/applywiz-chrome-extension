@@ -29,3 +29,5 @@ export const RECEIVE_RESUMES = 'RECEIVE_RESUMES';
 
 export const SET_AUTOMATION_STATUS = 'SET_AUTOMATION_STATUS';
 export const GET_AUTOMATION_STATUS = 'GET_AUTOMATION_STATUS';
+
+export const isDevEnv = process.env.env === 'dev';

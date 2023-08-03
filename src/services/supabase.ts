@@ -14,7 +14,6 @@ export const supabase = createClient(
 
 export const getFullUser = async (user: User) => {
   console.log('inside getfulluser');
-
   try {
     if (user) {
       const {

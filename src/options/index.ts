@@ -17,6 +17,7 @@ import {
   SIGN_IN_SUCCESS,
   SIGN_OUT_SUCCESS,
   START_AUTOMATION,
+  isDevEnv,
 } from '../constants';
 import { getFirstName } from '../utils';
 import {
@@ -148,9 +149,9 @@ fetchFiltersBtn.addEventListener('click', async () => {
   const chosenCountry = chosenCountryInput.value;
   console.log({ chosenCountry });
 
-  if (!jobKeyword) {
-    jobKeyword = 'Software Engineer';
-    // return alert('Please enter a job Keyword');
+  if (!jobKeyword?.length) {
+    if (isDevEnv) jobKeyword = 'Software Engineer';
+    else return alert('Please enter a job Keyword');
   }
   saveUserPreferences();
   toastNotify('Fetching Filters for: ', jobKeyword);

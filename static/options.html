@@ -16,13 +16,17 @@
   <main id="main-content" class="hidden" style="margin: 3%;">
     <div style="margin-left: 7rem; margin-top: 7rem;">
       <h1 id="user-greeting">Hello,</h1>
-      <h3>Check Automation Report <a href="https://apply-wiz.com/report">in your dashboard </a></h3>
+      <h3>Check Automation Report <a target="_blank" rel="noopener noreferrer" href="https://apply-wiz.com/report">in
+          your dashboard </a></h3>
     </div>
 
     <div class="flex-container">
       <!-- Questions Section -->
       <section class="container" style="flex: 1;">
-        <h2 style="margin-left: 2rem; margin-bottom: 10px;">Questions</h2>
+        <div style="margin-left: 2rem; ">
+          <h2 style="margin-bottom: 10px;">Base Questions</h2>
+          <p>Please ensure that all these are filled before applying to jobs</p>
+        </div>
 
         <ol>
           <li>
@@ -74,10 +78,10 @@
           </li>
           <li class="row">
             <div class="column">
-              <input type="text" name="skill[]" value="" />
+              <input type="text" name="skill[]" value="" placeholder="eg: Sales" />
             </div>
             <div class="column">
-              <input type="number" name="experience[]" value="" />
+              <input type="number" name="experience[]" value="" placeholder="eg: 5" />
             </div>
             <div class="button" id="addButton">+</div>
             <div class="button" style="opacity: 0;">-</div>
@@ -87,7 +91,8 @@
 
         <div id="advanced-matching">
           <h2>Advanced Tag matching</h2>
-          <p>Use this only if many jobs are shown as failed in <a href="https://apply-wiz.com/report">Daily Reports</a>
+          <p>Use this only if many jobs are shown as failed in <a target="_blank" rel="noopener noreferrer"
+              href="https://apply-wiz.com/report">Daily Reports</a>
           </p>
           <p>Separate by comma those that you want to match</p>
           <div id="advanced-tags-container">
@@ -128,13 +133,13 @@
           <div>
             <button id="fetch-resumes" class="btn">Fetch Added Resumes from LinkedIn</button>
           </div>
-          <p>If you haven't added a resume yet, add one here: <a
+          <p>If you haven't added a resume yet, add one here: <a target="_blank" rel="noopener noreferrer"
               href="https://www.linkedin.com/jobs/application-settings/">https://www.linkedin.com/jobs/application-settings/</a>
           </p>
         </label>
 
         <input type="text" style="width: 40%;" id="chosen-resume" name="resume" list="resume-list"
-          placeholder="eg: Default">
+          placeholder="Filled automatically after fetching resumes">
         <datalist id="resume-list"></datalist>
       </div>
 
