@@ -145,12 +145,8 @@ textarea {
   width: 75%;
 }
 
-// .row input[type="number"] {
-//   margin-left: 1.2rem;
-// }
-
 .button2 {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   padding: 0.4rem;
   width: 20%;
   background: #0094a8;
@@ -163,7 +159,7 @@ textarea {
   border-color: transparent;
 }
 .button2:hover {
-  letter-spacing: 0.5px;
+  // letter-spacing: 0.5px;
   background: #7edefc;
 }
 .button2:disabled {
@@ -188,4 +184,11 @@ textarea {
 
 .filter-wrapper .radio-group {
   display: flex;
+}
+
+#main-logo {
+  position: absolute;
+  right: 0;
+  margin-right: 10%;
+  padding: 3%;
 }

@@ -8,23 +8,30 @@
 
 <body>
   <div id="no-login" style="margin-top: 20vh">
-    <div>
-      <img src="icons/logo_only.png" alt="logo" height="150px" width="120px" style="margin-left: 625px;" />
+    <div style="display:flex; justify-content: center; align-items: center;">
+      <img src="icons/logo_only.png" alt="logo" height="150px" width="120px" />
     </div>
     <h1 class="center-align" id="alert-msg">
       Please Login from the extension to continue
     </h1>
-    
+
   </div>
 
   <main id="main-content" class="hidden" style="margin: 3%;">
-    <div style="margin-left: 34rem;">
-      <img src="icons/Logo_text_hori.png" alt="logo" />
-    </div>
-    <div style="margin-left: 7rem; margin-top: 2rem;">
-      <h1 id="user-greeting">Hello,</h1>
-      <h3>Check Automation Report <a target="_blank" rel="noopener noreferrer" href="https://apply-wiz.com/report">in
-          your dashboard </a></h3>
+    <div style="margin-left: 6.5rem; margin-top: 2rem; display: flex; align-items: center;">
+      <div>
+        <h1 id="user-greeting">Hello,</h1>
+        <h3>Check Automation Report <a target="_blank" rel="noopener noreferrer" href="https://apply-wiz.com/report">in
+            your dashboard </a></h3>
+
+        <p>Confused or overwhelmed about using ApplyWiz? Check out our <a target="_blank" rel="noopener noreferrer"
+            href="https://apply-wiz.com/blog-getting-started"> Getting Started Guide </a> to know more.</p>
+      </div>
+
+
+      <div id="main-logo">
+        <img src="icons/Logo_text_hori.png" alt="logo" />
+      </div>
     </div>
 
     <div class="flex-container">
@@ -95,7 +102,7 @@
             <div class="button" style="opacity: 0;">-</div>
           </li>
         </div>
-<br>
+        <br>
 
         <div id="advanced-matching">
           <h2>Advanced Tag matching(Optional)</h2>
@@ -127,7 +134,9 @@
     <section class="container" style="margin-left: 6.5rem; margin-top: -1rem;">
 
       <div class="chosen-country-wrapper">
-        <label for="message"><<h2>Preferred Country for Job Search</h2></label>
+        <label for="message">
+          <<h2>Preferred Country for Job Search</h2>
+        </label>
         <p>**Keep this blank to use the default search in LinkedIn. Usually automatically uses the last used search.
         </p>
         <input type="text" style="width: 40%;" id="chosen-country" name="country" list="country-list"
@@ -142,7 +151,7 @@
           <div>
             <button id="fetch-resumes" class="button2">Fetch Resumes from LinkedIn</button>
           </div>
-          <p>If you haven't added a resume yet, add one here: <a target="_blank" rel="noopener noreferrer"
+          <p>If you haven't added a resume to LinkedIn yet, add one here: <a target="_blank" rel="noopener noreferrer"
               href="https://www.linkedin.com/jobs/application-settings/">https://www.linkedin.com/jobs/application-settings/</a>
           </p>
         </label>
