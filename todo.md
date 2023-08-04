@@ -2,11 +2,8 @@
 
 # Stuff to do
 
-- change icons
 - create reusable api for awaiting and getting answers to async tasks
-
 - add description for extension
-<!-- - show stop button to stop automation in the popup -->
 
 ---
 

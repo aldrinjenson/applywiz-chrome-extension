@@ -1,9 +1,10 @@
 {
-  "name": "chrome-extension-webpack",
+  "name": "Apply-Wiz-chrome-extension-webpack",
   "version": "0.2.0",
-  "description": "Get started with Chrome extensions development using webpack, Typescript, Sass, and more",
+  "description": "Chrome Extension to automate applying to jobs in LinkedIn",
   "scripts": {
     "start": "webpack --watch --config webpack.dev.cjs",
+    "dev": "webpack --watch --config webpack.dev.cjs",
     "build": "webpack --config webpack.prod.cjs",
     "lint": "eslint --ext .ts,.js --max-warnings=0 .",
     "prettier": "prettier --write",

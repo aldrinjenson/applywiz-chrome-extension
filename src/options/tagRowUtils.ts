@@ -79,15 +79,21 @@ export const addNewTagRow = (tags = '', tagsValue = ''): void => {
   const newRow = document.createElement('li');
   newRow.className = 'row';
 
+  const tagColumnDiv = document.createElement('div');
+  tagColumnDiv.classList.add('column');
   const newTagInput = document.createElement('input');
   newTagInput.type = 'text';
   newTagInput.name = 'tags[]';
   newTagInput.value = tags;
+  tagColumnDiv.appendChild(newTagInput);
 
+  const tagValueColumnDiv = document.createElement('div');
+  tagValueColumnDiv.classList.add('column');
   const newValueInput = document.createElement('input');
   newValueInput.type = 'text';
   newValueInput.name = 'value';
   newValueInput.value = tagsValue;
+  tagValueColumnDiv.appendChild(newValueInput);
 
   const addButton = document.createElement('div');
   addButton.className = 'button';
@@ -102,8 +108,8 @@ export const addNewTagRow = (tags = '', tagsValue = ''): void => {
     advancedTagsContainer.removeChild(newRow),
   );
 
-  newRow.appendChild(newTagInput);
-  newRow.appendChild(newValueInput);
+  newRow.appendChild(tagColumnDiv);
+  newRow.appendChild(tagValueColumnDiv);
   newRow.appendChild(addButton);
   newRow.appendChild(removeButton);
 
