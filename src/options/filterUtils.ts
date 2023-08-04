@@ -96,6 +96,7 @@ export function createFilters(
   const submitButton = document.createElement('button');
   submitButton.classList.add('button2');
   submitButton.textContent = 'Start Applying';
+  submitButton.id = 'apply-btn';
   form.appendChild(submitButton);
 
   // Add an event listener to the submit button
