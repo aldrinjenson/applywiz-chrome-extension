@@ -1,7 +1,6 @@
 import { IS_THIS_USER_LOGGED_IN } from '../constants';
 
 const isPaidUserLoggedIn = () => {
-  console.log('inside user check func');
   const editButton = document.querySelector('button[aria-label="Edit intro"]');
   console.log(editButton);
   if (editButton) {
@@ -14,7 +13,7 @@ const isPaidUserLoggedIn = () => {
 };
 
 window.addEventListener('load', async () => {
-  console.log('Dom Loaded in LinkedIn profile page');
+  console.log('Dom Loaded in LinkedIn Profile ');
   chrome.runtime.onMessage.addListener(
     async (message, sender, sendResponse) => {
       switch (message.action) {

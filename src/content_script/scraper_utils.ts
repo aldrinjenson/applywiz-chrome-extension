@@ -191,7 +191,6 @@ const handleAnyUnfilledColumns = async (user) => {
         'Not able to fill all fields based on given user object for label: ' +
           labelText,
       );
-      console.log(label);
 
       // alert('too complex');
       const errorReason = `Cannot answer Input field: ${labelText}`;

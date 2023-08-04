@@ -1,9 +1,10 @@
+- finish google chrome content for extension
+
 # Stuff to do
 
 - change icons
 - create reusable api for awaiting and getting answers to async tasks
 
-- add correct logo
 - add description for extension
 <!-- - show stop button to stop automation in the popup -->
 

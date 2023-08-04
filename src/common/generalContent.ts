@@ -13,4 +13,3 @@
 // console.log('store');
 
 // console.log(store);
-console.log('general content script running..');

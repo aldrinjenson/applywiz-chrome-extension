@@ -10,7 +10,6 @@ const calculateAvailableJobsBasedOnFilter = async (
   console.log({ showResultsSpan, innerText });
 
   contentNotify(innerText);
-  await sleep(5000);
   console.log({ buttonInnerText: innerText });
 
   const kPlusPattern = /k\+/;
@@ -28,7 +27,6 @@ const calculateAvailableJobsBasedOnFilter = async (
   if (matches && matches.length > 0) {
     number = parseInt(matches[0], 10);
   }
-  console.log(number);
 
   return number;
 };
@@ -62,16 +60,16 @@ export const applySelectedFilters = async (
     }
   }
 
-  const availableJobs = await calculateAvailableJobsBasedOnFilter(
-    showResultsButton,
-  );
-  console.log({ isNum: isNaN(availableJobs), availableJobs });
+  // const availableJobs = await calculateAvailableJobsBasedOnFilter(
+  //   showResultsButton,
+  // );
+  // console.log({ isNum: isNaN(availableJobs), availableJobs });
 
-  if (availableJobs && !isNaN(availableJobs) && +availableJobs < maxJobs - 5) {
-    alert(
-      'Number of jobs available based on the filters applied is lesser than the maxJobs you have entered! Hit okay to proceed with maximum available jobs. Else close this tab and change filters in the Apply-Wiz options',
-    );
-  }
+  // if (availableJobs && !isNaN(availableJobs) && +availableJobs < maxJobs - 5) {
+  //   alert(
+  //     'Number of jobs available based on the filters applied is lesser than the maxJobs you have entered! Hit okay to proceed with maximum available jobs. Else close this tab and change filters in the Apply-Wiz options',
+  //   );
+  // }
 
   showResultsButton.click();
 };

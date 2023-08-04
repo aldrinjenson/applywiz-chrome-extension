@@ -41,7 +41,7 @@ h3 {
 label {
   display: block;
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
 
 input[type='text'],
@@ -191,4 +191,19 @@ textarea {
   right: 0;
   margin-right: 10%;
   padding: 3%;
+}
+
+#clear-btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#clear-btn:hover {
+  background-color: #fff;
 }

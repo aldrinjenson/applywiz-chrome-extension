@@ -208,6 +208,8 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
             isFinalStep = true;
           }
           continue;
+        } else {
+          await sleep(1200);
         }
 
         if (shouldStopAutomation) {

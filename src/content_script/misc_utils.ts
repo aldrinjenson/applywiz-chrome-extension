@@ -50,8 +50,6 @@ export const selectChosenResume = async (chosenResume = '') => {
     params: { all: true, timeout: 2000 },
   })) as HTMLElement[];
 
-  console.log({ availableResumes });
-
   if (!availableResumes?.length) return false;
 
   for (const resumeH3 of availableResumes) {
