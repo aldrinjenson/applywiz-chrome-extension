@@ -4,7 +4,6 @@ import { toastNotify } from '../common/common_utils';
 import { isDevEnv } from '../constants';
 
 export const handleEmailSignin = async (email: string, password: string) => {
-  toastNotify('Loggin In...');
   if (isDevEnv) {
     email = email || 'john@gmail.com';
     password = password || '123456';
