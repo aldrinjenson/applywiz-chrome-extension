@@ -33,6 +33,7 @@ export const getFiltersFromContentScript = (
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.action === 'RECEIVE_FILTERS') {
+        chrome.tabs.remove(sender.tab.id);
         const filters = message.data;
         const ignoredFilters = [
           'Under 10 applicants',
@@ -62,6 +63,7 @@ export const isRegisteredUserLoggedInToLinkedIn = (profileLink = '') => {
               data: { tabId: tab.id },
             },
             (resp) => {
+              chrome.tabs.remove(tab.id);
               return resolve(resp);
             },
           );

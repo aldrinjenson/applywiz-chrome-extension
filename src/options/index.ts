@@ -158,9 +158,12 @@ fetchFiltersBtn.addEventListener('click', async () => {
   toastNotify('Saving preferences locally');
   fetchFiltersBtn.disabled = true;
   const filters = await getFiltersFromContentScript(jobKeyword, chosenCountry);
-  toastNotify('Filters Received');
-  createFilters(filters, filterContainer, submitHandler);
-  // createFilters(filtersData, filterContainer, submitHandler);
+  if (filters?.length) {
+    toastNotify('Filters Received');
+    createFilters(filters, filterContainer, submitHandler);
+  } else {
+    toastNotify('Error in receiving filters.', 'Check internet and try again');
+  }
   fetchFiltersBtn.disabled = false;
 });
 
