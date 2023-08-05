@@ -1,6 +1,6 @@
 {
   "name": "Apply Wiz - Automatic Job Applier",
-  "description": "Chrome extension to automatically apply to jobs on several sites like LinkedIn, making you much productive in your job search. Perform Job Automation while you take a break and chill!",
+  "description": "Automatically apply to jobs on sites like LinkedIn, making you productive in your job search with job application automation!",
   "version": "0.9.5",
   "manifest_version": 3,
   "background": {

@@ -67,6 +67,13 @@ const sendMessageToApplyToJobs = (
   filters: [],
   user?: { experience: string; notice: string },
 ) => {
+  if (!workExpInput.value) {
+    toastNotify(
+      'Please fill in the General Experience value before applying..',
+    );
+    return;
+  }
+
   const userData = {
     name: candidateNameInput.value,
     experience: workExpInput.value,
@@ -117,9 +124,6 @@ const sendMessageToApplyToJobs = (
 };
 
 const submitHandler = (selectedFilterOptions: []) => {
-  // const user = {
-  //   linkedin_url: 'https://www.linkedin.com/in/john-geo-01b5aa281/',
-  // };
   chrome.runtime.sendMessage({ action: GET_USER }, async (user) => {
     toastNotify('Preparing environment', 'Hold on...');
     try {

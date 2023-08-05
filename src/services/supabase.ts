@@ -4,11 +4,12 @@ export const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_KEY,
   {
-    auth: {
-      // autoRefreshToken: false, // All my Supabase access is from server, so no need to refresh the token
-      detectSessionInUrl: false,
-      persistSession: false,
-    },
+    // auth: {
+    //   autoRefreshToken: true, // All my Supabase access is from server, so no need to refresh the token
+    //   detectSessionInUrl: false,
+    // persistSession: false,
+    // storage: localStorage,
+    // },
   },
 );
 

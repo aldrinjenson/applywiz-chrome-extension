@@ -116,7 +116,6 @@ chrome.runtime.onMessage.addListener(
 
       case GET_USER_PREFERENCES:
         const savedPreferences = store.getState().userPrefs;
-        console.log({ savedPreferences });
         sendReponse(savedPreferences);
         break;
 

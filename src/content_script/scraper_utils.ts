@@ -126,7 +126,7 @@ const handleAnyUnfilledColumns = async (user) => {
       }
 
       if (!isMatchingAdvancedTagRowFound) continue;
-      console.log('mathing row found: ', tagRow);
+      console.log('matching row found: ', tagRow);
 
       console.log({ input, value });
       input.value = value;
@@ -191,6 +191,14 @@ const handleAnyUnfilledColumns = async (user) => {
         'Not able to fill all fields based on given user object for label: ' +
           labelText,
       );
+
+      console.log({ label });
+
+      if (!labelText) {
+        console.log(labelText);
+
+        alert('Error bro!');
+      }
 
       // alert('too complex');
       const errorReason = `Cannot answer Input field: ${labelText}`;

@@ -26,6 +26,7 @@ export const fillResumeList = () => {
             case RECEIVE_RESUMES:
               console.log(message.data);
               fillDataList(message.data);
+              chrome.tabs.remove(sender.tab.id);
               break;
             default:
               break;

@@ -1,13 +1,12 @@
 import { jobObjectType } from '../types';
 import { getFullUser, supabase } from './supabase';
-import { toastNotify } from '../common/common_utils';
 import { isDevEnv } from '../constants';
 
 export const handleEmailSignin = async (email: string, password: string) => {
-  if (isDevEnv) {
-    email = email || 'john@gmail.com';
-    password = password || '123456';
-  }
+  // if (isDevEnv) {
+  //   email = email || 'john@gmail.com';
+  //   password = password || '123456';
+  // }
 
   try {
     const {
@@ -50,8 +49,6 @@ export const addJobsToDb = async (
   userId: string,
 ) => {
   console.log('going to add jobs!');
-  console.log(jobObjects);
-  console.log(userId);
 
   try {
     const modifiedJobObjects = jobObjects.map((jobObj) => ({
