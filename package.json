@@ -1,11 +1,12 @@
 {
-  "name": "Apply-Wiz-chrome-extension-webpack",
+  "name": "apply-wiz-chrome-extension",
   "version": "0.2.0",
   "description": "Chrome Extension to automate applying to jobs in LinkedIn",
   "scripts": {
     "start": "webpack --watch --config webpack.dev.cjs",
     "dev": "webpack --watch --config webpack.dev.cjs",
-    "build": "webpack --config webpack.prod.cjs",
+    "buildProd": "webpack --config webpack.prod.cjs",
+    "buildTest": "webpack --config webpack.dev.cjs",
     "lint": "eslint --ext .ts,.js --max-warnings=0 .",
     "prettier": "prettier --write",
     "test": "c8 mocha ./test/setup.js ./test/**/*.js"

@@ -3,10 +3,10 @@ import { getFullUser, supabase } from './supabase';
 import { isDevEnv } from '../constants';
 
 export const handleEmailSignin = async (email: string, password: string) => {
-  // if (isDevEnv) {
-  //   email = email || 'john@gmail.com';
-  //   password = password || '123456';
-  // }
+  if (isDevEnv) {
+    email = email || 'john@gmail.com';
+    password = password || '123456';
+  }
 
   try {
     const {
