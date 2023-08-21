@@ -1,33 +1,30 @@
-- finish google chrome content for extension
-
 # Stuff to do
 
 - create reusable api for awaiting and getting answers to async tasks
-- add description for extension
 
 ---
 
 - add counter in website for total number of jobs
-- collect user's location data and add it to db
-- minimise FAQs
 - stopping with a job application currently in progress
-- create recording of product workflow
 
 ---
 
 # #To ask users to do
 
-- show how to turn on notification
 - ask them to fill personal demographic information here: https://www.linkedin.com/mypreferences/d/demographic-info-copy
-- ask them to run the extension in full screen/ maximised mode
 
 # To review
 
 - advanced tag based filling fieds
-- location based job searching
 - password reset
 
 # Future Version fixes
 
 - handle gender
 - in reports page, maybe show the top reason for failing and handle that.
+
+- for stripe webhooks, add subscription created and also updated events
+- for updating usermetadata, use // const { data: user, error } = await supabase.auth.updateUser({
+  // data: {
+  // },
+  // });

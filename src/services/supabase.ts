@@ -9,6 +9,7 @@ export const getFullUser = async (user: User) => {
   const {
     user_metadata: { name, linkedInUrl },
   } = user;
+  // console.log({ user });
 
   const newUser = { ...user, name, linkedin_url: linkedInUrl };
   console.log('inside getfulluser');

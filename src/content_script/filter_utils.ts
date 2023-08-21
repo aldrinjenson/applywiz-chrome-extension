@@ -119,10 +119,18 @@ export const applyCountryNameInSearch = async (countryName = '') => {
   const searchButton = (await waitForElement({
     selector: '.jobs-search-box__submit-button',
   })) as HTMLButtonElement;
-  const locationSearchInput = (await waitForElement({
+
+  let locationSearchInput = (await waitForElement({
     selector: 'input[aria-label="City, state, or zip code"]',
   })) as HTMLInputElement;
-  console.log(locationSearchInput, searchButton);
+
+  if (!locationSearchInput) {
+    const locationSvg = document.querySelector(
+      'svg[data-test-icon="location-marker-small"]',
+    );
+    locationSearchInput = locationSvg.parentElement
+      .nextSibling as HTMLInputElement;
+  }
 
   locationSearchInput.value = countryName;
   console.log('clicking..');
