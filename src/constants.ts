@@ -9,8 +9,8 @@ export const ADD_JOBS_TO_DB = 'ADD_JOBS_TO_DB';
 export const USER_SIGN_IN = 'USER_SIGN_IN';
 export const USER_SIGN_OUT = 'USER_SIGN_OUT';
 
-export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
-export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
+// export const SIGN_IN_SUCCESS = 'SIGN_IN_SUCCESS';
+// export const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
 
 export const SHOW_NOTIFICATION = 'SHOW_NOTIFICATION';
 export const GET_COUNTER = 'GET_COUNTER';

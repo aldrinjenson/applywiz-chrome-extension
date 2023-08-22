@@ -26,8 +26,6 @@ import {
   SET_USER,
   SET_USER_PREFERENCES,
   SHOW_NOTIFICATION,
-  SIGN_IN_SUCCESS,
-  SIGN_OUT_SUCCESS,
   USER_SIGN_IN,
   USER_SIGN_OUT,
 } from '../constants';
@@ -78,11 +76,11 @@ chrome.runtime.onMessage.addListener(
         const { email, password } = data;
         toastNotify('Logging in.', 'Hold on..');
         handleEmailSignin(email, password)
-          .then((user) => {
-            store.dispatch(SET_USER, user);
+          .then((fullUser) => {
+            store.dispatch(SET_USER, fullUser);
             chrome.runtime.sendMessage({
-              action: SIGN_IN_SUCCESS,
-              data: user,
+              action: SET_USER,
+              data: fullUser,
             });
             toastNotify('Successfully logged in');
           })
@@ -99,7 +97,7 @@ chrome.runtime.onMessage.addListener(
           .then(() => {
             store.dispatch(SET_USER, null);
             chrome.runtime.sendMessage({
-              action: SIGN_OUT_SUCCESS,
+              action: SET_USER,
               user: null,
             });
             toastNotify('Successfully signed out');
@@ -129,12 +127,13 @@ chrome.runtime.onMessage.addListener(
       default:
     }
 
+    sendReponse();
     return true;
   },
 );
 
 supabase.auth.onAuthStateChange(async (event, session) => {
-  console.log('auth status changed');
+  console.log('sb auth status changing');
   console.log({ event, session });
 
   switch (event) {
@@ -150,26 +149,32 @@ supabase.auth.onAuthStateChange(async (event, session) => {
         });
 
         if (error) {
-          console.log({ error });
-          console.log('error in setting session; breaking');
+          console.log('difficulty in setting session directly.', error.message);
+          supabase.auth
+            .refreshSession({ refresh_token: refresh_token })
+            .then(() => console.log('refreshed token'))
+            .catch((e) => console.log('error in refreshing token: ', e));
+        }
+        if (!user) {
+          console.log('User not present in session. returngin..');
           break;
         }
 
         const fullUser = await getFullUser(user);
         console.log({ fullUser });
         store.dispatch(SET_USER, fullUser);
+        chrome.runtime.sendMessage({ action: SET_USER, data: fullUser }, () => {
+          console.log('sending set user message:', fullUser);
+        });
       }
       break;
     case 'SIGNED_IN':
-      const user = session?.user;
-      const fullUser = await getFullUser(user);
-      console.log('setting in storage');
-      store.dispatch(SET_USER, fullUser);
+      console.log('setting session in storage');
       await setStorageItem('sb_session', session);
       break;
     case 'SIGNED_OUT':
       store.dispatch(SET_USER, null);
-      chrome.runtime.sendMessage({ action: 'SIGN_OUT_SUCCESS', user: null });
+      console.log('removing session from storag');
       await setStorageItem('sb_session', null);
       break;
     default:
@@ -184,9 +189,3 @@ const initialSetUp = async () => {
   store.dispatch(SET_USER_PREFERENCES, savedUserPreferences);
 };
 initialSetUp();
-
-// chrome.runtime.onStartup.addListener(async () => {
-//   console.log('starting up..');
-// });
-
-// setTimeout(() => initialSetUp, 1000);

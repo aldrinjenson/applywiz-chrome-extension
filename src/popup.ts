@@ -2,9 +2,10 @@
 import '../styles/popup.scss';
 import { GeneralStore } from './common/General_store';
 import {
-  GET_AUTOMATION_STATUS,
+  // GET_AUTOMATION_STATUS,
   GET_USER,
-  SET_AUTOMATION_STATUS,
+  // SET_AUTOMATION_STATUS,
+  SET_USER,
   USER_SIGN_IN,
   USER_SIGN_OUT,
 } from './constants';
@@ -17,9 +18,11 @@ const statsDiv: HTMLDivElement = document.getElementById('stats');
 // const stopAutomationButton: HTMLButtonElement = document.querySelector(
 //   '#stop-automation-btn',
 // );
-const inProgressWrapper: HTMLDivElement = document.querySelector(
-  '#in-progress-wrapper',
-);
+// const inProgressWrapper: HTMLDivElement = document.querySelector(
+//   '#in-progress-wrapper',
+// );
+const loadingSection: HTMLDivElement =
+  document.querySelector('#loadingSection');
 
 const signOutButton = document.getElementById('signOutBtn');
 
@@ -61,55 +64,21 @@ chrome.runtime.onMessage.addListener(
     const { action, data } = message;
 
     switch (action) {
-      case 'SIGN_IN_SUCCESS':
-        console.log('successfull signin');
+      case SET_USER:
         const user = data;
         contentStore.setState({ user });
         triggerMainSectionVisibility(user);
         break;
-
-      case 'SIGN_OUT_SUCCESS':
-        contentStore.setState({ user: null });
-        triggerMainSectionVisibility(null);
-        break;
-
-      default:
-        console.log(' Warning: Unhandled action:', action);
     }
-
-    // return true;
   },
 );
 
-// setInterval(() => {
-//   chrome.runtime.sendMessage({ action: GET_AUTOMATION_STATUS }, (resp) => {
-//     console.log(resp);
-//   });
-// }, 1000);
-
-// stopAutomationButton.addEventListener('click', () => {
-//   chrome.runtime.sendMessage(
-//     { action: SET_AUTOMATION_STATUS, data: false },
-//     (resp) => {
-//       console.log(resp);
-//     },
-//   );
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
   console.log('From Content Script: DOM Loaded');
+  loadingSection.innerText = 'Loading..';
   chrome.runtime.sendMessage({ action: GET_USER }, (user) => {
     console.log('in popup: ');
-    console.log({ user });
-
     triggerMainSectionVisibility(user);
+    loadingSection.innerText = '';
   });
-  // chrome.runtime.sendMessage({ action: GET_AUTOMATION_STATUS }, (status) => {
-  //   console.log({ status });
-  //   if (status) {
-  //     inProgressWrapper.classList.remove('hidden');
-  //   } else {
-  //     inProgressWrapper.classList.add('hidden');
-  //   }
-  // });
 });

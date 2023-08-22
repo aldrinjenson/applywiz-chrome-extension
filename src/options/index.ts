@@ -12,13 +12,7 @@ import {
   getExperience,
 } from './tagRowUtils';
 import { updateWithSavedPreferences, saveUserPreferences } from './userPrefs';
-import {
-  GET_USER,
-  SIGN_IN_SUCCESS,
-  SIGN_OUT_SUCCESS,
-  START_AUTOMATION,
-  isDevEnv,
-} from '../constants';
+import { GET_USER, SET_USER, START_AUTOMATION, isDevEnv } from '../constants';
 import { getFirstName } from '../utils';
 import {
   getFiltersFromContentScript,
@@ -178,19 +172,11 @@ chrome.runtime.onMessage.addListener(
     console.log(message);
 
     switch (action) {
-      case SIGN_IN_SUCCESS:
-        console.log('successfull signin');
+      case SET_USER:
+        console.log('updating user status');
         const user = data;
         optionStore.setState({ user });
         triggerMainSectionVisibility(user);
-        break;
-
-      case SIGN_OUT_SUCCESS:
-        optionStore.setState({ user: null });
-        triggerMainSectionVisibility(null);
-        break;
-      default:
-      // console.log(' Warning: Unhandled action:', action);
     }
   },
 );
