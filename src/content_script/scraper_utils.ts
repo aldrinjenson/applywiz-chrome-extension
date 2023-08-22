@@ -2,6 +2,7 @@ import { sleep, waitForElement } from '../utils';
 import { contentNotify } from './message_utils';
 
 export const fetchAllJobsInCurrPage = async () => {
+  contentNotify('Getting jobs in page...');
   // to handle lazy loading or cards🙂
   let jobSideCards: HTMLElement[] = [];
   let numJobsFound = 0;
@@ -155,7 +156,7 @@ const handleAnyUnfilledColumns = async (user) => {
           input.dispatchEvent(inputEvent);
           fieldsFilled = true;
         } catch (error) {
-          console.log('error in matching input: ', input);
+          console.log('error in matching input: ', input, error);
         } finally {
           // eslint-disable-next-line no-unsafe-finally
           break;
