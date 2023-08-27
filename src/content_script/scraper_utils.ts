@@ -57,6 +57,7 @@ const handleAnyUnfilledColumns = async (user) => {
 
     // const label = await waitForElement('label', false, wrapper);
     const label = wrapper.querySelector('label');
+    const actualErrorMsg = wrapper.querySelector('span').innerText;
     const labelText = label?.innerText?.toLowerCase() || '';
     const input = wrapper.querySelector('input');
     let fieldsFilled = false;
@@ -202,7 +203,11 @@ const handleAnyUnfilledColumns = async (user) => {
       }
 
       // alert('too complex');
-      const errorReason = `Cannot answer Input field: ${labelText}`;
+      const errorReason = `Cannot answer Input field: ${
+        labelText ? labelText : actualErrorMsg
+      };`;
+      console.log(actualErrorMsg);
+      console.log(errorReason);
       await sleep(5000);
       // await sleep(2500);
       return { status: true, reason: errorReason };
@@ -216,7 +221,7 @@ const handleAnyUnfilledColumns = async (user) => {
 
 export const handleComplexity = async (user) => {
   const complexityObj = await handleAnyUnfilledColumns(user);
-  const { status: isTooComplex, reason: complexityReason } = complexityObj;
+  const { status: isTooComplex } = complexityObj;
 
   if (isTooComplex) {
     console.log('too complex');
