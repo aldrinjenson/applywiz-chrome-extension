@@ -24,7 +24,7 @@ If you need React support, please check this awesome boilerplate created by [Mic
 
 1. Clone the repository
 2. Run `npm install`
-3. Run `npm run start` for development mode, `npm run build` for production build
+3. Run `npm run dev` for development mode, `npm run build` for production build
 4. Add the extension to Chrome:
    1. Go to `chrome://extensions/`
    2. Enable the `Developer mode`
