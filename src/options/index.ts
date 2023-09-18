@@ -145,7 +145,6 @@ const submitHandler = (selectedFilterOptions: []) => {
 fetchFiltersBtn.addEventListener('click', async () => {
   let jobKeyword = jobKeywordInput.value;
   const chosenCountry = chosenCountryInput.value;
-  console.log({ chosenCountry });
 
   if (!jobKeyword?.length) {
     if (isDevEnv) jobKeyword = 'Software Engineer';
@@ -155,6 +154,9 @@ fetchFiltersBtn.addEventListener('click', async () => {
   toastNotify('Fetching Filters for: ', jobKeyword);
   toastNotify('Saving preferences locally');
   fetchFiltersBtn.disabled = true;
+  setTimeout(() => {
+    fetchFiltersBtn.disabled = false;
+  }, 5000);
   const filters = await getFiltersFromContentScript(jobKeyword, chosenCountry);
   if (filters?.length) {
     toastNotify('Filters Received');
@@ -162,7 +164,7 @@ fetchFiltersBtn.addEventListener('click', async () => {
   } else {
     toastNotify('Error in receiving filters.', 'Check internet and try again');
   }
-  fetchFiltersBtn.disabled = false;
+  // fetchFiltersBtn.disabled = false;
 });
 
 chrome.runtime.onMessage.addListener(
