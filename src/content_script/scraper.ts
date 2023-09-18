@@ -137,7 +137,7 @@ export const applyToJobs = async (filters = [], user = {}, maxCount = 10) => {
 
       await sleep(1000);
       applyButton.click();
-      console.log('clicked hopefully');
+      console.log('clicked job apply button ');
 
       let isFormComplete = false;
       formPageCount = 0;

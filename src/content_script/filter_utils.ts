@@ -123,9 +123,14 @@ export const applyCountryNameInSearch = async (countryName = '') => {
   if (locationSearchInput) {
     locationSearchInput.value = countryName;
   } else {
-    const locationInputAlt = (await waitForElement({
+    let locationInputAlt = (await waitForElement({
       selector: '#jobs-search-box-location-id-ember265',
     })) as HTMLInputElement;
+    if (!locationInputAlt) {
+      locationInputAlt = (await waitForElement({
+        selector: '#jobs-search-box-location-id-ember266',
+      })) as HTMLInputElement;
+    }
 
     locationInputAlt.value = countryName;
   }
