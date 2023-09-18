@@ -1,7 +1,7 @@
 {
   "name": "Apply Wiz - Automatic Job Applier",
   "description": "Automatically apply to jobs on sites like LinkedIn, making you productive in your job search with job application automation!",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"
