@@ -123,16 +123,17 @@ export const applyCountryNameInSearch = async (countryName = '') => {
   if (locationSearchInput) {
     locationSearchInput.value = countryName;
   } else {
-    let locationInputAlt = (await waitForElement({
-      selector: '#jobs-search-box-location-id-ember265',
-    })) as HTMLInputElement;
-    if (!locationInputAlt) {
-      locationInputAlt = (await waitForElement({
-        selector: '#jobs-search-box-location-id-ember266',
-      })) as HTMLInputElement;
+    console.log('using alt method');
+    const topInputElements = (await waitForElement({
+      selector: '.jobs-search-box__text-input',
+      params: { all: true },
+    })) as HTMLInputElement[];
+    const properInputs = topInputElements.filter((el) => el.hasAttribute('id'));
+    if (properInputs.length > 1) {
+      const locationInputAlt = properInputs[1];
+      locationInputAlt.value = countryName;
+      console.log('alt method success');
     }
-
-    locationInputAlt.value = countryName;
   }
 
   await sleep(500);

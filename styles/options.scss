@@ -147,19 +147,18 @@ textarea {
 
 .button2 {
   margin-top: 0.5rem;
-  padding: 0.4rem;
+  margin-right: 1rem;
+  padding: 0.5rem;
   width: 20%;
   background: #0094a8;
   cursor: pointer;
   color: white;
-  font-size: 0.9rem;
-  font-weight: 300;
+  font-size: 1rem;
   border-radius: 4px;
   transition: all 0.3s ease;
   border-color: transparent;
 }
 .button2:hover {
-  // letter-spacing: 0.5px;
   background: #7edefc;
 }
 .button2:disabled {
@@ -193,21 +192,33 @@ textarea {
   padding: 3%;
 }
 
-#clear-btn {
+.btn-secondary {
   padding: 8px 16px;
   border-radius: 4px;
   background-color: #f1f1f1;
   color: #333;
   font-size: 16px;
-  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-#clear-btn:hover {
+.btn-secondary:hover {
   background-color: #fff;
 }
 
 #apply-btn {
   margin-top: 25px;
 }
+
+// .btn-secondary {
+//   margin: 2%;
+//   padding: 0.5% 2%;
+//   background: #fefefe;
+//   border: 1px solid grey;
+// }
+// .btn-secondary:hover {
+//   margin: 2%;
+//   padding: 0.5% 2%;
+//   background: #fefefe;
+//   border: 1px solid grey;
+// }

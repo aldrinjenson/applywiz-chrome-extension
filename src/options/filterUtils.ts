@@ -122,5 +122,16 @@ export function createFilters(
     onClick(selectedOptions);
   });
 
+  const clearFiltersBtn = document.createElement('button');
+  clearFiltersBtn.classList.add('btn-secondary');
+  clearFiltersBtn.textContent = 'Clear Filters';
+  clearFiltersBtn.id = 'clear-filters-btn';
+  form.appendChild(clearFiltersBtn);
+
+  clearFiltersBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    form.reset();
+  });
+
   rootElement.appendChild(form);
 }
