@@ -1,185 +1,235 @@
-# Apply-Wiz-Chrome extension
+# ApplyWiz — Chrome Extension
 
-- A chrome extension to automate the boring tasks of applying to LinkedinJobs
-- Enter your details and apply to all EasyApply Jobs which matches the filters selected
+> Auto-apply to LinkedIn "Easy Apply" jobs while you watch it happen.
 
-- Made with Chrome-extension-webpack. Meant to be lightweight and scalable, hence easily adaptable to your needs.
+ApplyWiz is a Manifest V3 Chrome extension that drives the LinkedIn Easy Apply
+flow end to end: it searches with your filters, walks the multi-step
+application modal, fills the fields it can, submits, and moves on to the next
+job — all in the open tab, in front of you. It's the browser half of the larger
+ApplyWiz product (a web app dashboard + Supabase backend); this repo is the
+extension.
 
-It features:
+Launched on [Product Hunt](https://www.producthunt.com/) on **Aug 17, 2023**.
+Built Jun–Sep 2023 over ~99 commits.
 
-- [Chrome Extension Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/)
-- [Webpack 5](https://webpack.js.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Sass](https://sass-lang.com)
-- [Babel](https://babeljs.io/)
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
-- [Mocha](https://mochajs.org/)
+> **Disclaimer:** Automating LinkedIn almost certainly violates its Terms of
+> Service. This is shared as a past technical project / engineering case study,
+> not an actively maintained or endorsed service. Read the code, learn from the
+> DOM-automation patterns, but don't expect a working product against today's
+> LinkedIn — the selectors below were valid in 2023 and LinkedIn's markup shifts
+> constantly. That impermanence is exactly what made this interesting to build.
 
-If you need React support, please check this awesome boilerplate created by [Michael Xieyang Liu](https://github.com/lxieyang): [chrome-extension-boilerplate-react](https://github.com/lxieyang/chrome-extension-boilerplate-react).
+---
+
+## Why this was hard
+
+There is no LinkedIn Easy Apply API. The entire application flow is an
+undocumented, lazily-rendered React SPA that changes its DOM whenever LinkedIn
+feels like it. Every job is a different modal: some are one click, some are
+seven pages of questions about years of experience, work authorization, salary
+expectations, and checkboxes you must tick to agree to terms.
+
+So the whole extension is **DOM choreography** — reverse-engineered selectors,
+event dispatching that React will actually believe, and a state machine that
+knows when a form is stuck, looping, or genuinely unanswerable. That's the
+interesting part of this codebase, and the sections below call out the pieces by
+name.
+
+---
+
+## Architecture
+
+Three URL-scoped content scripts + one background service worker, wired together
+with a typed message-passing protocol over `chrome.runtime` and a small
+Redux-style store living in the background.
+
+```
+                ┌─────────────────────────────────────────────┐
+                │  background service worker (background/)      │
+                │   • Redux-style store: store.ts + reducer.ts  │
+                │   • Supabase auth + session rehydration       │
+                │   • batch job writes to Supabase              │
+                │   • chrome.notifications                      │
+                └───────────────▲───────────────────▲──────────┘
+                                │ message protocol  │
+       ┌────────────────────────┴───┐  ┌────────────┴────────────────┐
+       │ contentScript.js           │  │ popup.ts / options.ts        │
+       │  (linkedin.com/jobs/search)│  │  (UI: filters, prefs, login) │
+       │   • applyToJobs state mach.│  └──────────────────────────────┘
+       │   • autofill cascade       │
+       ├────────────────────────────┤
+       │ linkedInProfileContent.js  │  (linkedin.com/*/*)
+       │ linkedInJobSettings.js     │  (jobs/application-settings)
+       └────────────────────────────┘
+```
+
+### Content scripts (URL-scoped, from `static/manifest.json`)
+
+| Script | Matches | Job |
+|---|---|---|
+| `contentScript.js` | `linkedin.com/jobs/search/*` | the main act — applies the filters, runs the automation loop |
+| `linkedInProfileContent.js` | `linkedin.com/*/*` | reads profile context |
+| `linkedInJobSettings.js` | `linkedin.com/jobs/application-settings/` | application-settings page hooks |
+
+### The store (`src/background/store.ts` + `src/background/reducer.ts`)
+
+A hand-rolled Redux clone living in the service worker: `getState`, `dispatch`,
+`subscribe`/`unsubscribe`, `notifyListeners`, and a pure `reducer(state, action,
+data)`. State holds the Supabase `user`, `userPrefs`, `automationStatus`, and
+`extensionVersion`. Everything that crosses a script boundary is a typed
+`Message { action, data }` (see `src/types.ts`) keyed off ~15 action constants
+in `src/constants.ts` — `START_AUTOMATION`, `SET_USER`, `ADD_JOBS_TO_DB`,
+`SET_AUTOMATION_STATUS`, `GET_FILTERS`, `RECEIVE_RESUMES`, and so on. The
+background `onMessage` listener is the single switchboard for all of them.
+
+### Auth + persistence (`src/services/supabase.ts`, `suapbaseUtils.ts`, `src/background/index.ts`)
+
+Supabase email/password sign-in. Because MV3 service workers are killed and
+restarted constantly, the session is the source of truth, not memory:
+`onAuthStateChange` writes the session to `chrome.storage` on `SIGNED_IN`,
+clears it on `SIGNED_OUT`, and on `INITIAL_SESSION` rehydrates by reading
+`sb_session` back out of storage and calling `setSession` (falling back to
+`refreshSession` if the access token is stale). `getFullUser` enriches the auth
+user with subscription status from a `profile_view`. Applied jobs are
+batch-written to a `jobs` table.
+
+---
+
+## The automation, in detail
+
+### `waitForElement` — the primitive everything stands on (`src/utils.ts`)
+
+You cannot `querySelector` a React SPA and expect the element to be there. So
+nearly every interaction goes through:
+
+```ts
+waitForElement({ selector, params: { timeout, all, rootEl } })
+```
+
+It polls every **75ms** until the element exists or the timeout fires, resolving
+the node (or `null`). `all` returns every match; `rootEl` scopes the search to a
+subtree (used heavily to look *inside* a single form-field wrapper). This one
+helper is what turns a flaky, race-prone SPA into something you can script
+deterministically.
+
+### `applyToJobs` — the modal state machine (`src/content_script/scraper.ts`)
+
+The main loop. For each job card in the results list it:
+
+1. Clicks the card, then **detects already-applied** jobs (and bumps the target
+   count so they don't eat into your quota) and **skips external-apply** jobs
+   (detected by the `link-external` icon on the Apply button).
+2. Opens the Easy Apply modal and walks it, capped at **7 pages** so a broken
+   form can never loop forever.
+3. On each page it distinguishes the next action purely by `aria-label` —
+   `"Continue to next step"` → `"Review your application"` → `"Submit
+   application"` — advancing the selector as it goes.
+4. Reads LinkedIn's **completeness progress meter** (`getMaxProgressValue`); if
+   the reported progress exceeds 100% the form is stuck/looping, so it dismisses
+   the modal, discards the application, and **retries the job** (`i--`).
+5. Selects the right resume by name, calls the autofill cascade, and on the
+   final step submits — then watches for a submit **error toast** and retries if
+   one appears.
+
+Results are bucketed into `successfullJobs` / `failedJobs` / `skippedJobs` /
+`alreadyAppliedJobs`, and successes are flushed to the DB through a small
+sliding window so writes are batched rather than one-per-job.
+
+### `handleAnyUnfilledColumns` — the intelligent autofill cascade (`src/content_script/scraper_utils.ts`)
+
+This is the brains. It finds every error-flagged field
+(`li-icon[type="error-pebble-icon"]`), walks up to each field's wrapper, reads
+the `<label>`, and tries to answer it in **priority order**:
+
+1. **Resume errors** — skipped (handled separately by name selection).
+2. **Checkboxes / terms** — auto-ticks "Yes" and "agree terms" labels.
+3. **Experience fields** — matches the label against a per-skill
+   experience map (`user.experience["react"] = 5`), falling back to a
+   `generalExp` default.
+4. **User-defined "advanced tags"** — author-configured rules where *all* tags
+   in a row must appear in the label to fill its value (e.g. tags `["notice",
+   "period"]` → `"30 days"`).
+5. **Generic profile keys** — any top-level key on the user object whose name
+   appears in the label.
+6. **Select dropdowns** — falls back to the first real option (skipping a
+   "none" placeholder).
+
+Every fill dispatches a native `input`/`change` `Event` with `{ bubbles: true }`
+so React's synthetic event system actually registers the value — setting
+`input.value` alone is invisible to React. If a field exhausts every strategy,
+the job is **gracefully discarded** with a recorded reason
+(`"Cannot answer Input field: …"`) rather than submitted half-filled or left
+hanging.
+
+### Robustness odds and ends
+
+- **Lazy-load scrolling** (`fetchAllJobsInCurrPage`) — scrolls the results
+  column up to 7 times, watching for the page footer, to force LinkedIn to
+  render every job card before scraping.
+- **Pagination** (`moveToNextPage`) — reads the `artdeco-pagination`
+  indicators, finds the current page, and advances; returns `false` when there's
+  nowhere left to go.
+- **Error-toast detection + retry** (`handleErrorToastWhileSubmitting`) — catches
+  the "error while submitting" toast, dismisses it, discards the application, and
+  retries the job.
+- **Discard-and-retry** plumbing — shared logic for closing a stuck modal via
+  the `Dismiss` button and confirming the discard dialog.
+
+---
+
+## Stack
+
+- **TypeScript** + **Webpack 5**, seven entry points (one per content script /
+  page) bundled to `dist/`
+- **Manifest V3** (service worker background)
+- **Sass** via `sass-loader` + `mini-css-extract-plugin`
+- **Supabase JS** for auth + Postgres
+- **Mocha** + **c8** coverage, with **sinon-chrome** mocking the `chrome.*` APIs
+  so storage logic is testable off-browser
+- **Husky** pre-commit running **lint-staged** → **Prettier** + **ESLint**
+- **GitHub Actions** CI running the test suite on every push / PR to `main`
+
+---
 
 ## Getting started
 
-### Installing and running
-
-1. Clone the repository
-2. Run `npm install`
-3. Run `npm run dev` for development mode, `npm run build` for production build
-4. Add the extension to Chrome:
-   1. Go to `chrome://extensions/`
-   2. Enable the `Developer mode`
-   3. Click on `Load unpacked`
-   4. Choose the `dist` directory
-5. You are good to go! You can also pin the extension to the toolbar for easy access.
-
-### Project structure
-
-All TypeScript files are placed in `src` directory. There are few files already prepared for you:
-
-- `contentScript.ts` - the [content script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) to be run in the context of selected web pages
-- `serviceWorker.ts` - the [background script](https://developer.chrome.com/docs/extensions/mv3/service_workers/) usually used to initialize the extension and monitor events
-- `storage.ts` - little helper utility to easily manage the extension's [storage](https://developer.chrome.com/docs/extensions/reference/storage/). In this particular project we are using _synced_ storage area
-- `popup.ts` and `options.ts` - per-page scripts
-
-Style files are placed in `styles` directory. There you can find per-page stylesheets and `common.scss` with stylings common across the pages.
-We also use [Normalize.css](https://necolas.github.io/normalize.css/) so your extensions look good and consistent wherever they are installed.
-
-The `static` directory includes all the files to be copied over to the final build. It consists of `manifest.json` defining our extension, `.html` pages and icon set.
-
-The `test` directory contains your tests. See the dedicated section below for some more information on this topic.
-
-### Pages
-
-Currently, there are two pages: `popup.html` and `options.html`, which can be found in `static` directory. Both have corresponding script and style files at `src` and `styles` directories accordingly.
-
-#### Popup
-
-It's a default extension's page, visible after clicking on extension's icon in toolbar. According to the documentation:
-
-> The popup cannot be smaller than 25x25 and cannot be larger than 800x600.
-
-Read more [here](https://developer.chrome.com/docs/extensions/reference/browserAction/#popup).
-
-#### Options
-
-Options page shown by right-clicking the extension icon in the toolbar and selecting _Options_.
-
-There are two available types of options pages: `full page` and `embedded`. By default it is set to `full page`. You can change that behaviour in the `manifest.json`:
-
-```javascript
-"open_in_tab": true // For `full page`
-"open_in_tab": false // For `embedded`
+```bash
+npm install
+npm run dev        # webpack --watch (dev)
+npm run buildProd  # production build
+npm test           # mocha + c8 coverage
+npm run lint       # eslint, zero warnings allowed
 ```
 
-Read more [here](https://developer.chrome.com/docs/extensions/mv3/options/).
+Then load it into Chrome:
 
-### Storage helper functions
+1. Go to `chrome://extensions/`
+2. Enable **Developer mode**
+3. **Load unpacked** → choose the `dist` directory
+4. Pin it to the toolbar
 
-```typescript
-function getStorageData(): Promise<Storage> {...}
+The Supabase client reads `SUPABASE_URL` / `SUPABASE_KEY` from the build
+environment (via `dotenv-webpack`), so you'll need those set to actually sign in.
 
-// Example usage
-const storageData = await getStorageData();
-console.log(storageData);
+### Project layout
+
+```
+src/
+  background/        service worker: store, reducer, message switchboard, auth
+  content_script/    scraper.ts (state machine), scraper_utils.ts (autofill),
+                     filters, profile + index entry points
+  common/            notifications, shared content helpers
+  options/           options page: filters, prefs, advanced tags
+  services/          supabase client + auth/db helpers
+  utils.ts           waitForElement, sleep, network helpers
+  constants.ts       the message-action vocabulary
+  types.ts           Message + jobObjectType
+static/              manifest.json, popup.html, options.html, icons
+test/                mocha specs + sinon-chrome setup
 ```
 
-```typescript
-function setStorageData(data: Storage): Promise<void> {...}
+---
 
-// Example usage
-const newStorageData = { visible: true };
-await setStorageData(newStorageData);
-```
+## License
 
-```typescript
-function getStorageItem<Key extends keyof Storage>(
-  key: Key,
-): Promise<Storage[Key]> {...}
-
-// Example usage
-const isVisible = await getStorageItem('visible');
-console.log(isVisible);
-```
-
-```typescript
-function setStorageItem<Key extends keyof Storage>(
-  key: Key,
-  value: Storage[Key],
-): Promise<void> {...}
-
-// Example usage
-await setStorageItem('visible', true);
-```
-
-```typescript
-async function initializeStorageWithDefaults(defaults: Storage) {...}
-
-// If `visible` property is already set in the storage, it won't be replaced.
-// This function might be used in `onInstalled` event in service worker
-// to set default storage values on extension's initialization.
-const defaultStorageData = { visible: false };
-await initializeStorageWithDefaults(defaultStorageData);
-```
-
-All of the above functions use `Storage` interface which guarantees type safety. In the above use-case scenario, it could be declared as:
-
-```typescript
-interface Storage {
-  visible: boolean;
-}
-```
-
-**IMPORTANT!** Don't forget to change the interface according to your needs.
-
-_Check `src/storage.ts` for implementation details._
-
-### Content scripts
-
-Content scripts are files that run in the context of web pages. They live in an isolated world (private execution environment), so they do not conflict with the page or other extensions' content sripts.
-
-The content script can be _declared statically_ or _programmatically injected_.
-
-#### Static declaration (match patterns)
-
-Statically declared scripts are registered in the manifest file under the `"content_scripts"` field. They all must specify corresponding [match patterns](https://developer.chrome.com/docs/extensions/mv3/match_patterns/). In this boilerplate, the content script will be injected under all URLs by default. You can change that behaviour in `manifest.json` file.
-
-You can edit the default content script at `src/contentScript.ts`.
-
-#### Programmatic injection
-
-You can also inject the scripts programmatically. It might come in handy when you want to inject the script only in response to certain events. You also need to set extra permissions in manifest file. Read more about programmatic injection [here](https://developer.chrome.com/docs/extensions/mv3/content_scripts/#programmatic).
-
-As per docs:
-
-> Extensions are event-based programs used to modify or enhance the Chrome browsing experience. Events are browser triggers, such as navigating to a new page, removing a bookmark, or closing a tab. Extensions monitor these events using scripts in their background service worker, which then react with specified instructions.
-
-The most common event you will listen to is `chrome.runtime.onInstalled`:
-
-```typescript
-chrome.runtime.onInstalled.addListener(async () => {
-  // Here goes everything you want to execute after extension initialization
-  console.log('Extension successfully installed!');
-});
-```
-
-It is also the perfect (**and the only**) place to create a [context menu](https://developer.chrome.com/docs/extensions/reference/contextMenus/).
-
-You can edit the service worker at `src/serviceWorker.ts`.
-
-Read more about service workers [here](https://developer.chrome.com/docs/extensions/mv3/service_workers/).
-
-### Tests
-
-The boilerplate comes with a test suite using [mocha](https://mochajs.org/), and coverage tracking using [c8](https://github.com/bcoe/c8).
-
-Some basic tests that test the interaction with the chrome storage API have already been implemented to get you started. You can run the test suite using `npm test`.
-Testing the chrome API is especially interesting, as it is not available in the test environment. To get around this, you can use the `sinon-chrome` package to mock the API, some examples of this have been pre-implemented and can be found in `test/setup.js`. This setup file will run before the other tests.
-
-The `test.yml` file in `.github/workflows` contains a GitHub Actions workflow that will run the test suite on every PR against the `main` branch and every push to the `main` branch.
-
-## More resources
-
-- [Welcome to Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/)
-- [webpack documentation](https://webpack.js.org/concepts/)
-- [The TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
-- [Sass Basics](https://sass-lang.com/guide)
+MIT — see [LICENSE](./LICENSE).
